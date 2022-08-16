@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "kilt-native-templat",
-    "slug": "kilt-native-templat",
+    "name": "kilt-react-native-template",
+    "slug": "kilt-react-native-template",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

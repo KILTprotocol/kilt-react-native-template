@@ -1,5 +1,5 @@
 {
-  "name": "kilt-native-templat",
+  "name": "kilt-react-native-template",
   "version": "1.0.0",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
@@ -9,12 +9,21 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@kiltprotocol/sdk-js": "^0.28.1",
+    "base-64": "^1.0.0",
+    "buffer": "^6.0.3",
+    "events": "^3.3.0",
     "expo": "~46.0.7",
+    "expo-random": "~12.3.0",
+    "expo-standard-web-crypto": "^1.4.0",
     "expo-status-bar": "~1.4.0",
+    "process": "^0.11.10",
     "react": "18.0.0",
     "react-dom": "18.0.0",
     "react-native": "0.69.4",
-    "react-native-web": "~0.18.7"
+    "react-native-web": "~0.18.7",
+    "stream-browserify": "^3.0.0",
+    "text-encoding-polyfill": "^0.6.7"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
