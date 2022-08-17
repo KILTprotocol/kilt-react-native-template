@@ -1,0 +1,16 @@
+node_modules
+.expo/
+dist/
+npm-debug.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+web-build/
+globals.js
+metro.config.js
+bable.config.js
+# macOS
+.DS_Store
