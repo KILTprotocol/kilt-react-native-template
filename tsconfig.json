@@ -1,6 +1,10 @@
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
-    "strict": true
-  }
+    "jsx": "react",
+    "strict": true,
+    "module": "esnext",
+    "moduleResolution": "Node"
+  },
+  "include": ["src", "./**/*", "./*", ".eslintrc.js"]
 }
