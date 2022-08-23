@@ -4,5 +4,5 @@
     "strict": true,
     "module": "esnext"
   },
-  "include": ["./**/*", "./*", ".eslintrc.js"]
+  "include": ["./**/*", "./*", ".eslintrc.js"],
 }

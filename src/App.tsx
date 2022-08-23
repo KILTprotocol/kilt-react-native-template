@@ -1,9 +1,18 @@
-import React from 'react'
-import { init } from '@kiltprotocol/sdk-js'
+import React, { useEffect, useState } from 'react'
+import { init, Did } from '@kiltprotocol/sdk-js'
 import { StatusBar } from 'expo-status-bar'
 import { StyleSheet, Text, View } from 'react-native'
 
-const styles = StyleSheet.create({
+interface Styles {
+  container: {
+    flex: number
+    backgroundColor: string
+    alignItems: 'center'
+    justifyContent: 'center'
+  }
+}
+
+const styles = StyleSheet.create<Styles>({
   container: {
     flex: 1,
     backgroundColor: '#fff',
@@ -13,10 +22,20 @@ const styles = StyleSheet.create({
 })
 
 export default function App() {
-  init()
+  const [did, setDid] = useState('Fetching the Did Uri')
+  useEffect(() => {
+    const fetchDid = async () => {
+      await init({ address: 'wss://peregrine.kilt.io' })
+      const johnDoeDid = await Did.Web3Names.queryDidForWeb3Name('john_doe')
+      setDid(johnDoeDid || 'unknown')
+    }
+
+    fetchDid()
+  })
   return (
     <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
+      <Text>KILT Basic template</Text>
+      <Text>Here is John Doe`s Did = {did}</Text>
       <StatusBar />
     </View>
   )
