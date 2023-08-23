@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { init, Did } from '@kiltprotocol/sdk-js'
+import { connect, Did, ConfigService } from '@kiltprotocol/sdk-js'
 import { StatusBar } from 'expo-status-bar'
 import { StyleSheet, Text, View } from 'react-native'
 
@@ -25,9 +25,17 @@ export default function App() {
   const [did, setDid] = useState('Fetching the Did Uri')
   useEffect(() => {
     const fetchDid = async () => {
-      await init({ address: 'wss://peregrine.kilt.io' })
-      const johnDoeDid = await Did.Web3Names.queryDidForWeb3Name('john_doe')
-      setDid(johnDoeDid || 'unknown')
+      await connect('wss://peregrine.kilt.io')
+      const web3Name = 'john_doe'
+      const api = ConfigService.get('api')
+
+      console.log(`Querying the blockchain for the web3name "${web3Name}"`)
+      // Query the owner of the provided web3name.
+      const encodedWeb3NameOwner = await api.call.did.queryByWeb3Name(web3Name)
+
+      const { document } = Did.linkedInfoFromChain(encodedWeb3NameOwner)
+
+      setDid(document.uri || 'unknown')
     }
 
     fetchDid()
