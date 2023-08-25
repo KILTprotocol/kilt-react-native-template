@@ -33,7 +33,7 @@ export default function DidsList<R extends DidApiProvider>(props: { runtime: R }
   return (
     <Container>
       <Box>
-        <h1>DIDs</h1>
+        <Text>DIDs</Text>
         <List>
           {dids.map((did) => {
             return (

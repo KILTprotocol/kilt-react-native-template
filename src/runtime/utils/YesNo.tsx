@@ -14,7 +14,7 @@ export default function YesNo(props: YesNoProps): JSX.Element {
   return (
     <Container sx={{ textAlign: 'center' }}>
       <Box>
-        <h1>{props.title}</h1>
+        <Text>{props.title}</Text>
         <Grid container alignItems="center" justifyContent="center">
           <Grid item xs={12}>
             {props.children}

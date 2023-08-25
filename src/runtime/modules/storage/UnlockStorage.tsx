@@ -81,7 +81,7 @@ export function UnlockStorageScreen(props: UnlockStorageScreenProps): JSX.Elemen
     return (
       <View>
         <>
-          <h1>Unlock Storage</h1>
+          <Text>Unlock Storage</Text>
           <Text>Checking if storage is initialized...</Text>
         </>
       </View>
@@ -115,7 +115,7 @@ export function UnlockStorageScreen(props: UnlockStorageScreenProps): JSX.Elemen
   return (
     <View>
       <>
-        <h1>Unlock Storage</h1>
+        <Text>Unlock Storage</Text>
         <Text>Enter your password to unlock the storage.</Text>
         <TextInput value={password} onChange={setPassword} />
         <BouncyCheckbox onPress={rememberPasswordHandler} /> <Text>Remember Password</Text>

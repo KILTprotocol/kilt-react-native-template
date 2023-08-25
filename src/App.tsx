@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { connect, Did, ConfigService } from '@kiltprotocol/sdk-js'
-import { StatusBar } from 'expo-status-bar'
-import { StyleSheet, Text, View } from 'react-native'
+
+import { StatusBar, StyleSheet, Text, View } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import { SafeAreaView } from 'react-native-safe-area-context'
 import { UnlockStorageScreen } from './runtime/modules/storage/UnlockStorage'
 
 const Stack = createNativeStackNavigator()
@@ -47,9 +48,12 @@ export default function App() {
   })
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="UnlockStorageScreen" component={UnlockStorageScreen} />
-      </Stack.Navigator>
+      <SafeAreaView style={{ flex: 1 }}>
+        <StatusBar />
+        <Stack.Navigator>
+          <Stack.Screen name="UnlockStorageScreen" component={UnlockStorageScreen} />
+        </Stack.Navigator>
+      </SafeAreaView>
     </NavigationContainer>
   )
 }

@@ -79,7 +79,7 @@ export function DidsImport<R extends DidApiProvider & KeysApiProvider>(props: {
   return (
     <Container>
       <Box>
-        <h1>Import Did</h1>
+        <Text>Import Did</Text>
         <Grid container spacing={1} direction="column">
           <Grid item>
             <TextInput

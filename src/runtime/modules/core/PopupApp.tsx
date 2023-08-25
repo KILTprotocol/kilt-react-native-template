@@ -1,4 +1,5 @@
 import React from 'react'
+import { View, Text } from 'react-native'
 import * as SecureStore from 'expo-secure-store'
 import { UnlockStorageScreen } from '../storage/UnlockStorage'
 import ListKeys from '../keys/ListKeys'
@@ -32,8 +33,8 @@ export default function PopupApp(): JSX.Element {
     </div>
   ))
 
-  const urlParams = new URLSearchParams(window.location.search)
-  const fullscreen = urlParams.get('__fullscreen') !== null
+  // const urlParams = new URLSearchParams(window.location.search)
+  // const fullscreen = urlParams.get('__fullscreen') !== null
 
   const checkForCachedPassword = async (): Promise<void> => {
     const result = await SecureStore.getItemAsync('nessie-password')
@@ -69,36 +70,36 @@ export default function PopupApp(): JSX.Element {
     switch (module) {
       case 'keys':
         switch (screen) {
-          case 'list':
-            return <ListKeys runtime={runtime} />
-          case 'import':
-            return <ImportKey runtime={runtime} />
-          case 'sign':
-            return <KeysSign runtime={runtime} />
-          case 'encrypt':
-            return <KeysEncrypt runtime={runtime} />
-          case 'decrypt':
-            return <KeysDecrypt runtime={runtime} />
+          // case 'list':
+          //   return <ListKeys runtime={runtime} />
+          // case 'import':
+          //   return <ImportKey runtime={runtime} />
+          // case 'sign':
+          //   return <KeysSign runtime={runtime} />
+          // case 'encrypt':
+          //   return <KeysEncrypt runtime={runtime} />
+          // case 'decrypt':
+          //   return <KeysDecrypt runtime={runtime} />
           default:
             return <div>Unknown screen</div>
         }
       case 'dids':
         switch (screen) {
-          case 'list':
-            return <DidsList runtime={runtime} />
-          case 'create':
-            return <DidsCreate runtime={runtime} />
-          case 'import':
-            return <DidsImport runtime={runtime} />
-          case 'edit':
-            return <DidsEdit runtime={runtime} />
+          // case 'list':
+          //   return <DidsList runtime={runtime} />
+          // case 'create':
+          //   return <DidsCreate runtime={runtime} />
+          // case 'import':
+          //   return <DidsImport runtime={runtime} />
+          // case 'edit':
+          //   return <DidsEdit runtime={runtime} />
           default:
             return <div>Unknown screen</div>
         }
       case 'credentials':
         switch (screen) {
           case 'list':
-            return <CredentialsList runtime={runtime} />
+          // return <CredentialsList runtime={runtime} />
           default:
             return <div>Unknown screen</div>
         }
@@ -108,7 +109,7 @@ export default function PopupApp(): JSX.Element {
   }
 
   return (
-    <div>
+    <View>
       <AppDrawer
         open={drawerOpen}
         variant={'temporary'}
@@ -197,7 +198,7 @@ export default function PopupApp(): JSX.Element {
         }}
         isFullscreen={fullscreen}
       /> */}
-      {loading ? <div>Loading...</div> : null}
+      {loading ? <Text>Loading...</Text> : null}
       {!loading && masterPassword === '' ? (
         <UnlockStorageScreen
           onUnlock={(password: string) => {
@@ -207,6 +208,6 @@ export default function PopupApp(): JSX.Element {
       ) : null}
       {runtime !== null ? currentComponent : null}
       {/* <Copyright /> */}
-    </div>
+    </View>
   )
 }

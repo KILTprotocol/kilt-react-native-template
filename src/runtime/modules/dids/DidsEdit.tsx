@@ -212,7 +212,7 @@ export function DidsEdit<R extends DidApiProvider & KeysApiProvider> (props: {
   return (
     <Container>
       <Box>
-        <h1>Edit Did</h1>
+        <Text>Edit Did</Text>
         <Grid container spacing={1} direction="column">
           <Grid item xs={3}>
             <DidSelect possibleDids={availableDids} />

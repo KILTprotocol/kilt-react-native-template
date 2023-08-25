@@ -67,7 +67,7 @@ export default function CredentialsList<R extends CredentialStoreApiProvider>(pr
   return (
     <Container>
       <Box>
-        <h1>Credentials</h1>
+        <Text>Credentials</Text>
         <List>
           {creds.map((cred) => {
             return (

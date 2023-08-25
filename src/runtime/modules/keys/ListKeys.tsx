@@ -32,7 +32,7 @@ export default function ListKeys<R extends KeysApiProvider>(props: { runtime: R 
   return (
     <Container>
       <Box>
-        <h1>Keys</h1>
+        <Text>Keys</Text>
         <List>
           {keys.map((key) => {
             return (

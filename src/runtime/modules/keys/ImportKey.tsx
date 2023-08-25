@@ -45,7 +45,7 @@ export default function ImportKey<R extends KeysApiProvider> (props: { runtime: 
   return (
       <Container>
         <Box>
-          <h1>Import Key</h1>
+          <Text>Import Key</Text>
           <Grid container direction="column" spacing={1}>
             <Grid item>
               <TextInput

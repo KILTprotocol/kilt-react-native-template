@@ -147,7 +147,7 @@ export function DidsCreate<R extends DidApiProvider & KeysApiProvider> (props: {
   return (
     <Container>
       <Box>
-        <h1>Create Did</h1>
+        <Text>Create Did</Text>
         <Grid container spacing={1} direction="column">
           <Grid item xs={3}>
             <TextInput

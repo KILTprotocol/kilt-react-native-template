@@ -16,7 +16,7 @@ export function CredentialDetails({ cred }: { cred: KiltCredential }): JSX.Eleme
   })
   return (
     <View>
-      <h1>Credential Details</h1>
+      <Text>Credential Details</Text>
       <Text>{cred.cType.title}</Text>
       <FlatList
         data={[cred]}

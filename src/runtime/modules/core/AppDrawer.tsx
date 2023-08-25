@@ -2,6 +2,7 @@ import React from 'react'
 import { Text, View, Button } from 'react-native'
 import { createDrawerNavigator } from '@react-navigation/drawer'
 import { NavigationContainer } from '@react-navigation/native'
+import App from '../../../App'
 
 const Drawer = createDrawerNavigator()
 
@@ -23,22 +24,14 @@ export interface AppDrawerProps {
   setScreen: (module: string, screen: string) => void
 }
 
-function HomeScreen({ navigation }) {
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Button onPress={() => navigation.navigate('Notifications')} title="Go to notifications" />
-    </View>
-  )
-}
 export function AppDrawer(props: AppDrawerProps): JSX.Element {
   const { open, closeDrawer, setScreen, entries, variant } = props
 
   return (
-    <NavigationContainer>
-      <Drawer.Navigator initialRouteName="Home">
-        <Text>Nessie protects your Identity</Text>
-        <Drawer.Screen name="Home" component={HomeScreen} />
-        {/* {entries.map((entry) => {
+    <Drawer.Navigator initialRouteName="App">
+      <Text>Nessie protects your Identity</Text>
+      <Drawer.Screen name="App" component={App} />
+      {/* {entries.map((entry) => {
             return (
               <React.Fragment key={entry.name}>
                 <ListSubheader key={entry.name} component="div" id="nested-list-subheader">
@@ -61,7 +54,6 @@ export function AppDrawer(props: AppDrawerProps): JSX.Element {
               </React.Fragment>
             )
           })} */}
-      </Drawer.Navigator>
-    </NavigationContainer>
+    </Drawer.Navigator>
   )
 }

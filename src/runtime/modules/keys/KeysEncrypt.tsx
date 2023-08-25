@@ -72,7 +72,7 @@ export default function KeysEncrypt<R extends KeysApiProvider> (props: { runtime
   return (
       <Container>
         <Box>
-          <h1>Encrypt</h1>
+          <Text>Encrypt</Text>
           <Grid container spacing={1} direction="column">
             <Grid item>
               <SenderSelect />

@@ -74,7 +74,7 @@ export default function KeysDecrypt<R extends KeysApiProvider> (props: { runtime
   return (
     <Container>
       <Box>
-        <h1>Decrypt</h1>
+        <Text>Decrypt</Text>
         <Grid container spacing={1} direction="column">
           <Grid item>
             <ReceiverSelect />

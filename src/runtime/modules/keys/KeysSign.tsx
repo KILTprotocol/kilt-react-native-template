@@ -65,7 +65,7 @@ export default function KeysSign<R extends KeysApiProvider> (props: { runtime: R
   return (
       <Container>
         <Box>
-          <h1>Sign</h1>
+          <Text>Sign</Text>
           <Grid container spacing={1} direction="column">
             <Grid item>
               <PairSelect />
