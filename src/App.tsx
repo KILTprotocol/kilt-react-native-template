@@ -2,6 +2,11 @@ import React, { useEffect, useState } from 'react'
 import { connect, Did, ConfigService } from '@kiltprotocol/sdk-js'
 import { StatusBar } from 'expo-status-bar'
 import { StyleSheet, Text, View } from 'react-native'
+import { NavigationContainer } from '@react-navigation/native'
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import { UnlockStorageScreen } from './runtime/modules/storage/UnlockStorage'
+
+const Stack = createNativeStackNavigator()
 
 interface Styles {
   container: {
@@ -41,10 +46,10 @@ export default function App() {
     fetchDid()
   })
   return (
-    <View style={styles.container}>
-      <Text>KILT Basic template</Text>
-      <Text>Here is John Doe`s Did = {did}</Text>
-      <StatusBar />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="UnlockStorageScreen" component={UnlockStorageScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
   )
 }
