@@ -1,11 +1,11 @@
 import React from 'react'
 import { sendError, sendResponse } from '../../utils/response'
-
+import { View, Text } from 'react-native'
 import YesNo from '../../utils/YesNo'
 import type { KiltCredential, Container } from '../../interfaces'
 import { CredentialDetails } from '../credentialstore/CredentialDetails'
 
-function CredentialStoreConsent(): JSX.Element {
+export default function CredentialStoreConsentView({ navigation, route }): JSX.Element {
   const query = new URLSearchParams(window.location.search)
   const origin = query.get('__origin')
   const rawArgs = query.get('__args')
@@ -35,19 +35,12 @@ function CredentialStoreConsent(): JSX.Element {
         })
       }}
     >
-      <Container sx={{ textAlign: 'center' }}>
-        <h3>Store Credential</h3>
-        <p>Are you sure you want to store the following credential?</p>
-        <p>Origin: {origin}</p>
+      <View>
+        <Text>Store Credential</Text>
+        <Text>Are you sure you want to store the following credential?</Text>
+        <Text>Origin: {origin}</Text>
         <CredentialDetails cred={credential} />
-      </Container>
+      </View>
     </YesNo>
   )
 }
-
-const credentialStoreConsentView: Container = {
-  id: 'credential-store-consent',
-  component: CredentialStoreConsent,
-}
-
-export { credentialStoreConsentView }

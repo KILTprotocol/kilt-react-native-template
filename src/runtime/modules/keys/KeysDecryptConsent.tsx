@@ -1,10 +1,9 @@
 import React from 'react'
 import { sendError, sendResponse } from '../../utils/response'
-
+import { Text, View } from 'react-native'
 import YesNo from '../../utils/YesNo'
-import { type Container } from '../../interfaces'
 
-function KeysDecryptConsent(): JSX.Element {
+export default function KeysDecryptConsentView({ navigation, route }): JSX.Element {
   const query = new URLSearchParams(window.location.search)
   const origin = query.get('__origin')
   const rawArgs = query.get('__args')
@@ -35,27 +34,18 @@ function KeysDecryptConsent(): JSX.Element {
         })
       }}
     >
-      <Container sx={{ textAlign: 'center' }}>
-        <h3>Decrypt Data</h3>
-        <p>Are you sure you want to decrypt the following data?</p>
-        <p>
-          <strong>Receiver KID:</strong> {receiverKid}
-        </p>
-        <p>
-          <strong>Sender Pubkey:</strong> {senderPubkey}
-        </p>
-        <p>
-          <strong>Data:</strong> {msg}
-        </p>
-        <p>Origin: {origin}</p>
-      </Container>
+      <View>
+        <Text>Decrypt Data</Text>
+        <Text>Are you sure you want to decrypt the following data?</Text>
+
+        <Text>Receiver KID: {receiverKid}</Text>
+
+        <Text>Sender Pubkey: {senderPubkey} </Text>
+
+        <Text>Data: {msg}</Text>
+
+        <Text>Origin: {origin}</Text>
+      </View>
     </YesNo>
   )
 }
-
-const keysDecryptConsentViewContainer: Container = {
-  id: 'keys-decrypt-consent',
-  component: KeysDecryptConsent,
-}
-
-export { keysDecryptConsentView }

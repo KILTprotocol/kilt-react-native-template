@@ -1,10 +1,11 @@
 import React from 'react'
 import { sendError, sendResponse } from '../../utils/response'
-
+import { Text, View } from 'react-native'
 import YesNo from '../../utils/YesNo'
-import type { KiltCredential, Container } from '../../interfaces'
+import type { KiltCredential } from '../../interfaces'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
-function CredentialSelectView(): JSX.Element {
+export default function CredentialSelectView({ navigation, route }): JSX.Element {
   const query = new URLSearchParams(window.location.search)
   const origin = query.get('__origin')
   const rawArgs = query.get('__args')
@@ -38,15 +39,15 @@ function CredentialSelectView(): JSX.Element {
         })
       }}
     >
-      <Container sx={{ textAlign: 'center' }}>
-        <h3>Select Credential</h3>
-        <p>Please select a Credential to proceed.</p>
-        <p>Origin: {origin}</p>
-        <Grid container spacing={2} alignItems="center" justifyContent="center">
-          <Grid item>
-            <Person />
-          </Grid>
-          <Grid item>
+      <View>
+        <Text>Select Credential</Text>
+        <Text>Please select a Credential to proceed.</Text>
+        <Text>Origin: {origin}</Text>
+        <View>
+          <View>
+            <MaterialCommunityIcons name="person" color={'green'} />
+          </View>
+          {/* <View item>
             <Select
               value={selectedCredential}
               onChange={(event: SelectChangeEvent) => {
@@ -62,16 +63,9 @@ function CredentialSelectView(): JSX.Element {
                 )
               })}
             </Select>
-          </Grid>
-        </Grid>
-      </Container>
+          </View> */}
+        </View>
+      </View>
     </YesNo>
   )
 }
-
-const credentialSelectView: Container = {
-  id: 'credential-select-view',
-  component: CredentialSelectView,
-}
-
-export { credentialSelectView }

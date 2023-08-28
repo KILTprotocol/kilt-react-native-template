@@ -1,10 +1,11 @@
 import React from 'react'
 import { sendError, sendResponse } from '../../utils/response'
-
+import { View, Text } from 'react-native'
 import YesNo from '../../utils/YesNo'
-import type { DidDocument, Container } from '../../interfaces'
+import type { DidDocument } from '../../interfaces'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
-function DidSelectView(): JSX.Element {
+export default function DidSelectView({ navigation, route }): JSX.Element {
   const query = new URLSearchParams(window.location.search)
   const origin = query.get('__origin')
   const rawArgs = query.get('__args')
@@ -38,19 +39,19 @@ function DidSelectView(): JSX.Element {
         })
       }}
     >
-      <Container sx={{ textAlign: 'center' }}>
-        <h3>Select DID</h3>
-        <p>Please select a DID to proceed.</p>
-        <p>Origin: {origin}</p>
-        <Grid container spacing={2} alignItems="center" justifyContent="center">
-          <Grid item>
-            <Person />
-          </Grid>
-          <Grid item>
-            <Select
+      <View>
+        <Text>Select DID</Text>
+        <Text>Please select a DID to proceed.</Text>
+        <Text>Origin: {origin}</Text>
+        <View>
+          <View>
+            <MaterialCommunityIcons name="person" color={'green'} />
+          </View>
+          <View>
+            {/* <TouchableOpacity
               value={selectedDid}
-              onChange={(_, value) => {
-                setSelectedDid(value as string)
+              onPress={() => {
+                setSelectedDid(selectedDid)
               }}
             >
               {dids.map((did) => {
@@ -60,17 +61,10 @@ function DidSelectView(): JSX.Element {
                   </MenuItem>
                 )
               })}
-            </Select>
-          </Grid>
-        </Grid>
-      </Container>
+            </TouchableOpacity> */}
+          </View>
+        </View>
+      </View>
     </YesNo>
   )
 }
-
-const didSelectViewContainer: Container = {
-  id: 'did-select-view',
-  component: DidSelectView,
-}
-
-export { didSelectViewContainer }

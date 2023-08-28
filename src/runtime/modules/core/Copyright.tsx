@@ -1,19 +1,14 @@
 import React from 'react'
+import { Linking, TouchableOpacity } from 'react-native'
 
 export function Copyright(): JSX.Element {
-  const openBotLabs = (): void => {
-    void chrome.tabs.create({
-      url: 'https://botlabs.org/',
-      selected: true,
-    })
-  }
-
   return (
-    <Text variant="body2" color="text.secondary" align="center" onClick={openBotLabs}>
-      <Link color="inherit" href={'https://botlabs.org/'}>
-        {'Copyright Botlabs GmbH '}
-        {new Date().getFullYear()}.
-      </Link>
-    </Text>
+    <TouchableOpacity onPress={() => Linking.openURL('https://botlabs.org/')}>
+      https://botlabs.org/
+      <br />
+      Copyright Botlabs GmbH
+      <br />
+      {new Date().getFullYear()}.
+    </TouchableOpacity>
   )
 }

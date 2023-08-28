@@ -1,19 +1,26 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Text, View, TextInput, TouchableOpacity } from 'react-native'
 import BouncyCheckbox from 'react-native-bouncy-checkbox'
 import { NessieRuntime } from '../../index'
-import { OnboardUser } from './OnboardUser'
+import OnboardUser from './OnboardUser'
 import { Storage } from './storage'
 import * as SecureStore from 'expo-secure-store'
+import { CommonActions } from '@react-navigation/native'
+
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
 
 const textDecoder = new TextDecoder()
 const textEncoder = new TextEncoder()
 
 interface UnlockStorageScreenProps {
   onUnlock: (password: string) => void
+  navigation: any
+  route: any
 }
 
-export function UnlockStorageScreen(props: UnlockStorageScreenProps): JSX.Element {
+// type Props = NativeStackScreenProps<UnlockStorageScreenProps, 'UnlockStorageScreen', 'MyStack'>
+
+export default function UnlockStorageScreen(props: UnlockStorageScreenProps) {
   const [password, setPassword] = useState('Enter your password')
   const [rememberPassword, setRememberPassword] = useState(false)
   const [error, setError] = useState('')
@@ -23,11 +30,12 @@ export function UnlockStorageScreen(props: UnlockStorageScreenProps): JSX.Elemen
 
   const checkIfStorageIsInitialized = async (): Promise<boolean> => {
     const result = await SecureStore.getItemAsync('nessie-initialized')
-    if (!result) throw new Error('UnlockStorage If storage is not initialized')
-    return result!['nessie-initialized'] !== undefined
+    return result !== undefined
   }
+
   const rememberPasswordHandler = () => setRememberPassword(!rememberPassword)
-  React.useEffect((): void => {
+
+  useEffect((): void => {
     checkIfStorageIsInitialized()
       .then((initialized) => {
         setStorageInitialized(initialized)
@@ -52,11 +60,11 @@ export function UnlockStorageScreen(props: UnlockStorageScreenProps): JSX.Elemen
 
   const checkForCachedPassword = async (): Promise<void> => {
     const result = await SecureStore.getItemAsync('nessie-password')
-
-    if (result && result['nessie-password'] !== undefined) {
-      const correct = await checkIfPasswordIsCorrect(result['nessie-password'])
+    if (result && result !== undefined) {
+      const correct = await checkIfPasswordIsCorrect(result)
+      console.log('Helping the correct', correct)
       if (correct) {
-        props.onUnlock(result['nessie-password'])
+        props.onUnlock(result)
       } else {
         await SecureStore.deleteItemAsync('nessie-password')
       }
@@ -69,7 +77,7 @@ export function UnlockStorageScreen(props: UnlockStorageScreenProps): JSX.Elemen
       .then((correct) => {
         if (correct) {
           if (rememberPassword) {
-            SecureStore.getItemAsync({ 'nessie-password': password }).catch(console.error)
+            SecureStore.getItemAsync('nessie-password').catch(console.error)
           }
           props.onUnlock(password)
         }
@@ -80,10 +88,8 @@ export function UnlockStorageScreen(props: UnlockStorageScreenProps): JSX.Elemen
   if (storageInitialized === null) {
     return (
       <View>
-        <>
-          <Text>Unlock Storage</Text>
-          <Text>Checking if storage is initialized...</Text>
-        </>
+        <Text>Unlock Storage</Text>
+        <Text>Checking if storage is initialized...</Text>
       </View>
     )
   }
@@ -95,11 +101,11 @@ export function UnlockStorageScreen(props: UnlockStorageScreenProps): JSX.Elemen
           const store = new Storage(runtime, password)
           Promise.all([
             store.set('test', textEncoder.encode('test')),
-            SecureStore.setItemAsync('nessie-initialized', 'true'),
+            store.set('nessie-initialized', textEncoder.encode('true')),
           ])
             .then(() => {
               if (rememberPassword) {
-                SecureStore.setItemAsync('nessie-password', password).catch(console.error)
+                store.set('nessie-password', textEncoder.encode(password)).catch(console.error)
               }
               props.onUnlock(password)
             })
@@ -112,16 +118,18 @@ export function UnlockStorageScreen(props: UnlockStorageScreenProps): JSX.Elemen
     )
   }
 
+  console.log('I am storage',  storageInitialized)
+
   return (
     <View>
-      <>
-        <Text>Unlock Storage</Text>
-        <Text>Enter your password to unlock the storage.</Text>
-        <TextInput value={password} onChange={setPassword} />
-        <BouncyCheckbox onPress={rememberPasswordHandler} /> <Text>Remember Password</Text>
-        <TouchableOpacity onPress={onInsertPassword}>Unlock</TouchableOpacity>
-        <Text>{error}</Text>
-      </>
+      <Text>Unlock Storage</Text>
+      <Text>Enter your password to unlock the storage.</Text>
+      <TextInput value={password} onChangeText={setPassword} />
+      {/* <BouncyCheckbox onPress={rememberPasswordHandler} /> <Text>Remember Password</Text> */}
+      <TouchableOpacity onPress={onInsertPassword}>
+        <Text>Unlock with your Password</Text>
+      </TouchableOpacity>
+      <Text>{error}</Text>
     </View>
   )
 }

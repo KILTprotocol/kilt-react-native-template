@@ -1,5 +1,6 @@
 import type { Module, StorageApi, NessieRequest, NessieResponse, CoreApi } from '../../interfaces'
 import * as SecureStore from 'expo-secure-store'
+import * as RootNavigation from './../../../RootNavigation'
 
 import { dummyEncryptData as encryptData, dummyDecryptData as decryptData } from './crypto'
 
@@ -63,32 +64,32 @@ class Storage<R extends CoreApi> implements StorageApi, Module {
   async processRPCRequest(req: NessieRequest): Promise<NessieResponse> {
     switch (req.method) {
       case 'set': {
-        console.log('storage.ts: set', req.args)
-        const key = (req.args as any)[0] as string
-        const value = (req.args as any)[1] as string
+        console.log('storage.ts: set', req.params)
+        const key = (req.params as any)[0] as string
+        const value = (req.params as any)[1] as string
         await this.set(key, Uint8Array.from(Buffer.from(value, 'utf8')))
         return { result: true }
       }
       case 'get': {
-        console.log('storage.ts: get', req.args)
-        if (typeof (req.args as any)[0] !== 'string') {
+        console.log('storage.ts: get', req.params)
+        if (typeof (req.params as any)[0] !== 'string') {
           throw new Error('Invalid arguments.')
         }
-        const key = (req.args as any)[0] as string
+        const key = (req.params as any)[0] as string
         const value = await this.get(key)
         return { result: Buffer.from(value).toString('utf8') }
       }
       case 'remove': {
-        console.log('storage.ts: remove', req.args)
-        if (typeof (req.args as any)[0] !== 'string') {
+        console.log('storage.ts: remove', req.params)
+        if (typeof (req.params as any)[0] !== 'string') {
           throw new Error('Invalid arguments.')
         }
-        const key = (req.args as any)[0] as string
+        const key = (req.params as any)[0] as string
         await this.remove(key)
         return { result: true }
       }
       case 'all': {
-        console.log('storage.ts: all', req.args)
+        console.log('storage.ts: all', req.params)
         const result = await this.all()
         return { result: result.map(([key, value]) => [key, Buffer.from(value).toString('utf8')]) }
       }
@@ -109,16 +110,13 @@ class Storage<R extends CoreApi> implements StorageApi, Module {
       return this.password
     }
     // if not, open the popup to get the password
-    const resp = await this.runtime.openPopup('get-password', {
-      origin: 'unknown',
-      args: {},
-    })
-    if (resp.result === undefined) {
-      throw new Error('No password provided.')
-    }
-    this.password = (resp.result as { password: string }).password
-    SecureStore.setItemAsync('password', this.password).catch(console.error)
-    return this.password
+    RootNavigation.navigate('UnlockStorageScreen', {})
+    // if (resp === undefined) {
+    //   throw new Error('No password provided.')
+    // }
+    // this.password = (resp.result as { password: string }).password
+    // SecureStore.setItemAsync('password', this.password).catch(console.error)
+    return password
   }
 }
 

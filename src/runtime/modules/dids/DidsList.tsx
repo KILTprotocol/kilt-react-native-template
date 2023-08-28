@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react'
 
 import { type DidApiProvider, type DidDocument } from '../../interfaces'
 import Snackbar from '../../utils/snackbar'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
-export default function DidsList<R extends DidApiProvider>(props: { runtime: R }): JSX.Element {
+export default function DidsList<R extends DidApiProvider>({ navigation, route }): JSX.Element {
   const didsApi = props.runtime.getDidApi()
 
   const [dids, setDids] = useState<DidDocument[]>([])
@@ -80,7 +81,7 @@ export default function DidsList<R extends DidApiProvider>(props: { runtime: R }
                   }}
                 >
                   <ListItemIcon>
-                    <PersonIcon />
+                    <MaterialCommunityIcons name="person" color={'green'} />
                   </ListItemIcon>
                   <ListItemText
                     primary={<Text noWrap>{did.alsoKnownAs[0] ?? 'No Name'}</Text>}

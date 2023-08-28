@@ -11,10 +11,9 @@ import type {
 } from '../../interfaces'
 import generateName from '../../utils/generateName'
 import { DidDocument } from './DidDocument'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
-export function DidsEdit<R extends DidApiProvider & KeysApiProvider> (props: {
-  runtime: R
-}): JSX.Element {
+export function DidsEdit<R extends DidApiProvider & KeysApiProvider> ({ navigation, route }): JSX.Element {
   const { runtime } = props
   const didsApi = runtime.getDidApi()
   const keysApi = runtime.getKeysApi()
@@ -74,7 +73,8 @@ export function DidsEdit<R extends DidApiProvider & KeysApiProvider> (props: {
             <MenuItem key={did.id} value={did.id}>
               <Grid container spacing={1} direction="row" alignItems="center">
                 <Grid item>
-                  <PersonIcon />
+                <MaterialCommunityIcons name="person" color={'green'} />
+
                 </Grid>
                 <Grid item>
                   <Text >{did.alsoKnownAs[0] ?? 'No Name'}</Text>

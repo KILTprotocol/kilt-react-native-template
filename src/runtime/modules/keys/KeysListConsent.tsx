@@ -4,10 +4,11 @@ import { sendError, sendResponse } from '../../utils/response'
 
 import { type KeyInfo, type Container } from '../../interfaces'
 import { CacheTimeSelect } from '../../utils/CacheTimeSelect'
+import { View, Text, TouchableOpacity } from 'react-native'
 
-// KeysListConsent gets a list of keys as arguments and asks the user to confirm
+// KeysViewConsent gets a View of keys as arguments and asks the user to confirm
 // which of the keys they want to share with the requesting origin.
-function KeysListConsent(): JSX.Element {
+export default function KeysListConsentView({ navigation, route }): JSX.Element {
   const query = new URLSearchParams(window.location.search)
   const origin = query.get('__origin')
   const rawArgs = query.get('__args')
@@ -44,14 +45,14 @@ function KeysListConsent(): JSX.Element {
   }
 
   return (
-    <Container sx={{ textAlign: 'center' }}>
-      <h3>Share Keys</h3>
-      <p>Please select the keys you want to share.</p>
-      <p>Origin: {origin}</p>
-      <List>
+    <View>
+      <Text>Share Keys</Text>
+      <Text>Text lease select the keys you want to share.</Text>
+      <Text>Origin: {origin}</Text>
+      {/* <View>
         {keys.map((key) => {
           return (
-            <ListItem
+            <ViewItem
               key={key.kid}
               secondaryAction={
                 <IconButton
@@ -64,15 +65,15 @@ function KeysListConsent(): JSX.Element {
                 </IconButton>
               }
             >
-              <ListItemButton
+              <ViewItemButton
                 onClick={() => {
                   handleSelect(key.kid)
                 }}
               >
-                <ListItemIcon>
+                <ViewItemIcon>
                   <VpnKeyIcon />
-                </ListItemIcon>
-                <ListItemText
+                </ViewItemIcon>
+                <ViewItemText
                   secondary={<Text noWrap>{key.kid}</Text>}
                   primary={
                     <React.Fragment>
@@ -88,11 +89,11 @@ function KeysListConsent(): JSX.Element {
                     </React.Fragment>
                   }
                 />
-              </ListItemButton>
-            </ListItem>
+              </ViewItemButton>
+            </ViewItem>
           )
         })}
-      </List>
+      </View>
       <Grid container alignItems="center" justifyContent="center">
         <Grid item xs={8}>
           <CacheTimeSelect onSelect={setCacheSeconds} />
@@ -123,14 +124,7 @@ function KeysListConsent(): JSX.Element {
             Yes
           </TouchableOpacity>
         </Grid>
-      </Grid>
-    </Container>
+      </Grid> */}
+    </View>
   )
 }
-
-const keysListConsentViewContainer: Container = {
-  id: 'keys-list-consent',
-  component: KeysListConsent,
-}
-
-export { keysListConsentView }

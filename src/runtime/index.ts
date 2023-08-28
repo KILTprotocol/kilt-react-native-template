@@ -72,22 +72,8 @@ class NessieRuntime implements CoreApi, StorageApiProvider {
     return await this.storage.getPassword()
   }
 
-  async openPopup(view: string, args: PopupArgs): Promise<NessieResponse> {
-    const requestId = crypto.randomUUID()
-    const url = `popup.html?__id=${requestId}&__view=${view}&__args=${encodeURIComponent(
-      JSON.stringify(args.args)
-    )}&__origin=${args.origin}`
-    chrome.windows
-      .create({
-        url,
-        type: 'popup',
-      })
-      .catch((err) => {
-        console.error('background.js: error creating window', err)
-      })
-    return await new Promise<NessieResponse>((resolve, reject) => {
-      this.requests.set(requestId, { resolve, reject })
-    })
+  async openPopup(navigation, args: PopupArgs): Promise<NessieResponse> {
+    return navigation.navigate(args)
   }
 
   handlePopupResponse(resp: NessieResponse): void {

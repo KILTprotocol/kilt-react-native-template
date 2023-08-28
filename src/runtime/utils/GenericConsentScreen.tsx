@@ -1,11 +1,9 @@
 import React from 'react'
-import { View } from 'react-native'
+import { View, Text } from 'react-native'
 import { sendError, sendResponse } from './response'
-
 import YesNo from './YesNo'
-import { type Container } from '../interfaces'
 
-function GenericConsent(): JSX.Element {
+export default function GenericConsentView({ navigation, route }): JSX.Element {
   const query = new URLSearchParams(window.location.search)
   const origin = query.get('__origin')
   const rawArgs = query.get('__args')
@@ -37,16 +35,9 @@ function GenericConsent(): JSX.Element {
       }}
     >
       <View>
-        <p>{msg}</p>
-        <p>Origin: {origin}</p>
+        <Text>{msg}</Text>
+        <Text>Origin: {origin}</Text>
       </View>
     </YesNo>
   )
 }
-
-const genericConsentView: Container = {
-  id: 'generic-consent',
-  component: GenericConsent,
-}
-
-export { genericConsentView }

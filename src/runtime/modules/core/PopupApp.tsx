@@ -1,19 +1,19 @@
 import React from 'react'
-import { View, Text } from 'react-native'
+import { View, Text, Image } from 'react-native'
 import * as SecureStore from 'expo-secure-store'
-import { UnlockStorageScreen } from '../storage/UnlockStorage'
+import UnlockStorageScreen from '../storage/UnlockStorage'
 import ListKeys from '../keys/ListKeys'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 // import { Header } from './Header'
 import { AppDrawer } from './AppDrawer'
-// import { Copyright } from './Copyright'
+import { Copyright } from './Copyright'
 import { NessieRuntime } from '../../index'
 
 import ImportKey from '../keys/ImportKey'
 import KeysSign from '../keys/KeysSign'
 import KeysEncrypt from '../keys/KeysEncrypt'
-import KeysDecrypt from '../keys/KeysDecrypt'
+// import KeysDecrypt from '../keys/KeysDecrypt'
 
 import DidsList from '../dids/DidsList'
 import { DidsCreate } from '../dids/DidsCreate'
@@ -22,28 +22,30 @@ import { DidsEdit } from '../dids/DidsEdit'
 
 import CredentialsList from '../credentialstore/CredentialsList'
 
-export default function PopupApp(): JSX.Element {
+export default function PopupApp({ navigation, route }) {
   const [masterPassword, setMasterPassword] = React.useState('')
   const [loading, setLoading] = React.useState(true)
   const [runtime, setRuntime] = React.useState<NessieRuntime | null>(null)
   const [drawerOpen, setDrawerOpen] = React.useState(false)
   const [currentComponent, setCurrentComponent] = React.useState(() => (
-    <div>
-      <img src="logo.png" style={{ width: '80%', marginTop: '5%' }} />
-    </div>
+    <View>{/* <Image source={'logo.png'} style={{ width: '80%', marginTop: '5%' }} /> */}</View>
   ))
 
   // const urlParams = new URLSearchParams(window.location.search)
   // const fullscreen = urlParams.get('__fullscreen') !== null
 
   const checkForCachedPassword = async (): Promise<void> => {
-    const result = await SecureStore.getItemAsync('nessie-password')
-    if (result['nessie-password'] !== undefined) {
-      setMasterPassword(result['nessie-password'])
+    // const result = await SecureStore.getItemAsync('nessie-password')
+    const result = null
+    if (result !== null) {
+      setMasterPassword(result)
     }
+
     setLoading(false)
   }
-
+  const handler = (password: string) => {
+    setMasterPassword(password)
+  }
   React.useEffect((): void => {
     checkForCachedPassword().catch(console.error)
   }, [])
@@ -63,54 +65,54 @@ export default function PopupApp(): JSX.Element {
     }
   }, [masterPassword])
 
-  const getScreen = (module: string, screen: string): JSX.Element => {
-    if (runtime === null) {
-      return <div>Runtime not initialized</div>
-    }
-    switch (module) {
-      case 'keys':
-        switch (screen) {
-          // case 'list':
-          //   return <ListKeys runtime={runtime} />
-          // case 'import':
-          //   return <ImportKey runtime={runtime} />
-          // case 'sign':
-          //   return <KeysSign runtime={runtime} />
-          // case 'encrypt':
-          //   return <KeysEncrypt runtime={runtime} />
-          // case 'decrypt':
-          //   return <KeysDecrypt runtime={runtime} />
-          default:
-            return <div>Unknown screen</div>
-        }
-      case 'dids':
-        switch (screen) {
-          // case 'list':
-          //   return <DidsList runtime={runtime} />
-          // case 'create':
-          //   return <DidsCreate runtime={runtime} />
-          // case 'import':
-          //   return <DidsImport runtime={runtime} />
-          // case 'edit':
-          //   return <DidsEdit runtime={runtime} />
-          default:
-            return <div>Unknown screen</div>
-        }
-      case 'credentials':
-        switch (screen) {
-          case 'list':
-          // return <CredentialsList runtime={runtime} />
-          default:
-            return <div>Unknown screen</div>
-        }
-      default:
-        return <div>Unknown module</div>
-    }
-  }
-
+  // const getScreen = (module: string, screen: string): JSX.Element => {
+  //   if (runtime === null) {
+  //     return <View>Runtime not initialized</View>
+  //   }
+  //   switch (module) {
+  //     case 'keys':
+  //       switch (screen) {
+  //         // case 'list':
+  //         //   return <ListKeys runtime={runtime} />
+  //         // case 'import':
+  //         //   return <ImportKey runtime={runtime} />
+  //         // case 'sign':
+  //         //   return <KeysSign runtime={runtime} />
+  //         // case 'encrypt':
+  //         //   return <KeysEncrypt runtime={runtime} />
+  //         // case 'decrypt':
+  //         //   return <KeysDecrypt runtime={runtime} />
+  //         default:
+  //           return <View>Unknown screen</View>
+  //       }
+  //     case 'dids':
+  //       switch (screen) {
+  //         // case 'list':
+  //         //   return <DidsList runtime={runtime} />
+  //         // case 'create':
+  //         //   return <DidsCreate runtime={runtime} />
+  //         // case 'import':
+  //         //   return <DidsImport runtime={runtime} />
+  //         // case 'edit':
+  //         //   return <DidsEdit runtime={runtime} />
+  //         default:
+  //           return <View>Unknown screen</View>
+  //       }
+  //     case 'credentials':
+  //       switch (screen) {
+  //         case 'list':
+  //         // return <CredentialsList runtime={runtime} />
+  //         default:
+  //           return <View>Unknown screen</View>
+  //       }
+  //     default:
+  //       return <View>Unknown module</View>
+  //   }
+  // }
+  console.log(masterPassword)
   return (
     <View>
-      <AppDrawer
+      {/* <AppDrawer
         open={drawerOpen}
         variant={'temporary'}
         entries={[
@@ -191,7 +193,7 @@ export default function PopupApp(): JSX.Element {
           setCurrentComponent(component)
           setDrawerOpen(false)
         }}
-      />
+      /> */}
       {/* <Header
         openDrawer={() => {
           setDrawerOpen(true)
@@ -200,13 +202,11 @@ export default function PopupApp(): JSX.Element {
       /> */}
       {loading ? <Text>Loading...</Text> : null}
       {!loading && masterPassword === '' ? (
-        <UnlockStorageScreen
-          onUnlock={(password: string) => {
-            setMasterPassword(password)
-          }}
-        />
+        <UnlockStorageScreen onUnlock={handler} navigation route />
       ) : null}
       {runtime !== null ? currentComponent : null}
+
+      {masterPassword ? <Text>I am something</Text> : null}
       {/* <Copyright /> */}
     </View>
   )

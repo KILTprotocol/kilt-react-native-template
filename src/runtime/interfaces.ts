@@ -8,10 +8,10 @@ export interface KeyInfo {
 }
 
 interface NessieRequest {
-  origin: string
+  name: string
   module: string
   method: string
-  args: unknown
+  params: unknown
 }
 
 interface NessieResponse {
@@ -23,8 +23,8 @@ interface NessieResponse {
 }
 
 interface PopupArgs {
-  origin: string
-  args: unknown
+  name: string
+  params: unknown
 }
 
 interface CoreApi {

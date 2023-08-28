@@ -1,10 +1,10 @@
 import React from 'react'
 import { sendError, sendResponse } from '../../utils/response'
+import { Text, View } from 'react-native'
 
 import YesNo from '../../utils/YesNo'
-import { type Container } from '../../interfaces'
 
-function KeysEncryptConsent(): JSX.Element {
+export default function KeysEncryptConsentView({ navigation, route }): JSX.Element {
   const query = new URLSearchParams(window.location.search)
   const origin = query.get('__origin')
   const rawArgs = query.get('__args')
@@ -35,27 +35,18 @@ function KeysEncryptConsent(): JSX.Element {
         })
       }}
     >
-      <Container sx={{ textAlign: 'center' }}>
-        <h3>Encrypt Data</h3>
-        <p>Are you sure you want to encrypt the following data?</p>
-        <p>
-          <strong>Sender KID:</strong> {senderKid}
-        </p>
-        <p>
-          <strong>Receiver Pubkey:</strong> {receiverPubkey}
-        </p>
-        <p>
-          <strong>Data:</strong> {msg}
-        </p>
-        <p>Origin: {origin}</p>
-      </Container>
+      <View>
+        <Text>Encrypt Data</Text>
+        <Text>Are you sure you want to encrypt the following data?</Text>
+
+        <Text>Sender KID: {senderKid}</Text>
+
+        <Text>Receiver Pubkey: {receiverPubkey} </Text>
+
+        <Text>Data: {msg}</Text>
+
+        <Text>Origin: {origin}</Text>
+      </View>
     </YesNo>
   )
 }
-
-const keysEncryptConsentViewContainer: Container = {
-  id: 'keys-encrypt-consent',
-  component: KeysEncryptConsent,
-}
-
-export { keysEncryptConsentView }
