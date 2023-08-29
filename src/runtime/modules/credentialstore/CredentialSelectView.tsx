@@ -50,7 +50,7 @@ export default function CredentialSelectView({ navigation, route }): JSX.Element
           {/* <View item>
             <Select
               value={selectedCredential}
-              onChange={(event: SelectChangeEvent) => {
+              onChangeText={(event: SelectChangeEvent) => {
                 console.log('selected credential: ', event.target.value)
                 setSelectedCredential(event.target.value)
               }}

@@ -26,14 +26,9 @@ export default function CredentialsList<R extends CredentialStoreApiProvider>(pr
   const [selectedCred, setSelectedCred] = useState<KiltCredential | null>(null)
 
   function updateCredentialList(): void {
-    credentialStoreApi
-      .list()
-      .then((creds) => {
-        setCreds(creds)
-      })
-      .catch((e) => {
-        console.error(e)
-      })
+    credentialStoreApi.list().then((creds) => {
+      setCreds(creds)
+    })
   }
 
   useEffect(() => {

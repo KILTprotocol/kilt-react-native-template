@@ -21,21 +21,19 @@ export default function KeysSign<R extends KeysApiProvider> (props: { runtime: R
         setSelectedKey(signingKeys[0].kid)
       }
       setKeys(signingKeys)
-    }).catch((e) => {
-      console.error(e)
     })
   }, [])
 
   const PairSelect = (): JSX.Element => (
-      < fullWidth>
+      < >
         <InputLabel>Signer</InputLabel>
         <Select
-          fullWidth
+          
           id="pair"
           label="Signer"
           value={selectedKey}
-          onChange={(e) => {
-            setSelectedKey(e.target.value)
+          onChangeText={
+            setSelectedKey()
           } }
         >
           {keys.map((key) => (
@@ -51,8 +49,6 @@ export default function KeysSign<R extends KeysApiProvider> (props: { runtime: R
     if (selectedKey === undefined) return
     keysApi.sign(selectedKey, enc.encode(text)).then((sig) => {
       setSig('0x' + Buffer.from(sig).toString('hex'))
-    }).catch((e) => {
-      console.error(e)
     })
   }
 
@@ -73,17 +69,17 @@ export default function KeysSign<R extends KeysApiProvider> (props: { runtime: R
             <Grid item>
               <TextInput
                 value={text}
-                onChange={(e) => { setText(e.target.value) }}
+                onChangeText={ setText}
                 label="Text"
-                fullWidth
+                
               />
             </Grid>
             <Grid item>
               <TextInput
                 value={sig}
-                onChange={(e) => {}}
+                onChangeText={setSig}
                 label="Signature"
-                fullWidth
+                
               />
             </Grid>
             <Grid item>

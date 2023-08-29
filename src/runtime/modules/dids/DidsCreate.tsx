@@ -41,15 +41,15 @@
 //     const [usage, setUsage] = useState('')
 
 //     const PairSelect = (): JSX.Element => (
-//       < fullWidth>
+//       < >
 //         <InputLabel>Key</InputLabel>
 //         <Select
-//           fullWidth
+//           
 //           id="pair"
 //           label="Key"
 //           value={key}
-//           onChange={(e) => {
-//             setKey(e.target.value)
+//           onChangeText={
+//             setKey()
 //           } }
 //         >
 //           {possibleKeys.map((key) => (
@@ -93,15 +93,15 @@
 //             <PairSelect/>
 //           </Grid>
 //           <Grid item xs={3}>
-//           < fullWidth>
+//           < >
 //             <InputLabel>Usage</InputLabel>
 //             <Select
-//               fullWidth
+//               
 //               id="usage"
 //               label="Usage"
 //               value={usage}
-//               onChange={(e) => {
-//                 setUsage(e.target.value)
+//               onChangeText={
+//                 setUsage()
 //               }}
 //             >
 //               {['authentication', 'attestation', 'delegation', 'encryption'].map((usage) => (
@@ -131,22 +131,22 @@
 //         <Grid container spacing={1} direction="column">
 //           <Grid item xs={3}>
 //             <TextInput
-//               fullWidth
+//               
 //               label="Did"
 //               value={did}
-//               onChange={(e) => {
-//                 setDid(e.target.value)
+//               onChangeText={
+//                 setDid()
 //               }}
 //             />
 //           </Grid>
 //           <Grid item xs={3}>
 //           <TextInput
-//                 fullWidth
+//                 
 //                 id="name"
 //                 label="Name"
 //                 value={name}
-//                 onChange={(e) => {
-//                   setName(e.target.value)
+//                 onChangeText={
+//                   setName()
 //                 }}
 //                 InputProps={{
 //                   endAdornment: (
@@ -163,7 +163,7 @@
 //             <KeyList didDocument={didDocument} possibleKeys={availableKeys} />
 //           </Grid>
 //           <Grid item xs={3}>
-//             <TouchableOpacity onClick={importDid} variant="contained" fullWidth>Import DID</TouchableOpacity>
+//             <TouchableOpacity onClick={importDid} variant="contained" >Import DID</TouchableOpacity>
 //           </Grid>
 //         </Grid>
 //       </Box>

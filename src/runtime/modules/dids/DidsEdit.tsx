@@ -47,8 +47,8 @@
 //           id="did"
 //           label="Did"
 //           value={selectedDid?.id ?? ''}
-//           onChange={(e) => {
-//             const did = possibleDids.find((did) => did.id === e.target.value)
+//           onChangeText={
+//             const did = possibleDids.find((did) => did.id === )
 //             setSelectedDid(did ?? null)
 //           } }
 //         >
@@ -79,15 +79,15 @@
 //     const [usage, setUsage] = useState('')
 
 //     const PairSelect = (): JSX.Element => (
-//       < fullWidth>
+//       < >
 //         <InputLabel>Key</InputLabel>
 //         <Select
-//           fullWidth
+//           
 //           id="pair"
 //           label="Key"
 //           value={key}
-//           onChange={(e) => {
-//             setKey(e.target.value)
+//           onChangeText={
+//             setKey()
 //           } }
 //         >
 //           {possibleKeys.map((key) => (
@@ -149,15 +149,15 @@
 //                   <PairSelect/>
 //               </Grid>
 //               <Grid item xs={6}>
-//                 < fullWidth>
+//                 < >
 //                   <InputLabel>Usage</InputLabel>
 //                   <Select
-//                   fullWidth
+//                   
 //                   id="usage"
 //                   label="Usage"
 //                   value={usage}
-//                   onChange={(e) => {
-//                     setUsage(e.target.value)
+//                   onChangeText={
+//                     setUsage()
 //                   }}
 //                   >
 //                   {['authentication', 'attestation', 'delegation', 'encryption'].map((usage) => (
@@ -200,15 +200,15 @@
 //           </Grid>
 //           <Grid item xs={3}>
 //           <TextInput
-//             fullWidth
+//             
 //             id="name"
 //             label="Name"
 //             value={name}
-//             onChange={(e) => {
+//             onChangeText={
 //               if (selectedDid === null) {
 //                 return
 //               }
-//               selectedDid.alsoKnownAs = [e.target.value]
+//               selectedDid.alsoKnownAs = []
 //               setSelectedDid(new DidDocument(selectedDid))
 //             }}
 //             InputProps={{
@@ -228,7 +228,7 @@
 //           <Grid item xs={3}>
 //             <TouchableOpacity onClick={() => {
 //               saveDid()
-//             }} variant="contained" fullWidth>Save Updates</TouchableOpacity>
+//             }} variant="contained" >Save Updates</TouchableOpacity>
 //           </Grid>
 //         </Grid>
 //       </Box>

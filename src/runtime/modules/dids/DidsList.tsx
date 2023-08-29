@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 
 import { type DidApiProvider, type DidDocument } from '../../interfaces'
-import Snackbar from '../../utils/snackbar'
+
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 export default function DidsList<R extends DidApiProvider>({ navigation, route }): JSX.Element {
@@ -15,16 +15,9 @@ export default function DidsList<R extends DidApiProvider>({ navigation, route }
   >('success')
 
   function updateDidList(): void {
-    didsApi
-      .list()
-      .then((dids) => {
-        setDids(dids)
-      })
-      .catch((e) => {
-        setSnackbarMessage(e.message)
-        setSnackbarSeverity('error')
-        setSnackbarOpen(true)
-      })
+    didsApi.list().then((dids) => {
+      setDids(dids)
+    })
   }
 
   useEffect(() => {
@@ -44,19 +37,12 @@ export default function DidsList<R extends DidApiProvider>({ navigation, route }
                   <IconButton
                     aria-label="comment"
                     onClick={() => {
-                      didsApi
-                        .remove(did.id)
-                        .then(() => {
-                          updateDidList()
-                          setSnackbarMessage('Did deleted')
-                          setSnackbarSeverity('success')
-                          setSnackbarOpen(true)
-                        })
-                        .catch((e) => {
-                          setSnackbarMessage(e.message)
-                          setSnackbarSeverity('error')
-                          setSnackbarOpen(true)
-                        })
+                      didsApi.remove(did.id).then(() => {
+                        updateDidList()
+                        setSnackbarMessage('Did deleted')
+                        setSnackbarSeverity('success')
+                        setSnackbarOpen(true)
+                      })
                     }}
                   >
                     <DeleteIcon />
@@ -66,18 +52,11 @@ export default function DidsList<R extends DidApiProvider>({ navigation, route }
                 <ListItemButton
                   onClick={() => {
                     // copy DID to clipboard
-                    navigator.clipboard
-                      .writeText(did.id)
-                      .then(() => {
-                        setSnackbarMessage('DID copied to clipboard')
-                        setSnackbarSeverity('success')
-                        setSnackbarOpen(true)
-                      })
-                      .catch((e) => {
-                        setSnackbarMessage(e.message)
-                        setSnackbarSeverity('error')
-                        setSnackbarOpen(true)
-                      })
+                    navigator.clipboard.writeText(did.id).then(() => {
+                      setSnackbarMessage('DID copied to clipboard')
+                      setSnackbarSeverity('success')
+                      setSnackbarOpen(true)
+                    })
                   }}
                 >
                   <ListItemIcon>
@@ -97,14 +76,7 @@ export default function DidsList<R extends DidApiProvider>({ navigation, route }
           })}
         </List>
       </Box>
-      <Snackbar
-        open={snackbarOpen}
-        handleClose={() => {
-          setSnackbarOpen(false)
-        }}
-        message={snackbarMessage}
-        severity={snackbarSeverity}
-      />
+      
     </Container>
   )
 }
