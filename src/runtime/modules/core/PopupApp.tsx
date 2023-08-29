@@ -1,26 +1,11 @@
 import React from 'react'
 import { View, Text, Image } from 'react-native'
 import * as SecureStore from 'expo-secure-store'
-import UnlockStorageScreen from '../storage/UnlockStorage'
+import UnlockStorageScreen from '../../../screens/UnlockStorageScreen'
 import ListKeys from '../keys/ListKeys'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
-// import { Header } from './Header'
-import { AppDrawer } from './AppDrawer'
-import { Copyright } from './Copyright'
 import { NessieRuntime } from '../../index'
-
-import ImportKey from '../keys/ImportKey'
-import KeysSign from '../keys/KeysSign'
-import KeysEncrypt from '../keys/KeysEncrypt'
-// import KeysDecrypt from '../keys/KeysDecrypt'
-
-import DidsList from '../dids/DidsList'
-import { DidsCreate } from '../dids/DidsCreate'
-import { DidsImport } from '../dids/DidsImport'
-import { DidsEdit } from '../dids/DidsEdit'
-
-import CredentialsList from '../credentialstore/CredentialsList'
 
 export default function PopupApp({ navigation, route }) {
   const [masterPassword, setMasterPassword] = React.useState('')

@@ -29,9 +29,9 @@ interface PopupArgs {
 
 interface CoreApi {
   unlock: () => Promise<void>
-  processRPCRequest: (req: NessieRequest) => Promise<NessieResponse>
-  openPopup: (view: string, args: PopupArgs) => Promise<NessieResponse>
-  handlePopupResponse: (resp: NessieResponse) => void
+  // processRPCRequest: (req: NessieRequest) => Promise<NessieResponse>
+  // openPopup: (view: string, args: PopupArgs) => Promise<NessieResponse>
+  // handlePopupResponse: (resp: NessieResponse) => void
 }
 
 interface Module {

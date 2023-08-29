@@ -6,8 +6,8 @@ import { StatusBar, StyleSheet, Text, View } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import UnlockStorageScreen from './runtime/modules/storage/UnlockStorage'
-import OnboardUser from './runtime/modules/storage/OnboardUser'
+import UnlockStorageScreen from './screens/UnlockStorageScreen'
+import OnboardUserScreen from './screens/OnboardUserScreen'
 import KeysSignConsentView from './runtime/modules/keys/KeysSignConsent'
 import KeysEncryptConsentView from './runtime/modules/keys/KeysEncryptConsent'
 import KeysDecryptConsentView from './runtime/modules/keys/KeysDecryptConsent'
@@ -17,6 +17,7 @@ import CredentialStoreConsentView from './runtime/modules/credentialapi/Credenti
 import DidSelectView from './runtime/modules/credentialapi/DidSelectView'
 import CredentialSelectView from './runtime/modules/credentialstore/CredentialSelectView'
 import PopupApp from './runtime/modules/core/PopupApp'
+import AuthContextProvider from './runtime/modules/storage/auth-context'
 
 const Stack = createNativeStackNavigator()
 
@@ -67,10 +68,8 @@ function Main() {
 function AuthStack() {
   return (
     <Stack.Navigator>
-      {/* <Stack.Screen name="main" component={Main} /> */}
-      <Stack.Screen name="PopupApp" component={PopupApp} />
       <Stack.Screen name="UnlockStorageScreen" component={UnlockStorageScreen} />
-      <Stack.Screen name="OnboardUser" component={OnboardUser} />
+      <Stack.Screen name="OnboardUserScreen" component={OnboardUserScreen} />
       {/* <Stack.Screen name="KeysSignConsentView" component={KeysSignConsentView} />
   <Stack.Screen name="KeysEncryptConsentView" component={KeysEncryptConsentView} />
   <Stack.Screen name="KeysDecryptConsentView" component={KeysDecryptConsentView} />
@@ -83,22 +82,24 @@ function AuthStack() {
   )
 }
 
-function AuthUser() {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen name="main" component={Main} />
-    </Stack.Navigator>
-  )
-}
+// function AuthUser() {
+//   return (
+//     <Stack.Navigator>
+//       <Stack.Screen name="main" component={Main} />
+//     </Stack.Navigator>
+//   )
+// }
 
 export default function App() {
   return (
-    <NavigationContainer ref={navigationRef}>
-      <SafeAreaView style={{ flex: 1 }}>
-        <StatusBar />
-        <AuthStack />
-        <AuthUser />
-      </SafeAreaView>
-    </NavigationContainer>
+    <AuthContextProvider>
+      <NavigationContainer ref={navigationRef}>
+        <SafeAreaView style={{ flex: 1 }}>
+          <StatusBar />
+          <AuthStack />
+          {/* <AuthUser /> */}
+        </SafeAreaView>
+      </NavigationContainer>
+    </AuthContextProvider>
   )
 }

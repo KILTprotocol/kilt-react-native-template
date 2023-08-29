@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { Text, View, TextInput, TouchableOpacity } from 'react-native'
 import BouncyCheckbox from 'react-native-bouncy-checkbox'
-import { NessieRuntime } from '../../index'
-import OnboardUser from './OnboardUser'
-import { Storage } from './storage'
+import { NessieRuntime } from '../runtime/index'
+import OnboardUser from './OnboardUserScreen'
+import { Storage } from '../runtime/modules/storage/storage'
 import * as SecureStore from 'expo-secure-store'
 import { CommonActions } from '@react-navigation/native'
 
@@ -30,7 +30,8 @@ export default function UnlockStorageScreen(props: UnlockStorageScreenProps) {
 
   const checkIfStorageIsInitialized = async (): Promise<boolean> => {
     const result = await SecureStore.getItemAsync('nessie-initialized')
-    return result !== undefined
+    console.log('result handle', result, password)
+    return !!result
   }
 
   const rememberPasswordHandler = () => setRememberPassword(!rememberPassword)
@@ -45,16 +46,24 @@ export default function UnlockStorageScreen(props: UnlockStorageScreenProps) {
 
   const checkIfPasswordIsCorrect = async (password: string): Promise<boolean> => {
     const store = new Storage(runtime, password)
+    console.log(store)
     try {
       const test = await store.get('test')
+      console.log('did happen 1?')
+
       if (textDecoder.decode(test) !== 'test') {
         setError('Incorrect password')
+        console.log('did happen 2?')
+
         return false
       }
     } catch (e) {
       setError('Incorrect password')
+      console.log('did happen 3?')
+
       return false
     }
+    console.log('did happen 4?')
     return true
   }
 
@@ -70,7 +79,7 @@ export default function UnlockStorageScreen(props: UnlockStorageScreenProps) {
       }
     }
   }
-  checkForCachedPassword().catch(console.error)
+  // checkForCachedPassword().catch(console.error)
 
   const onInsertPassword = (): void => {
     checkIfPasswordIsCorrect(password)
@@ -79,46 +88,24 @@ export default function UnlockStorageScreen(props: UnlockStorageScreenProps) {
           if (rememberPassword) {
             SecureStore.getItemAsync('nessie-password').catch(console.error)
           }
-          props.onUnlock(password)
+          // props.onUnlock(password)
         }
       })
       .catch(console.error)
   }
 
-  if (storageInitialized === null) {
-    return (
-      <View>
-        <Text>Unlock Storage</Text>
-        <Text>Checking if storage is initialized...</Text>
-      </View>
-    )
-  }
+  // if (storageInitialized === null) {
+  //   return (
+  //     <View>
+  //       <Text>Unlock Storage</Text>
+  //       <Text>Checking if storage is initialized...</Text>
+  //     </View>
+  //   )
+  // }
 
   if (!storageInitialized) {
-    return (
-      <OnboardUser
-        setMasterPassword={(password: string) => {
-          const store = new Storage(runtime, password)
-          Promise.all([
-            store.set('test', textEncoder.encode('test')),
-            store.set('nessie-initialized', textEncoder.encode('true')),
-          ])
-            .then(() => {
-              if (rememberPassword) {
-                store.set('nessie-password', textEncoder.encode(password)).catch(console.error)
-              }
-              props.onUnlock(password)
-            })
-            .catch((e: any) => {
-              console.error(e)
-              setError('Error initializing storage')
-            })
-        }}
-      />
-    )
+    return <OnboardUser />
   }
-
-  console.log('I am storage',  storageInitialized)
 
   return (
     <View>

@@ -1,6 +1,7 @@
 import type { Module, StorageApi, NessieRequest, NessieResponse, CoreApi } from '../../interfaces'
 import * as SecureStore from 'expo-secure-store'
 import * as RootNavigation from './../../../RootNavigation'
+import * as KeyStore from 'react-native-keychain'
 
 import { dummyEncryptData as encryptData, dummyDecryptData as decryptData } from './crypto'
 
@@ -116,7 +117,8 @@ class Storage<R extends CoreApi> implements StorageApi, Module {
     // }
     // this.password = (resp.result as { password: string }).password
     // SecureStore.setItemAsync('password', this.password).catch(console.error)
-    return password
+    // return password
+    return 'no'
   }
 }
 
