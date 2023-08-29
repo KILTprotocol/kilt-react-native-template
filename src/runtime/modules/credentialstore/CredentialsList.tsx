@@ -13,7 +13,7 @@
 import React, { useEffect, useState } from 'react'
 // import DeleteIcon from '@mui/icons-material/Delete'
 import type { CredentialStoreApiProvider, KiltCredential } from '../../interfaces'
-// import Snackbar from '../../utils/snackbar'
+
 // import { CreditCard } from '@mui/icons-material'
 import { CredentialDetails } from './CredentialDetails'
 
@@ -24,11 +24,6 @@ export default function CredentialsList<R extends CredentialStoreApiProvider>(pr
 
   const [creds, setCreds] = useState<KiltCredential[]>([])
   const [selectedCred, setSelectedCred] = useState<KiltCredential | null>(null)
-  // const [snackbarOpen, setSnackbarOpen] = useState(false)
-  // const [snackbarMessage, setSnackbarMessage] = useState('')
-  // const [snackbarSeverity, setSnackbarSeverity] = useState<
-  // 'success' | 'info' | 'warning' | 'error'
-  // >('success')
 
   function updateCredentialList(): void {
     credentialStoreApi
@@ -38,9 +33,6 @@ export default function CredentialsList<R extends CredentialStoreApiProvider>(pr
       })
       .catch((e) => {
         console.error(e)
-        // setSnackbarMessage(e.message)
-        // setSnackbarSeverity('error')
-        // setSnackbarOpen(true)
       })
   }
 
@@ -81,15 +73,9 @@ export default function CredentialsList<R extends CredentialStoreApiProvider>(pr
                         .remove(cred.rootHash)
                         .then(() => {
                           updateCredentialList()
-                          // setSnackbarMessage('Did deleted')
-                          // setSnackbarSeverity('success')
-                          // setSnackbarOpen(true)
                         })
                         .catch((e) => {
                           console.error(e)
-                          // setSnackbarMessage(e.message)
-                          // setSnackbarSeverity('error')
-                          // setSnackbarOpen(true)
                         })
                     }}
                   >
@@ -102,16 +88,8 @@ export default function CredentialsList<R extends CredentialStoreApiProvider>(pr
                     setSelectedCred(cred)
                     navigator.clipboard
                       .writeText(cred.rootHash)
-                      .then(() => {
-                        // setSnackbarMessage('Credential hash copied to clipboard')
-                        // setSnackbarSeverity('success')
-                        // setSnackbarOpen(true)
-                      })
-                      .catch((e) => {
-                        // setSnackbarMessage(e.message)
-                        // setSnackbarSeverity('error')
-                        // setSnackbarOpen(true)
-                      })
+                      .then(() => {})
+                      .catch((e) => {})
                   }}
                 >
                   <ListItemIcon>
@@ -131,14 +109,6 @@ export default function CredentialsList<R extends CredentialStoreApiProvider>(pr
           })}
         </List>
       </Box>
-      {/* <Snackbar
-        open={snackbarOpen}
-        handleClose={() => {
-          setSnackbarOpen(false)
-        }}
-        message={snackbarMessage}
-        severity={snackbarSeverity}
-      /> */}
     </Container>
   )
 }

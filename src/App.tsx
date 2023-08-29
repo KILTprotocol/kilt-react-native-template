@@ -20,6 +20,8 @@ import PopupApp from './runtime/modules/core/PopupApp'
 import AuthContextProvider, { AuthContext } from './runtime/modules/storage/auth-context'
 import styles from './styles/styles'
 import YesNo from './runtime/utils/YesNo'
+import { AppDrawer } from './runtime/modules/core/AppDrawer'
+import ImportKeyScreen from './screens/ImportKeyScreen'
 
 const Stack = createNativeStackNavigator()
 
@@ -49,57 +51,45 @@ function Main({ navigation }) {
       <TouchableOpacity style={styles.text} onPress={() => authContext.logout()}>
         <Text style={styles.text}>Logout</Text>
       </TouchableOpacity>
-
-      <TouchableOpacity
-        onPress={() => {
-          /* 1. Navigate to the Details route with params */
-          navigation.navigate('YesNo', {
-            title: 86,
-            children: 'anything you want here',
-            origin: 'Main',
-          })
-        }}
-      >
-        <Text style={styles.text}>Go to Yes or No</Text>
-      </TouchableOpacity>
     </View>
   )
 }
+// <TouchableOpacity
+//   onPress={() => {
+//     navigation.navigate('YesNo', {
+//       title: 86,
+//       children: 'anything you want here',
+//       origin: 'Main',
+//     })
+//   }}
+// >
+//   <Text style={styles.text}>Go to Yes or No</Text>
+// </TouchableOpacity>
 
 function AuthStack() {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen name="UnlockStorageScreen" component={UnlockStorageScreen} />
-      <Stack.Screen name="OnboardUserScreen" component={OnboardUserScreen} />
-    </Stack.Navigator>
-  )
-}
-
-function AuthUser() {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen name="Main" component={Main} />
-      <Stack.Screen name="YesNo" component={YesNo} />
-      <Stack.Screen name="KeysSignConsentView" component={KeysSignConsentView} />
-      <Stack.Screen name="KeysEncryptConsentView" component={KeysEncryptConsentView} />
-      <Stack.Screen name="KeysDecryptConsentView" component={KeysDecryptConsentView} />
-      <Stack.Screen name="KeysListConsentView" component={KeysListConsentView} />
-      <Stack.Screen name="GenericConsentView" component={GenericConsentView} />
-      <Stack.Screen name="CredentialStoreConsentView" component={CredentialStoreConsentView} />
-      <Stack.Screen name="DidSelectView" component={DidSelectView} />
-      <Stack.Screen name="CredentialSelectView" component={CredentialSelectView} />
-    </Stack.Navigator>
-  )
-}
-
-function Auth() {
   const authContext = useContext(AuthContext)
 
   useEffect(() => {
     console.log('authContext', authContext)
   }, [authContext])
 
-  return <>{!authContext.isAuthenticated ? <AuthStack /> : <AuthUser />}</>
+  return (
+    <Stack.Navigator>
+      {!authContext.isAuthenticated ? (
+        <Stack.Group>
+          <Stack.Screen name="UnlockStorageScreen" component={UnlockStorageScreen} />
+          <Stack.Screen name="OnboardUserScreen" component={OnboardUserScreen} />
+        </Stack.Group>
+      ) : (
+        <Stack.Group>
+          <Stack.Screen name="AppDrawer" component={AppDrawer} />
+          <Stack.Screen name="Main" component={Main} />
+          <Stack.Screen name="YesNo" component={YesNo} />
+          <Stack.Screen name="ImportKeyScreen" component={ImportKeyScreen} />
+        </Stack.Group>
+      )}
+    </Stack.Navigator>
+  )
 }
 
 export default function App() {
@@ -108,7 +98,7 @@ export default function App() {
       <NavigationContainer ref={navigationRef}>
         <SafeAreaView style={{ flex: 1 }}>
           <StatusBar />
-          <Auth />
+          <AuthStack />
         </SafeAreaView>
       </NavigationContainer>
     </AuthContextProvider>

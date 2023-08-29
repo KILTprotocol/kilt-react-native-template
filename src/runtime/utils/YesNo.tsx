@@ -1,14 +1,14 @@
-import React from 'react'
+import React, { ReactNode } from 'react'
 import { View, Text, TouchableOpacity } from 'react-native'
 import { CacheTimeSelect } from './CacheTimeSelect'
 
-export default function YesNo({ navigation, route }): JSX.Element {
+export default function YesNo({ navigation, route }, props: { children: ReactNode }): JSX.Element {
   const [cacheSeconds, setCacheSeconds] = React.useState(0)
   return (
     <View>
       <Text>{route.params.title}</Text>
 
-      <Text>{route.params.children}</Text>
+      {props.children}
 
       <CacheTimeSelect onSelect={setCacheSeconds} />
 

@@ -27,8 +27,8 @@ export interface AppDrawerProps {
 export function AppDrawer(): JSX.Element {
   return (
     <Drawer.Navigator initialRouteName="App">
-      <Text>Nessie protects your Identity</Text>
-      <Drawer.Screen name="App" component={App} />
+      {/* <Text>Nessie protects your Identity</Text> */}
+      {/* <Drawer.Screen name="App" component={App} /> */}
       {/* {entries.map((entry) => {
             return (
               <React.Fragment key={entry.name}>
