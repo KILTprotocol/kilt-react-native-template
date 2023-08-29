@@ -186,9 +186,7 @@ export default function PopupApp({ navigation, route }) {
         isFullscreen={fullscreen}
       /> */}
       {loading ? <Text>Loading...</Text> : null}
-      {!loading && masterPassword === '' ? (
-        <UnlockStorageScreen onUnlock={handler} navigation route />
-      ) : null}
+      {!loading && masterPassword === '' ? <UnlockStorageScreen /> : null}
       {runtime !== null ? currentComponent : null}
 
       {masterPassword ? <Text>I am something</Text> : null}

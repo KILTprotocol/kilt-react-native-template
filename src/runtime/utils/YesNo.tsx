@@ -2,37 +2,30 @@ import React from 'react'
 import { View, Text, TouchableOpacity } from 'react-native'
 import { CacheTimeSelect } from './CacheTimeSelect'
 
-interface YesNoProps {
-  title: string
-  children: React.ReactNode
-  onYes: (cacheSeconds: number) => void
-  onNo: () => void
-}
-
 export default function YesNo({ navigation, route }): JSX.Element {
   const [cacheSeconds, setCacheSeconds] = React.useState(0)
   return (
     <View>
-      <Text>{props.title}</Text>
+      <Text>{route.params.title}</Text>
 
-      <Text>{props.children}</Text>
+      <Text>{route.params.children}</Text>
 
       <CacheTimeSelect onSelect={setCacheSeconds} />
 
       <TouchableOpacity
         onPress={() => {
-          props.onNo()
+          navigation.navigate(route.params.origin, { ...route.params.no })
         }}
       >
-        No
+        <Text>NO</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
         onPress={() => {
-          props.onYes(cacheSeconds)
+          navigation.navigate(route.params.origin, { ...route.params.yes, time: cacheSeconds })
         }}
       >
-        Yes
+        <Text>Yes</Text>
       </TouchableOpacity>
     </View>
   )

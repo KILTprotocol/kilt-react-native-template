@@ -19,10 +19,11 @@ import CredentialSelectView from './runtime/modules/credentialstore/CredentialSe
 import PopupApp from './runtime/modules/core/PopupApp'
 import AuthContextProvider, { AuthContext } from './runtime/modules/storage/auth-context'
 import styles from './styles/styles'
+import YesNo from './runtime/utils/YesNo'
 
 const Stack = createNativeStackNavigator()
 
-function Main() {
+function Main({ navigation }) {
   const [did, setDid] = useState('Fetching the Did Uri')
   const authContext = useContext(AuthContext)
   useEffect(() => {
@@ -48,6 +49,19 @@ function Main() {
       <TouchableOpacity style={styles.text} onPress={() => authContext.logout()}>
         <Text style={styles.text}>Logout</Text>
       </TouchableOpacity>
+
+      <TouchableOpacity
+        onPress={() => {
+          /* 1. Navigate to the Details route with params */
+          navigation.navigate('YesNo', {
+            title: 86,
+            children: 'anything you want here',
+            origin: 'Main',
+          })
+        }}
+      >
+        <Text style={styles.text}>Go to Yes or No</Text>
+      </TouchableOpacity>
     </View>
   )
 }
@@ -65,6 +79,7 @@ function AuthUser() {
   return (
     <Stack.Navigator>
       <Stack.Screen name="Main" component={Main} />
+      <Stack.Screen name="YesNo" component={YesNo} />
       <Stack.Screen name="KeysSignConsentView" component={KeysSignConsentView} />
       <Stack.Screen name="KeysEncryptConsentView" component={KeysEncryptConsentView} />
       <Stack.Screen name="KeysDecryptConsentView" component={KeysDecryptConsentView} />

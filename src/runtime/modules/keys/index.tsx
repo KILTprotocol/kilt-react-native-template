@@ -11,7 +11,6 @@ import {
 
 import { box, box_open, randomBytes, box_keyPair_fromSecretKey } from 'tweetnacl-ts'
 
-// import { Keyring } from '@polkadot/ui-keyring'
 import { type KeyringPair } from '@polkadot/keyring/types'
 
 import {
@@ -31,7 +30,7 @@ import { Keystore } from './store'
 import generateName from '../../utils/generateName'
 import kid from '../../utils/kid'
 import { u8a } from '../../utils/u8a'
-import { Utils } from '@kiltprotocol/sdk-js'
+import { Keyring } from './keyClass'
 
 interface KeyMetadata {
   name: string
@@ -53,7 +52,7 @@ type RuntimeRequirements = CoreApi &
 export class KeysModule<R extends RuntimeRequirements> implements Module, KeysApi {
   private readonly runtime: R
   private readonly consentCache: ConsentCacheApi
-  private readonly keyring: Utils.Keyring
+  private readonly keyring: Keyring
   private isInitialized = false
 
   name = 'keys'
@@ -61,7 +60,7 @@ export class KeysModule<R extends RuntimeRequirements> implements Module, KeysAp
 
   constructor(runtime: R) {
     this.runtime = runtime
-    this.keyring = new Utils.Keyring()
+    this.keyring = new Keyring()
     this.consentCache = runtime.getConsentCacheApi()
   }
 
@@ -217,7 +216,7 @@ export class KeysModule<R extends RuntimeRequirements> implements Module, KeysAp
   }
 
   loadMetadata(pair: KeyringPair): KeyMetadata {
-    const addr = this.keyring.getAddress(pair.address)
+    const addr = this.keyring.getAddress(pair.address, null)
     if (addr == null) {
       throw new Error("can't find address")
     }
