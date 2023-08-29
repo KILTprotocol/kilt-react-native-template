@@ -6,12 +6,12 @@ import {
   keyExtractPath,
   sr25519PairFromSeed,
   mnemonicToMiniSecret,
-  blake2AsU8a
+  blake2AsU8a,
 } from '@polkadot/util-crypto'
 
 import { box, box_open, randomBytes, box_keyPair_fromSecretKey } from 'tweetnacl-ts'
 
-import { Keyring } from '@polkadot/ui-keyring'
+// import { Keyring } from '@polkadot/ui-keyring'
 import { type KeyringPair } from '@polkadot/keyring/types'
 
 import {
@@ -24,13 +24,14 @@ import {
   type CoreApi,
   type ConsentCacheApiProvider,
   type ConsentCacheApi,
-  type MasterKeyProvider
+  type MasterKeyProvider,
 } from '../../interfaces'
 
 import { Keystore } from './store'
 import generateName from '../../utils/generateName'
 import kid from '../../utils/kid'
 import { u8a } from '../../utils/u8a'
+import { Utils } from '@kiltprotocol/sdk-js'
 
 interface KeyMetadata {
   name: string
@@ -44,24 +45,27 @@ interface KeyMetadata {
 }
 
 // this is what we need from the runtime
-type RuntimeRequirements = CoreApi & StorageApiProvider & ConsentCacheApiProvider & MasterKeyProvider
+type RuntimeRequirements = CoreApi &
+  StorageApiProvider &
+  ConsentCacheApiProvider &
+  MasterKeyProvider
 
 export class KeysModule<R extends RuntimeRequirements> implements Module, KeysApi {
   private readonly runtime: R
   private readonly consentCache: ConsentCacheApi
-  private readonly keyring: Keyring
+  private readonly keyring: Utils.Keyring
   private isInitialized = false
 
   name = 'keys'
   displayName = 'Keys'
 
-  constructor (runtime: R) {
+  constructor(runtime: R) {
     this.runtime = runtime
-    this.keyring = new Keyring()
+    this.keyring = new Utils.Keyring()
     this.consentCache = runtime.getConsentCacheApi()
   }
 
-  private async init (): Promise<void> {
+  private async init(): Promise<void> {
     if (this.isInitialized) {
       return
     }
@@ -76,35 +80,48 @@ export class KeysModule<R extends RuntimeRequirements> implements Module, KeysAp
     console.log('keys::init ready')
   }
 
-  async processRPCRequest (req: NessieRequest): Promise<NessieResponse> {
+  async processRPCRequest(req: NessieRequest): Promise<NessieResponse> {
     switch (req.method) {
       case 'generateMnemonic':
         return { result: await this.generateMnemonic() }
       case 'import': {
-        const typed = req as { args: {
-          mnemonic: string
-          derivationPath: string
-          keyType: KeypairType | 'x25519'
-          name: string
-        } }
-        const info = await this.import(typed.args.mnemonic, typed.args.derivationPath, typed.args.keyType, typed.args.name)
+        const typed = req as {
+          params: {
+            mnemonic: string
+            derivationPath: string
+            keyType: KeypairType | 'x25519'
+            name: string
+          }
+        }
+        const info = await this.import(
+          typed.params.mnemonic,
+          typed.params.derivationPath,
+          typed.params.keyType,
+          typed.params.name
+        )
         return { result: info }
       }
       case 'list': {
         const list = await this.list()
-        if (!await this.consentCache.check('keys', 'list', req.origin)) {
+        if (!(await this.consentCache.check('keys', 'list', req.name))) {
           const resp = await this.runtime.openPopup('keys-list-consent', {
-            origin: req.origin,
-            args: {
-              keys: list
-            }
+            name: req.name,
+            params: {
+              keys: list,
+            },
           })
           if (resp.meta !== undefined && resp.meta?.cacheSeconds > 0) {
-            await this.consentCache.cache('keys', 'list', req.origin, resp.meta.cacheSeconds, resp.result)
+            await this.consentCache.cache(
+              'keys',
+              'list',
+              req.name,
+              resp.meta.cacheSeconds,
+              resp.result
+            )
           }
           return { result: resp.result }
         } else {
-          const list = await this.consentCache.getContext('keys', 'list', req.origin)
+          const list = await this.consentCache.getContext('keys', 'list', req.name)
           if (list === undefined) {
             throw new Error('consent cache is empty')
           }
@@ -112,68 +129,82 @@ export class KeysModule<R extends RuntimeRequirements> implements Module, KeysAp
         }
       }
       case 'sign': {
-        const typed = req as { args: {
-          kid: string
-          msg: string
-          withType?: boolean
-        } }
-        if (!await this.consentCache.check('keys', 'sign', req.origin)) {
-          const resp = await this.runtime.openPopup('keys-sign-consent', {
-            origin: req.origin,
-            args: {
-              kid: typed.args.kid,
-              msg: typed.args.msg
-            }
-          })
-          if (resp.meta !== undefined && resp.meta?.cacheSeconds > 0) {
-            await this.consentCache.cache('keys', 'sign', req.origin, resp.meta.cacheSeconds)
+        const typed = req as {
+          params: {
+            kid: string
+            msg: string
+            withType?: boolean
           }
         }
-        const sig = await this.sign(typed.args.kid, u8a(typed.args.msg), typed.args.withType)
+        if (!(await this.consentCache.check('keys', 'sign', req.name))) {
+          const resp = await this.runtime.openPopup('keys-sign-consent', {
+            name: req.name,
+            params: {
+              kid: typed.params.kid,
+              msg: typed.params.msg,
+            },
+          })
+          if (resp.meta !== undefined && resp.meta?.cacheSeconds > 0) {
+            await this.consentCache.cache('keys', 'sign', req.name, resp.meta.cacheSeconds)
+          }
+        }
+        const sig = await this.sign(typed.params.kid, u8a(typed.params.msg), typed.params.withType)
         return { result: '0x' + Buffer.from(sig).toString('hex') }
       }
       case 'encrypt': {
-        const typed = req as { args: {
-          kid: string
-          receiverPubkey: string
-          msg: string
-        } }
-        if (!await this.consentCache.check('keys', 'encrypt', req.origin)) {
-          const resp = await this.runtime.openPopup('keys-encrypt-consent', {
-            origin: req.origin,
-            args: {
-              senderKid: typed.args.kid,
-              receiverPubkey: typed.args.receiverPubkey,
-              msg: typed.args.msg
-            }
-          })
-          if (resp.meta !== undefined && resp.meta?.cacheSeconds > 0) {
-            await this.consentCache.cache('keys', 'encrypt', req.origin, resp.meta.cacheSeconds)
+        const typed = req as {
+          params: {
+            kid: string
+            receiverPubkey: string
+            msg: string
           }
         }
-        const data = await this.encrypt(typed.args.kid, u8a(typed.args.receiverPubkey), u8a(typed.args.msg))
+        if (!(await this.consentCache.check('keys', 'encrypt', req.name))) {
+          const resp = await this.runtime.openPopup('keys-encrypt-consent', {
+            name: req.name,
+            params: {
+              senderKid: typed.params.kid,
+              receiverPubkey: typed.params.receiverPubkey,
+              msg: typed.params.msg,
+            },
+          })
+          if (resp.meta !== undefined && resp.meta?.cacheSeconds > 0) {
+            await this.consentCache.cache('keys', 'encrypt', req.name, resp.meta.cacheSeconds)
+          }
+        }
+        const data = await this.encrypt(
+          typed.params.kid,
+          u8a(typed.params.receiverPubkey),
+          u8a(typed.params.msg)
+        )
         return { result: data }
       }
       case 'decrypt': {
-        const typed = req as { args: {
-          kid: string
-          senderPubkey: string
-          msg: string
-        } }
-        if (!await this.consentCache.check('keys', 'decrypt', req.origin)) {
-          const resp = await this.runtime.openPopup('keys-decrypt-consent', {
-            origin: req.origin,
-            args: {
-              receiverKid: typed.args.kid,
-              senderPubkey: typed.args.senderPubkey,
-              msg: typed.args.msg
-            }
-          })
-          if (resp.meta !== undefined && resp.meta?.cacheSeconds > 0) {
-            await this.consentCache.cache('keys', 'decrypt', req.origin, resp.meta.cacheSeconds)
+        const typed = req as {
+          params: {
+            kid: string
+            senderPubkey: string
+            msg: string
           }
         }
-        const data = await this.decrypt(typed.args.kid, u8a(typed.args.senderPubkey), u8a(typed.args.msg))
+        if (!(await this.consentCache.check('keys', 'decrypt', req.name))) {
+          const resp = await this.runtime.openPopup('keys-decrypt-consent', {
+            name: req.name,
+            params: {
+              receiverKid: typed.params.kid,
+              senderPubkey: typed.params.senderPubkey,
+              msg: typed.params.msg,
+            },
+          })
+          if (resp.meta !== undefined && resp.meta?.cacheSeconds > 0) {
+            await this.consentCache.cache('keys', 'decrypt', req.name, resp.meta.cacheSeconds)
+          }
+        }
+        const data = await this.decrypt(
+          typed.params.kid,
+          u8a(typed.params.senderPubkey),
+          u8a(typed.params.msg)
+        )
         return { result: data }
       }
       default:
@@ -181,11 +212,11 @@ export class KeysModule<R extends RuntimeRequirements> implements Module, KeysAp
     }
   }
 
-  saveMetadata (pair: KeyringPair, md: KeyMetadata): void {
+  saveMetadata(pair: KeyringPair, md: KeyMetadata): void {
     this.keyring.saveAddress(pair.address, { md })
   }
 
-  loadMetadata (pair: KeyringPair): KeyMetadata {
+  loadMetadata(pair: KeyringPair): KeyMetadata {
     const addr = this.keyring.getAddress(pair.address)
     if (addr == null) {
       throw new Error("can't find address")
@@ -195,12 +226,12 @@ export class KeysModule<R extends RuntimeRequirements> implements Module, KeysAp
   }
 
   // api functions
-  async generateMnemonic (words: 12 | 15 | 18 | 21 | 24 = 12): Promise<string> {
+  async generateMnemonic(words: 12 | 15 | 18 | 21 | 24 = 12): Promise<string> {
     await this.init()
     return mnemonicGenerate(words)
   }
 
-  async import (
+  async import(
     mnemonic: string,
     derivationPath = '',
     keyType: KeypairType | 'x25519' = 'sr25519',
@@ -222,10 +253,10 @@ export class KeysModule<R extends RuntimeRequirements> implements Module, KeysAp
     )
     console.log('imported pair', pair)
     const meta: KeyMetadata = {
-      name: (name.length > 0) ? name : generateName(),
+      name: name.length > 0 ? name : generateName(),
       address: pair.address,
       type: keyType,
-      kid: kid(pair)
+      kid: kid(pair),
     }
     if (keyType === 'x25519') {
       const seed = mnemonicToMiniSecret(mnemonic)
@@ -241,11 +272,11 @@ export class KeysModule<R extends RuntimeRequirements> implements Module, KeysAp
     return {
       kid: meta.kid,
       name: meta.name,
-      type: meta.type
+      type: meta.type,
     }
   }
 
-  async list (): Promise<KeyInfo[]> {
+  async list(): Promise<KeyInfo[]> {
     await this.init()
     console.log('call keys::list')
     return this.keyring.getPairs().map((pair) => {
@@ -254,14 +285,15 @@ export class KeysModule<R extends RuntimeRequirements> implements Module, KeysAp
       return {
         kid: meta.kid,
         name: meta.name,
-        type: meta.type
+        type: meta.type,
       }
     })
   }
 
-  async remove (keyId: string): Promise<void> {
+  async remove(keyId: string): Promise<void> {
     await this.init()
-    const [address] = this.keyring.getPairs()
+    const [address] = this.keyring
+      .getPairs()
       .map((pair) => {
         const meta = this.loadMetadata(pair)
         return { pair, meta }
@@ -275,7 +307,7 @@ export class KeysModule<R extends RuntimeRequirements> implements Module, KeysAp
     this.keyring.forgetAddress(address)
   }
 
-  async sign (keyId: string, msg: Uint8Array, withType = false): Promise<Uint8Array> {
+  async sign(keyId: string, msg: Uint8Array, withType = false): Promise<Uint8Array> {
     await this.init()
     const [pair] = this.keyring.getPairs().filter((pair) => kid(pair) === keyId)
     if (pair === undefined) {
@@ -287,11 +319,7 @@ export class KeysModule<R extends RuntimeRequirements> implements Module, KeysAp
     return sig
   }
 
-  async encrypt (
-    keyId: string,
-    receiverPubkey: Uint8Array,
-    msg: Uint8Array
-  ): Promise<Uint8Array> {
+  async encrypt(keyId: string, receiverPubkey: Uint8Array, msg: Uint8Array): Promise<Uint8Array> {
     await this.init()
     // load sender key
     const [senderMeta] = this.keyring
@@ -319,11 +347,7 @@ export class KeysModule<R extends RuntimeRequirements> implements Module, KeysAp
     return encryptedWithNonce
   }
 
-  async decrypt (
-    kid: string,
-    senderPubkey: Uint8Array,
-    msg: Uint8Array
-  ): Promise<Uint8Array> {
+  async decrypt(kid: string, senderPubkey: Uint8Array, msg: Uint8Array): Promise<Uint8Array> {
     await this.init()
     // load receiver key
     const [receiverMeta] = this.keyring
