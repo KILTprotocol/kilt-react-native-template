@@ -1,15 +1,3 @@
-// import {
-//   Container,
-//   Box,
-//   List,
-//   ListItem,
-//   IconButton,
-//   ListItemIcon,
-//   ListItemText,
-//   Text,
-//   ListItemButton,
-//   TouchableOpacity,
-// } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 // import DeleteIcon from '@mui/icons-material/Delete'
 import type { CredentialStoreApiProvider, KiltCredential } from '../../interfaces'
@@ -40,7 +28,6 @@ export default function CredentialsList<R extends CredentialStoreApiProvider>(pr
       <Container>
         <CredentialDetails cred={selectedCred} />
         <TouchableOpacity
-          variant="contained"
           onClick={() => {
             setSelectedCred(null)
           }}

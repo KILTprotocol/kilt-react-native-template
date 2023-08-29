@@ -1,6 +1,6 @@
 import React from 'react'
 import { sendError, sendResponse } from '../../utils/response'
-import { View, Text } from 'react-native'
+import { View, Text, TouchableOpacity } from 'react-native'
 import YesNo from '../../utils/YesNo'
 import type { DidDocument } from '../../interfaces'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -48,7 +48,7 @@ export default function DidSelectView({ navigation, route }): JSX.Element {
             <MaterialCommunityIcons name="person" color={'green'} />
           </View>
           <View>
-            {/* <TouchableOpacity
+            <TouchableOpacity
               value={selectedDid}
               onPress={() => {
                 setSelectedDid(selectedDid)
@@ -61,7 +61,7 @@ export default function DidSelectView({ navigation, route }): JSX.Element {
                   </MenuItem>
                 )
               })}
-            </TouchableOpacity> */}
+            </TouchableOpacity>
           </View>
         </View>
       </View>

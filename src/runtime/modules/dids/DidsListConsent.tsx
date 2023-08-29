@@ -93,7 +93,7 @@ function DidsListConsent(): JSX.Element {
         </Grid>
         <Grid item xs={6}>
           <TouchableOpacity
-            variant="contained"
+            
             color="error"
             onClick={() => {
               sendError('user denied').finally(() => {
@@ -106,7 +106,7 @@ function DidsListConsent(): JSX.Element {
         </Grid>
         <Grid item xs={6}>
           <TouchableOpacity
-            variant="contained"
+            
             color="success"
             onClick={() => {
               sendResponse(selected, { cacheSeconds }).finally(() => {

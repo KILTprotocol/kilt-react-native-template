@@ -42,7 +42,7 @@
 //     const { possibleDids } = props
 //     return (
 //       <>
-//         <InputLabel>Did</InputLabel>
+//         <Text>Did</Text>
 //         <Select
 //           id="did"
 //           label="Did"
@@ -80,7 +80,7 @@
 
 //     const PairSelect = (): JSX.Element => (
 //       < >
-//         <InputLabel>Key</InputLabel>
+//         <Text>Key</Text>
 //         <Select
 //           
 //           id="pair"
@@ -150,7 +150,7 @@
 //               </Grid>
 //               <Grid item xs={6}>
 //                 < >
-//                   <InputLabel>Usage</InputLabel>
+//                   <Text>Usage</Text>
 //                   <Select
 //                   
 //                   id="usage"
@@ -228,7 +228,7 @@
 //           <Grid item xs={3}>
 //             <TouchableOpacity onClick={() => {
 //               saveDid()
-//             }} variant="contained" >Save Updates</TouchableOpacity>
+//             }}  >Save Updates</TouchableOpacity>
 //           </Grid>
 //         </Grid>
 //       </Box>

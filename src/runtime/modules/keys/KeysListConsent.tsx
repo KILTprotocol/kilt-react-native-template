@@ -49,7 +49,7 @@ export default function KeysListConsentView({ navigation, route }): JSX.Element 
       <Text>Share Keys</Text>
       <Text>Text lease select the keys you want to share.</Text>
       <Text>Origin: {origin}</Text>
-      {/* <View>
+      <View>
         {keys.map((key) => {
           return (
             <ViewItem
@@ -57,7 +57,7 @@ export default function KeysListConsentView({ navigation, route }): JSX.Element 
               secondaryAction={
                 <IconButton
                   aria-label="comment"
-                  onClick={() => {
+                  onPress={() => {
                     handleSelect(key.kid)
                   }}
                 >
@@ -66,7 +66,7 @@ export default function KeysListConsentView({ navigation, route }): JSX.Element 
               }
             >
               <ViewItemButton
-                onClick={() => {
+                onPress={() => {
                   handleSelect(key.kid)
                 }}
               >
@@ -78,12 +78,7 @@ export default function KeysListConsentView({ navigation, route }): JSX.Element 
                   primary={
                     <React.Fragment>
                       {key.name}
-                      <Text
-                        sx={{ display: 'inline' }}
-                        component="span"
-                        variant="body2"
-                        color="text.primary"
-                      >
+                      <Text sx={{ display: 'inline' }} component="span" variant="body2">
                         {' - ' + key.type}
                       </Text>
                     </React.Fragment>
@@ -94,37 +89,28 @@ export default function KeysListConsentView({ navigation, route }): JSX.Element 
           )
         })}
       </View>
-      <Grid container alignItems="center" justifyContent="center">
-        <Grid item xs={8}>
-          <CacheTimeSelect onSelect={setCacheSeconds} />
-        </Grid>
-        <Grid item xs={6}>
-          <TouchableOpacity
-            variant="contained"
-            color="error"
-            onClick={() => {
-              sendError('user denied').finally(() => {
-                window.close()
-              })
-            }}
-          >
-            No
-          </TouchableOpacity>
-        </Grid>
-        <Grid item xs={6}>
-          <TouchableOpacity
-            variant="contained"
-            color="success"
-            onClick={() => {
-              sendResponse(selected, { cacheSeconds }).finally(() => {
-                window.close()
-              })
-            }}
-          >
-            Yes
-          </TouchableOpacity>
-        </Grid>
-      </Grid> */}
+
+      <CacheTimeSelect onSelect={setCacheSeconds} />
+
+      <TouchableOpacity
+        onPress={() => {
+          sendError('user denied').finally(() => {
+            window.close()
+          })
+        }}
+      >
+        No
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        onPress={() => {
+          sendResponse(selected, { cacheSeconds }).finally(() => {
+            window.close()
+          })
+        }}
+      >
+        Yes
+      </TouchableOpacity>
     </View>
   )
 }

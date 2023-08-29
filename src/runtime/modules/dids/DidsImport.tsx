@@ -102,7 +102,7 @@ export function DidsImport<R extends DidApiProvider & KeysApiProvider>(props: {
 
       <TouchableOpacity
         disabled={inProgress}
-        variant="contained"
+        
         onClick={(): void => {
           generateDid().then(() => {
             setInProgress(false)

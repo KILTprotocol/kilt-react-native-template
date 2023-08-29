@@ -204,20 +204,20 @@ class KiltModule<R extends RuntimeRequirements> implements KiltApi, Module {
     console.log('KiltModule.processRPCRequest:', req)
     switch (req.method) {
       case 'getDidNonce': {
-        console.log('KiltModule.processRPCRequest: getDidNonce:', req.args)
-        const { did } = req.args as { did: string }
+        console.log('KiltModule.processRPCRequest: getDidNonce:', req.params)
+        const { did } = req.params as { did: string }
         const nonce = await this.getDidNonce(did)
         return { result: nonce }
       }
       case 'getDidDocument': {
-        console.log('KiltModule.processRPCRequest: getDidDocument:', req.args)
-        const { did } = req.args as { did: string }
+        console.log('KiltModule.processRPCRequest: getDidDocument:', req.params)
+        const { did } = req.params as { did: string }
         const doc = await this.getDidDocument(did)
         return { result: doc }
       }
       case 'signAndSubmitExtrinsic': {
-        console.log('KiltModule.processRPCRequest: signAndSubmitExtrinsic:', req.args)
-        const { kid, extrinsic } = req.args as { kid: string; extrinsic: string }
+        console.log('KiltModule.processRPCRequest: signAndSubmitExtrinsic:', req.params)
+        const { kid, extrinsic } = req.params as { kid: string; extrinsic: string }
         const api = await this.getKiltApi()
         const parsedTx = api.tx(extrinsic)
         const msg = `Do you want to sign and submit the following extrinsic with your key ${kid}?\n${JSON.stringify(
@@ -232,8 +232,8 @@ class KiltModule<R extends RuntimeRequirements> implements KiltApi, Module {
         return { result: null }
       }
       case 'signExtrinsic': {
-        console.log('KiltModule.processRPCRequest: signExtrinsic:', req.args)
-        const { kid, extrinsic } = req.args as { kid: string; extrinsic: string }
+        console.log('KiltModule.processRPCRequest: signExtrinsic:', req.params)
+        const { kid, extrinsic } = req.params as { kid: string; extrinsic: string }
         const api = await this.getKiltApi()
         const parsedTx = api.tx(extrinsic)
         const msg = `Do you want to sign the following extrinsic?\n${JSON.stringify(
@@ -248,8 +248,8 @@ class KiltModule<R extends RuntimeRequirements> implements KiltApi, Module {
         return { result: signed }
       }
       case 'signExtrinsicPayload': {
-        console.log('KiltModule.processRPCRequest: signExtrinsic:', req.args)
-        const { kid, payload } = req.args as { kid: string; payload: SignerPayloadJSON }
+        console.log('KiltModule.processRPCRequest: signExtrinsic:', req.params)
+        const { kid, payload } = req.params as { kid: string; payload: SignerPayloadJSON }
         const msg = `Do you want to sign the following extrinsic payload?\n${JSON.stringify(
           JSON.stringify(payload),
           null,
@@ -262,8 +262,8 @@ class KiltModule<R extends RuntimeRequirements> implements KiltApi, Module {
         return { result: signed }
       }
       case 'authorizeDidOperation': {
-        console.log('KiltModule.processRPCRequest: authorizeDidOperation:', req.args)
-        const { did, kid, submitter, callData } = req.args as {
+        console.log('KiltModule.processRPCRequest: authorizeDidOperation:', req.params)
+        const { did, kid, submitter, callData } = req.params as {
           did: string
           kid: string
           submitter: string
@@ -283,8 +283,8 @@ class KiltModule<R extends RuntimeRequirements> implements KiltApi, Module {
         return { result: signed }
       }
       case 'createDidExtrinsic': {
-        console.log('KiltModule.processRPCRequest: createDidExtrinsic:', req.args)
-        const { did, submitter } = req.args as { did: string; submitter: string }
+        console.log('KiltModule.processRPCRequest: createDidExtrinsic:', req.params)
+        const { did, submitter } = req.params as { did: string; submitter: string }
         const msg = `Do you want to create a CreateDidExtrinsic for the DID ${did} using the account ${submitter} as submitter?`
         if (!(await this.checkConsent(req, msg))) {
           return { error: 'User did not consent' }
@@ -293,8 +293,8 @@ class KiltModule<R extends RuntimeRequirements> implements KiltApi, Module {
         return { result: signed }
       }
       case 'setRpcProvider': {
-        console.log('KiltModule.processRPCRequest: setRpcProvider:', req.args)
-        const { endpoint } = req.args as { endpoint: string }
+        console.log('KiltModule.processRPCRequest: setRpcProvider:', req.params)
+        const { endpoint } = req.params as { endpoint: string }
         if (
           !(await this.checkConsent(req, `Do you want to set the RPC provider to ${endpoint}?`))
         ) {
@@ -304,7 +304,7 @@ class KiltModule<R extends RuntimeRequirements> implements KiltApi, Module {
         return { result: null }
       }
       case 'getRpcProvider': {
-        console.log('KiltModule.processRPCRequest: getRpcProvider:', req.args)
+        console.log('KiltModule.processRPCRequest: getRpcProvider:', req.params)
         const endpoint = await this.getRpcProvider()
         return { result: endpoint }
       }
@@ -369,7 +369,7 @@ class KiltModule<R extends RuntimeRequirements> implements KiltApi, Module {
       if (!ok) {
         const resp = await this.coreApi.openPopup('generic-consent', {
           origin: req.origin,
-          args: { msg },
+          params: { msg },
         })
         if (resp.meta !== undefined && resp.meta?.cacheSeconds > 0) {
           await this.consentCache.cache(req.module, req.method, req.origin, resp.meta.cacheSeconds)

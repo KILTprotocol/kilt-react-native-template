@@ -40,13 +40,13 @@ export default function KeysDecrypt<R extends KeysApiProvider>(props: { runtime:
     return (
       <>
         <Text>Receiver</Text>
-        <Select id="receiver" label="Receiver" value={receiver} onChangeText={setReceiver}>
+        {/* <Select id="receiver" label="Receiver" value={receiver} onChangeText={setReceiver}>
           {keys.map((md) => (
             <MenuItem key={md.kid} value={md.kid}>
               {md.name + ` (${md.kid.substring(0, 14)}...)`}
             </MenuItem>
           ))}
-        </Select>
+        </Select> */}
       </>
     )
   }

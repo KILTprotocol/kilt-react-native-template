@@ -42,7 +42,7 @@
 
 //     const PairSelect = (): JSX.Element => (
 //       < >
-//         <InputLabel>Key</InputLabel>
+//         <Text>Key</Text>
 //         <Select
 //           
 //           id="pair"
@@ -94,7 +94,7 @@
 //           </Grid>
 //           <Grid item xs={3}>
 //           < >
-//             <InputLabel>Usage</InputLabel>
+//             <Text>Usage</Text>
 //             <Select
 //               
 //               id="usage"
@@ -163,7 +163,7 @@
 //             <KeyList didDocument={didDocument} possibleKeys={availableKeys} />
 //           </Grid>
 //           <Grid item xs={3}>
-//             <TouchableOpacity onClick={importDid} variant="contained" >Import DID</TouchableOpacity>
+//             <TouchableOpacity onClick={importDid}  >Import DID</TouchableOpacity>
 //           </Grid>
 //         </Grid>
 //       </Box>
