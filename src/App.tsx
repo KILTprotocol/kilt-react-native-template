@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { connect, Did, ConfigService } from '@kiltprotocol/sdk-js'
 
 import { navigationRef } from './RootNavigation'
-import { StatusBar, StyleSheet, Text, View } from 'react-native'
+import { StatusBar, StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -17,30 +17,14 @@ import CredentialStoreConsentView from './runtime/modules/credentialapi/Credenti
 import DidSelectView from './runtime/modules/credentialapi/DidSelectView'
 import CredentialSelectView from './runtime/modules/credentialstore/CredentialSelectView'
 import PopupApp from './runtime/modules/core/PopupApp'
-import AuthContextProvider from './runtime/modules/storage/auth-context'
+import AuthContextProvider, { AuthContext } from './runtime/modules/storage/auth-context'
+import styles from './styles/styles'
 
 const Stack = createNativeStackNavigator()
 
-interface Styles {
-  container: {
-    flex: number
-    backgroundColor: string
-    alignItems: 'center'
-    justifyContent: 'center'
-  }
-}
-
-const styles = StyleSheet.create<Styles>({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-})
-
 function Main() {
   const [did, setDid] = useState('Fetching the Did Uri')
+  const authContext = useContext(AuthContext)
   useEffect(() => {
     const fetchDid = async () => {
       await connect('wss://peregrine.kilt.io')
@@ -59,8 +43,11 @@ function Main() {
     fetchDid()
   })
   return (
-    <View>
-      <Text>come on DID get your ass here: {did}</Text>
+    <View style={styles.container}>
+      <Text style={styles.text}>come on DID get your ass here: {did}</Text>
+      <TouchableOpacity style={styles.text} onPress={() => authContext.logout()}>
+        <Text style={styles.text}>Logout</Text>
+      </TouchableOpacity>
     </View>
   )
 }
@@ -70,25 +57,35 @@ function AuthStack() {
     <Stack.Navigator>
       <Stack.Screen name="UnlockStorageScreen" component={UnlockStorageScreen} />
       <Stack.Screen name="OnboardUserScreen" component={OnboardUserScreen} />
-      {/* <Stack.Screen name="KeysSignConsentView" component={KeysSignConsentView} />
-  <Stack.Screen name="KeysEncryptConsentView" component={KeysEncryptConsentView} />
-  <Stack.Screen name="KeysDecryptConsentView" component={KeysDecryptConsentView} />
-  <Stack.Screen name="KeysListConsentView" component={KeysListConsentView} />
-  <Stack.Screen name="GenericConsentView" component={GenericConsentView} />
-  <Stack.Screen name="CredentialStoreConsentView" component={CredentialStoreConsentView} />
-  <Stack.Screen name="DidSelectView" component={DidSelectView} />
-  <Stack.Screen name="CredentialSelectView" component={CredentialSelectView} /> */}
     </Stack.Navigator>
   )
 }
 
-// function AuthUser() {
-//   return (
-//     <Stack.Navigator>
-//       <Stack.Screen name="main" component={Main} />
-//     </Stack.Navigator>
-//   )
-// }
+function AuthUser() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen name="Main" component={Main} />
+      <Stack.Screen name="KeysSignConsentView" component={KeysSignConsentView} />
+      <Stack.Screen name="KeysEncryptConsentView" component={KeysEncryptConsentView} />
+      <Stack.Screen name="KeysDecryptConsentView" component={KeysDecryptConsentView} />
+      <Stack.Screen name="KeysListConsentView" component={KeysListConsentView} />
+      <Stack.Screen name="GenericConsentView" component={GenericConsentView} />
+      <Stack.Screen name="CredentialStoreConsentView" component={CredentialStoreConsentView} />
+      <Stack.Screen name="DidSelectView" component={DidSelectView} />
+      <Stack.Screen name="CredentialSelectView" component={CredentialSelectView} />
+    </Stack.Navigator>
+  )
+}
+
+function Auth() {
+  const authContext = useContext(AuthContext)
+
+  useEffect(() => {
+    console.log('authContext', authContext)
+  }, [authContext])
+
+  return <>{!authContext.isAuthenticated ? <AuthStack /> : <AuthUser />}</>
+}
 
 export default function App() {
   return (
@@ -96,8 +93,7 @@ export default function App() {
       <NavigationContainer ref={navigationRef}>
         <SafeAreaView style={{ flex: 1 }}>
           <StatusBar />
-          <AuthStack />
-          {/* <AuthUser /> */}
+          <Auth />
         </SafeAreaView>
       </NavigationContainer>
     </AuthContextProvider>

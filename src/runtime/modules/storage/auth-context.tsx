@@ -1,28 +1,32 @@
-import React, { ReactNode, createContext, useState } from 'react'
-import { randomAsHex } from '@polkadot/util-crypto'
+import React, { ReactNode, createContext, useMemo, useState } from 'react'
 
 export const AuthContext = createContext({
-  token: null,
   isAuthenticated: false,
   authenticate: () => {},
   logout: () => {},
 })
 
 function AuthContextProvider({ children }: { children: ReactNode }) {
-  const [authToken, setAuthToken] = useState()
-  function authenticate(token) {
-    setAuthToken(randomAsHex())
+  const [authToken, setAuthToken] = useState<boolean | null>()
+
+  function authenticate() {
+    setAuthToken(true)
   }
+
   function logout() {
     setAuthToken(null)
   }
-  const value = {
-    token: authToken,
-    isAuthenicated: authToken!!,
-    authenticate: authenticate,
-    logout: logout,
-  }
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
+
+  const contextValue = useMemo(
+    () => ({
+      isAuthenticated: authToken,
+      authenticate,
+      logout,
+    }),
+    [authToken, authenticate, logout]
+  )
+
+  return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
 }
 
 export default AuthContextProvider

@@ -42,23 +42,23 @@ class Storage<R extends CoreApi> implements StorageApi, Module {
     const result = await SecureStore.getItemAsync('all')
     const decrypted: Array<[string, Uint8Array]> = []
     const pw = await this.getPassword()
-    // for (const key in result) {
-    //   if (!(typeof result[key] === 'string') || (prefix !== undefined && !key.startsWith(prefix))) {
-    //     continue
-    //   }
-    //   try {
-    //     const val: Uint8Array = Buffer.from(result[key], 'hex')
-    //     console.log('storage.ts: all get candidate for decryption', key, val)
-    //     try {
-    //       const clear = await decryptData(val, pw)
-    //       decrypted.push([key, clear])
-    //     } catch (e) {
-    //       console.error('storage::all decryption failed', e)
-    //     }
-    //   } catch (e) {
-    //     console.error('storage.ts: all', e)
-    //   }
-    // }
+    for (const key in result) {
+      if (!(typeof result[key] === 'string') || (prefix !== undefined && !key.startsWith(prefix))) {
+        continue
+      }
+      try {
+        const val: Uint8Array = Buffer.from(result[key], 'hex')
+        console.log('storage.ts: all get candidate for decryption', key, val)
+        try {
+          const clear = await decryptData(val, pw)
+          decrypted.push([key, clear])
+        } catch (e) {
+          console.error('storage::all decryption failed', e)
+        }
+      } catch (e) {
+        console.error('storage.ts: all', e)
+      }
+    }
     return decrypted
   }
 
@@ -102,23 +102,33 @@ class Storage<R extends CoreApi> implements StorageApi, Module {
   async getPassword(): Promise<string> {
     // first look at the memory if it is cached
     if (this.password !== undefined) {
+      console.log('I am the password line 105', this.password)
       return this.password
     }
     // now check session storage
     const password = await SecureStore.getItemAsync('password')
+    console.log('I am the password line 110 in stored SecureStore Session', password)
+
     if (password !== undefined) {
       this.password = password as string
+      console.log('I am setting the session password to be the password line 114', this.password)
+
       return this.password
     }
+
+    console.log('none of these worked, I am opening the UnlockStorageScreen')
     // if not, open the popup to get the password
     RootNavigation.navigate('UnlockStorageScreen', {})
+
+    console.log('Hopefully I have gone through')
+
     // if (resp === undefined) {
     //   throw new Error('No password provided.')
     // }
     // this.password = (resp.result as { password: string }).password
     // SecureStore.setItemAsync('password', this.password).catch(console.error)
     // return password
-    return 'no'
+    return password
   }
 }
 

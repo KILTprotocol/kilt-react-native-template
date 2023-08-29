@@ -24,9 +24,7 @@ export interface AppDrawerProps {
   setScreen: (module: string, screen: string) => void
 }
 
-export function AppDrawer(props: AppDrawerProps): JSX.Element {
-  const { open, closeDrawer, setScreen, entries, variant } = props
-
+export function AppDrawer(): JSX.Element {
   return (
     <Drawer.Navigator initialRouteName="App">
       <Text>Nessie protects your Identity</Text>

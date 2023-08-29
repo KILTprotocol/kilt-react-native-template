@@ -1,58 +1,33 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Storage } from '../runtime/modules/storage/storage'
 import { NessieRuntime } from '../runtime/index'
-import { View, Text, TextInput, TouchableOpacity, Dimensions, StyleSheet } from 'react-native'
-import * as AsyncStore from 'expo-secure-store'
+import { View, Text, TextInput, TouchableOpacity } from 'react-native'
+import * as SecureStore from 'expo-secure-store'
+import BouncyCheckbox from 'react-native-bouncy-checkbox'
+import { AuthContext } from '../runtime/modules/storage/auth-context'
+import styles from '../styles/styles'
 
-const textDecoder = new TextDecoder()
 const textEncoder = new TextEncoder()
-
-const screenWidth = Dimensions.get('screen').width
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#1f1f1f',
-    alignItems: 'center',
-    paddingTop: 250,
-  },
-  text: {
-    color: 'white',
-    marginBottom: 20,
-    fontSize: 30,
-  },
-  textInput: {
-    padding: 5,
-    paddingStart: 15,
-    backgroundColor: '#3b3b3b',
-    width: screenWidth * 0.8,
-    borderRadius: 25,
-    marginBottom: 15,
-    color: 'white',
-    fontWeight: '600',
-  },
-  loginBtn: {
-    paddingHorizontal: 25,
-    paddingVertical: 10,
-    backgroundColor: '#ff1178',
-    borderRadius: 25,
-    color: 'white',
-    textAlign: 'center',
-  },
-})
 
 export default function OnboardUser(): JSX.Element {
   const [password, setPassword] = React.useState<undefined | string>()
+  const [rememberPassword, setRemeberPassword] = React.useState<boolean>(false)
+  const authContext = useContext(AuthContext)
 
   const createMasterPassword = async (): Promise<void> => {
-    if (password === null) {
+    if (!password) {
       return
     }
     const runtime = new NessieRuntime()
     const store = new Storage(runtime, password)
 
     await store.set('test', textEncoder.encode('test'))
-    await AsyncStore.setItemAsync('nessie-initialized', 'true')
+    await SecureStore.setItemAsync('nessie-initialized', 'true')
+    if (rememberPassword) {
+      await SecureStore.setItemAsync('session-password', password)
+    }
+
+    authContext.authenticate()
   }
 
   return (
@@ -68,6 +43,7 @@ export default function OnboardUser(): JSX.Element {
         value={undefined}
         onChangeText={setPassword}
       />
+      <BouncyCheckbox onPress={() => setRemeberPassword(!rememberPassword)} />
       <TouchableOpacity style={styles.loginBtn} onPress={createMasterPassword}>
         <Text>Create Master Password</Text>
       </TouchableOpacity>
