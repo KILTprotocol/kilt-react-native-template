@@ -7,8 +7,9 @@ import generateName from '../runtime/utils/generateName'
 import RNPickerSelect from 'react-native-picker-select'
 import { RuntimeContext } from '../wrapper/RuntimeContextProvider'
 import { NessieRuntime } from '../runtime'
+import styles from '../styles/styles'
 
-export default function ImportKeyScreen({ navigation, route }): JSX.Element {
+export default function ImportKeyScreen(): JSX.Element {
   const runtimeContext = useContext(RuntimeContext)
   const keysApi = (runtimeContext.nessieRuntime as unknown as NessieRuntime).getKeysApi()
   console.log('what do I get', keysApi)
@@ -23,26 +24,32 @@ export default function ImportKeyScreen({ navigation, route }): JSX.Element {
   }
 
   return (
-    <View>
-      <Text>Import Key</Text>
+    <View style={styles.container}>
+      <Text style={styles.text}>Import Key</Text>
 
-      <TextInput placeholder="Name" value={name} onChangeText={setName} />
+      <TextInput style={styles.textInput} placeholder="Name" value={name} onChangeText={setName} />
       <TouchableOpacity
+        style={styles.loginBtn}
         onPress={() => keysApi.generateMnemonic(12).then((mnemonic) => setMnemonic(mnemonic))}
       >
-        <Text>Generate a Mnemonic</Text>
+        <Text style={styles.text}>Generate a Mnemonic</Text>
       </TouchableOpacity>
 
-      <TextInput placeholder="type a mnemonic" value={mnemonic} onChangeText={setMnemonic} />
-
       <TextInput
+        style={styles.textInput}
+        placeholder="type a mnemonic"
+        value={mnemonic}
+        onChangeText={setMnemonic}
+      />
+      <TextInput
+        style={styles.textInput}
         value={derivation}
         onChangeText={(derivation) => {
           setDerivation(derivation)
         }}
       />
 
-      <Text>Algorithm</Text>
+      <Text style={styles.text}>Algorithm</Text>
       <RNPickerSelect
         onValueChange={(keyAlgorithm) => {
           setAlgorithm(keyAlgorithm)
@@ -56,8 +63,8 @@ export default function ImportKeyScreen({ navigation, route }): JSX.Element {
         ]}
       />
 
-      <TouchableOpacity onPress={addKey}>
-        <Text>Add Key</Text>
+      <TouchableOpacity style={styles.textInput} onPress={addKey}>
+        <Text style={styles.text}>Add Key</Text>
       </TouchableOpacity>
     </View>
   )

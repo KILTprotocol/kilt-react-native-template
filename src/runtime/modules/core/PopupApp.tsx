@@ -6,8 +6,9 @@ import ListKeys from '../keys/ListKeys'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 import { NessieRuntime } from '../../index'
+import styles from '../../../styles/styles'
 
-export default function PopupApp({ navigation, route }) {
+export default function PopupApp() {
   const [masterPassword, setMasterPassword] = React.useState('')
   const [loading, setLoading] = React.useState(true)
   const [runtime, setRuntime] = React.useState<NessieRuntime | null>(null)
@@ -96,7 +97,7 @@ export default function PopupApp({ navigation, route }) {
   // }
   console.log(masterPassword)
   return (
-    <View>
+    <View style={styles.container}>
       {/* <AppDrawer
         open={drawerOpen}
         variant={'temporary'}
