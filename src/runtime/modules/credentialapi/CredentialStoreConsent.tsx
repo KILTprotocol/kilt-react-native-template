@@ -1,7 +1,7 @@
 import React from 'react'
 import { sendError, sendResponse } from '../../utils/response'
 import { View, Text } from 'react-native'
-import YesNo from '../../utils/YesNo'
+import YesNo from '../../../components/YesNo'
 import type { KiltCredential, Container } from '../../interfaces'
 import { CredentialDetails } from '../credentialstore/CredentialDetails'
 

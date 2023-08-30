@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, Text, Image } from 'react-native'
 import * as SecureStore from 'expo-secure-store'
-import UnlockStorageScreen from '../../../screens/UnlockStorageScreen'
+import UnlockStorageScreen from '../../../pages/UnlockStorageScreen'
 import ListKeys from '../keys/ListKeys'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 

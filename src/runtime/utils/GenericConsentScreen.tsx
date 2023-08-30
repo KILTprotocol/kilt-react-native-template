@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, Text } from 'react-native'
 import { sendError, sendResponse } from './response'
-import YesNo from './YesNo'
+import YesNo from '../../components/YesNo'
 
 export default function GenericConsentView({ navigation, route }): JSX.Element {
   const query = new URLSearchParams(window.location.search)

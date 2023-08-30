@@ -40,9 +40,9 @@ import cbor from 'cbor'
 import { hexToU8a, u8aEq, u8aToHex, u8aToU8a } from '@polkadot/util'
 import { CredentialBuilder } from './credential'
 import type { DidDidDetails } from '@kiltprotocol/augment-api'
-import { credentialStoreConsentView } from './CredentialStoreConsent'
-import { didSelectViewContainer } from './DidSelectView'
-import { credentialSelectView } from '../credentialstore/CredentialSelectView'
+// import { credentialStoreConsentView } from './CredentialStoreConsent'
+// import { didSelectViewContainer } from './DidSelectView'
+// import { credentialSelectView } from '../credentialstore/CredentialSelectView'
 import { DidDocument } from '../dids/DidDocument'
 
 type RuntimeRequirements = KiltApiProvider &

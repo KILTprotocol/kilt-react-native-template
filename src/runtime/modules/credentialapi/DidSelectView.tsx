@@ -1,7 +1,7 @@
 import React from 'react'
 import { sendError, sendResponse } from '../../utils/response'
 import { View, Text, TouchableOpacity } from 'react-native'
-import YesNo from '../../utils/YesNo'
+import YesNo from '../../../components/YesNo'
 import type { DidDocument } from '../../interfaces'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 

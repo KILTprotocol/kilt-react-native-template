@@ -4,7 +4,7 @@ import { NessieRuntime } from '../runtime/index'
 import { View, Text, TextInput, TouchableOpacity } from 'react-native'
 import * as SecureStore from 'expo-secure-store'
 import BouncyCheckbox from 'react-native-bouncy-checkbox'
-import { AuthContext } from '../runtime/modules/storage/auth-context'
+import { AuthContext } from '../wrapper/AuthContextProvider'
 import styles from '../styles/styles'
 
 const textEncoder = new TextEncoder()

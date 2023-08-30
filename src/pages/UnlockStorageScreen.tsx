@@ -5,7 +5,7 @@ import { NessieRuntime } from '../runtime/index'
 import OnboardUser from './OnboardUserScreen'
 import { Storage } from '../runtime/modules/storage/storage'
 import * as SecureStore from 'expo-secure-store'
-import { AuthContext } from '../runtime/modules/storage/auth-context'
+import { AuthContext } from '../wrapper/AuthContextProvider'
 import styles from '../styles/styles'
 
 const textDecoder = new TextDecoder()

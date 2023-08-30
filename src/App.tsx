@@ -6,8 +6,8 @@ import { StatusBar, StyleSheet, Text, View, TouchableOpacity } from 'react-nativ
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import UnlockStorageScreen from './screens/UnlockStorageScreen'
-import OnboardUserScreen from './screens/OnboardUserScreen'
+import UnlockStorageScreen from './pages/UnlockStorageScreen'
+import OnboardUserScreen from './pages/OnboardUserScreen'
 import KeysSignConsentView from './runtime/modules/keys/KeysSignConsent'
 import KeysEncryptConsentView from './runtime/modules/keys/KeysEncryptConsent'
 import KeysDecryptConsentView from './runtime/modules/keys/KeysDecryptConsent'
@@ -17,11 +17,12 @@ import CredentialStoreConsentView from './runtime/modules/credentialapi/Credenti
 import DidSelectView from './runtime/modules/credentialapi/DidSelectView'
 import CredentialSelectView from './runtime/modules/credentialstore/CredentialSelectView'
 import PopupApp from './runtime/modules/core/PopupApp'
-import AuthContextProvider, { AuthContext } from './runtime/modules/storage/auth-context'
+import AuthContextProvider, { AuthContext } from './wrapper/AuthContextProvider'
 import styles from './styles/styles'
-import YesNo from './runtime/utils/YesNo'
+import YesNo from './components/YesNo'
 import { AppDrawer } from './runtime/modules/core/AppDrawer'
-import ImportKeyScreen from './screens/ImportKeyScreen'
+import ImportKeyScreen from './pages/ImportKeyScreen'
+import RuntimeContextProvider from './wrapper/RuntimeContextProvider'
 
 const Stack = createNativeStackNavigator()
 
@@ -81,12 +82,14 @@ function AuthStack() {
           <Stack.Screen name="OnboardUserScreen" component={OnboardUserScreen} />
         </Stack.Group>
       ) : (
-        <Stack.Group>
-          <Stack.Screen name="AppDrawer" component={AppDrawer} />
+        <RuntimeContextProvider>
+          <Stack.Group>
+            {/* <Stack.Screen name="AppDrawer" component={AppDrawer} />
           <Stack.Screen name="Main" component={Main} />
-          <Stack.Screen name="YesNo" component={YesNo} />
-          <Stack.Screen name="ImportKeyScreen" component={ImportKeyScreen} />
-        </Stack.Group>
+          <Stack.Screen name="YesNo" component={YesNo} /> */}
+            <Stack.Screen name="ImportKeyScreen" component={ImportKeyScreen} />
+          </Stack.Group>
+        </RuntimeContextProvider>
       )}
     </Stack.Navigator>
   )

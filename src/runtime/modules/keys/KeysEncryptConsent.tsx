@@ -2,7 +2,7 @@ import React from 'react'
 import { sendError, sendResponse } from '../../utils/response'
 import { Text, View } from 'react-native'
 
-import YesNo from '../../utils/YesNo'
+import YesNo from '../../../components/YesNo'
 
 export default function KeysEncryptConsentView({ navigation, route }): JSX.Element {
   const query = new URLSearchParams(window.location.search)

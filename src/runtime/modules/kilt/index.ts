@@ -365,14 +365,14 @@ class KiltModule<R extends RuntimeRequirements> implements KiltApi, Module {
 
   private async checkConsent(req: NessieRequest, msg: string): Promise<boolean> {
     try {
-      const ok = await this.consentCache.check(req.module, req.method, req.origin)
+      const ok = await this.consentCache.check(req.module, req.method, req.name)
       if (!ok) {
         const resp = await this.coreApi.openPopup('generic-consent', {
-          origin: req.origin,
+          name: req.name,
           params: { msg },
         })
         if (resp.meta !== undefined && resp.meta?.cacheSeconds > 0) {
-          await this.consentCache.cache(req.module, req.method, req.origin, resp.meta.cacheSeconds)
+          await this.consentCache.cache(req.module, req.method, req.name, resp.meta.cacheSeconds)
         }
       }
       return true

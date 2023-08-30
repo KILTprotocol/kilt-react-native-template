@@ -2,7 +2,7 @@ import React from 'react'
 import { View, Text } from 'react-native'
 import { sendError, sendResponse } from '../../utils/response'
 
-import YesNo from '../../utils/YesNo'
+import YesNo from '../../../components/YesNo'
 
 function KeysSignConsentView({ navigation, route }): JSX.Element {
   const query = new URLSearchParams(window.location.search)
