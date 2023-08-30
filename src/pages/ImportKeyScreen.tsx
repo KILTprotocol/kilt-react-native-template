@@ -1,13 +1,17 @@
 import { mnemonicGenerate } from '@polkadot/util-crypto'
 import { type KeypairType } from '@polkadot/util-crypto/types'
 import { TextInput, View, Text, TouchableOpacity } from 'react-native'
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import generateName from '../runtime/utils/generateName'
 
 import RNPickerSelect from 'react-native-picker-select'
+import { RuntimeContext } from '../wrapper/RuntimeContextProvider'
+import { NessieRuntime } from '../runtime'
 
 export default function ImportKeyScreen({ navigation, route }): JSX.Element {
-  const keysApi = route.params.runtime.getKeysApi()
+  const runtimeContext = useContext(RuntimeContext)
+  const keysApi = (runtimeContext.nessieRuntime as unknown as NessieRuntime).getKeysApi()
+  console.log('what do I get', keysApi)
 
   const [algorithm, setAlgorithm] = useState('sr25519')
   const [mnemonic, setMnemonic] = useState(mnemonicGenerate())

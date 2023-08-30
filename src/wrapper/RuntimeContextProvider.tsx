@@ -7,11 +7,11 @@ export const RuntimeContext = createContext({
 })
 
 function RuntimeContextProvider({ children }: { children: ReactNode }) {
-  const [initialisedRuntime, setInitialisedRuntime] = useState<NessieRuntime | null>()
+  const [initialisedRuntime, setInitialisedRuntime] = useState<NessieRuntime | null>(null)
 
   function getRuntime(password: string) {
-    const nessieRuntime = new NessieRuntime(password)
-    setInitialisedRuntime(nessieRuntime)
+    const runtime = new NessieRuntime(password)
+    setInitialisedRuntime(runtime)
   }
 
   const contextValue = useMemo(

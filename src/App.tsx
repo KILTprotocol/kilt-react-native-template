@@ -82,14 +82,12 @@ function AuthStack() {
           <Stack.Screen name="OnboardUserScreen" component={OnboardUserScreen} />
         </Stack.Group>
       ) : (
-        <RuntimeContextProvider>
-          <Stack.Group>
-            {/* <Stack.Screen name="AppDrawer" component={AppDrawer} />
+        <Stack.Group>
+          {/* <Stack.Screen name="AppDrawer" component={AppDrawer} />
           <Stack.Screen name="Main" component={Main} />
           <Stack.Screen name="YesNo" component={YesNo} /> */}
-            <Stack.Screen name="ImportKeyScreen" component={ImportKeyScreen} />
-          </Stack.Group>
-        </RuntimeContextProvider>
+          <Stack.Screen name="ImportKeyScreen" component={ImportKeyScreen} />
+        </Stack.Group>
       )}
     </Stack.Navigator>
   )
@@ -98,12 +96,14 @@ function AuthStack() {
 export default function App() {
   return (
     <AuthContextProvider>
-      <NavigationContainer ref={navigationRef}>
-        <SafeAreaView style={{ flex: 1 }}>
-          <StatusBar />
-          <AuthStack />
-        </SafeAreaView>
-      </NavigationContainer>
+      <RuntimeContextProvider>
+        <NavigationContainer ref={navigationRef}>
+          <SafeAreaView style={{ flex: 1 }}>
+            <StatusBar />
+            <AuthStack />
+          </SafeAreaView>
+        </NavigationContainer>
+      </RuntimeContextProvider>
     </AuthContextProvider>
   )
 }

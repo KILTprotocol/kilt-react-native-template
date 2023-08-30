@@ -7,6 +7,7 @@ import { Storage } from '../runtime/modules/storage/storage'
 import * as SecureStore from 'expo-secure-store'
 import { AuthContext } from '../wrapper/AuthContextProvider'
 import styles from '../styles/styles'
+import { RuntimeContext } from '../wrapper/RuntimeContextProvider'
 
 const textDecoder = new TextDecoder()
 
@@ -18,6 +19,7 @@ export default function UnlockStorageScreen() {
   const [error, setError] = useState('')
   const [storageInitialized, setStorageInitialized] = useState<boolean | null>(null)
   const authContext = useContext(AuthContext)
+  const runtimeContext = useContext(RuntimeContext)
 
   const runtime = new NessieRuntime()
 
@@ -73,9 +75,11 @@ export default function UnlockStorageScreen() {
         if (correct) {
           if (rememberPassword) {
             authContext.authenticate()
+            runtimeContext.getRuntime(enterPassword)
           }
         }
         authContext.authenticate()
+        runtimeContext.getRuntime(enterPassword)
       })
       .catch(console.error)
   }
