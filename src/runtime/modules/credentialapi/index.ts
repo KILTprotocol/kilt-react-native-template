@@ -86,7 +86,7 @@ class CredentialApiModule<R extends RuntimeRequirements> implements Module {
     switch (req.method) {
       case 'startSession': {
         try {
-          const { dAppName, dAppEncryptionKeyUri, challenge, version } = req.args as {
+          const { dAppName, dAppEncryptionKeyUri, challenge, version } = req.params as {
             dAppName: string
             dAppEncryptionKeyUri: string
             challenge: string
@@ -105,7 +105,7 @@ class CredentialApiModule<R extends RuntimeRequirements> implements Module {
       }
       case 'processMessage': {
         try {
-          const obj = req.args as {
+          const obj = req.params as {
             msg: EncryptedMessageV1 | EncryptedMessageV3
             version: string
           }

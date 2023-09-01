@@ -29,9 +29,9 @@ interface PopupArgs {
 
 interface CoreApi {
   unlock: () => Promise<void>
-  // processRPCRequest: (req: NessieRequest) => Promise<NessieResponse>
+  processRPCRequest: (req: NessieRequest) => Promise<NessieResponse>
   // openPopup: (view: string, args: PopupArgs) => Promise<NessieResponse>
-  // handlePopupResponse: (resp: NessieResponse) => void
+  handlePopupResponse: (resp: NessieResponse) => void
 }
 
 interface Module {
@@ -70,11 +70,6 @@ interface KeysApi {
 
 interface KeysApiProvider {
   getKeysApi: () => KeysApi
-}
-
-interface Container {
-  id: string
-  component: React.FC
 }
 
 interface ConsentCacheApi {
@@ -195,7 +190,6 @@ export type {
   StorageApiProvider,
   KeysApi,
   KeysApiProvider,
-  Container,
   PopupArgs,
   ConsentCacheApi,
   ConsentCacheApiProvider,

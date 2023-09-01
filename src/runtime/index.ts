@@ -76,27 +76,27 @@ class NessieRuntime
     return await this.storage.getPassword()
   }
 
-  // handlePopupResponse(resp: NessieResponse): void {
-  //   const requestId: string = (resp as any).__id
-  //   const req = this.requests.get(requestId)
-  //   if (req === undefined) {
-  //     return
-  //   }
-  //   const { resolve, reject } = req
-  //   if (resolve === undefined || reject === undefined) {
-  //     throw new Error(`Request ${requestId} not found.`)
-  //   }
-  //   this.requests.delete(requestId)
-  //   console.log('handlePopupResponse:', resp)
-  //   if (resp.error !== undefined) {
-  //     reject(resp.error)
-  //   } else {
-  //     if (resp.meta !== undefined) {
-  //       console.log('handlePopupResponse: meta:', resp.meta)
-  //     }
-  //     resolve(resp)
-  //   }
-  // }
+  handlePopupResponse(resp: NessieResponse): void {
+    const requestId: string = (resp as any).__id
+    const req = this.requests.get(requestId)
+    if (req === undefined) {
+      return
+    }
+    const { resolve, reject } = req
+    if (resolve === undefined || reject === undefined) {
+      throw new Error(`Request ${requestId} not found.`)
+    }
+    this.requests.delete(requestId)
+    console.log('handlePopupResponse:', resp)
+    if (resp.error !== undefined) {
+      reject(resp.error)
+    } else {
+      if (resp.meta !== undefined) {
+        console.log('handlePopupResponse: meta:', resp.meta)
+      }
+      resolve(resp)
+    }
+  }
 
   async processRPCRequest(req: NessieRequest): Promise<NessieResponse> {
     const m = this.modules.get(req.module)
@@ -108,7 +108,7 @@ class NessieRuntime
 
   async unlock(): Promise<void> {
     await this.storage.getPassword()
-    // await this.keys.list()
+    await this.keys.list()
   }
 
   getStorage(): StorageApi {

@@ -1,5 +1,6 @@
 import type { Module, StorageApi, NessieRequest, NessieResponse, CoreApi } from '../../interfaces'
-import * as SecureStore from 'expo-secure-store'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+
 import * as RootNavigation from './../../../RootNavigation'
 
 import { dummyEncryptData as encryptData, dummyDecryptData as decryptData } from './crypto'
@@ -14,34 +15,40 @@ class Storage<R extends CoreApi> implements StorageApi, Module {
   }
 
   async get(key: string): Promise<Uint8Array> {
-    const result = await SecureStore.getItemAsync(key)
+    const result = await AsyncStorage.getItem(key)
+    console.log('get result', result)
     if (result === undefined) {
       throw new Error(`Key '${key}' not found.`)
     }
     const decoded: Uint8Array = Buffer.from(result as string, 'hex')
+
     return await decryptData(decoded, await this.getPassword())
   }
 
   async set(key: string, value: Uint8Array): Promise<Uint8Array | null> {
+    console.log('I am setting the value', key, value)
     let old: Uint8Array | null = null
     try {
       old = await this.get(key)
     } catch (e) {}
+
     const encrypted = await encryptData(value, await this.getPassword())
     const encoded = Buffer.from(encrypted).toString('hex')
-    await SecureStore.setItemAsync(key, encoded)
+    await AsyncStorage.setItem(key, encoded)
     return old
   }
 
   async remove(key: string): Promise<void> {
-    await SecureStore.deleteItemAsync(key)
+    await AsyncStorage.removeItem(key)
   }
 
   async all(prefix?: string): Promise<Array<[string, Uint8Array]>> {
-    const result = await SecureStore.getItemAsync('all')
+    const result = await AsyncStorage.getAllKeys().then((setKeys) => setKeys)
+    console.log('result,', result)
     const decrypted: Array<[string, Uint8Array]> = []
     const pw = await this.getPassword()
-    for (const key in result) {
+
+    for (const key of result) {
       if (!(typeof result[key] === 'string') || (prefix !== undefined && !key.startsWith(prefix))) {
         continue
       }
@@ -101,25 +108,18 @@ class Storage<R extends CoreApi> implements StorageApi, Module {
   async getPassword(): Promise<string> {
     // first look at the memory if it is cached
     if (this.password !== undefined) {
-      console.log('I am the password line 105', this.password)
       return this.password
     }
     // now check session storage
-    const password = await SecureStore.getItemAsync('password')
-    console.log('I am the password line 110 in stored SecureStore Session', password)
+    const password = await AsyncStorage.getItem('password')
 
     if (password !== undefined) {
       this.password = password as string
-      console.log('I am setting the session password to be the password line 114', this.password)
 
       return this.password
     }
-
-    console.log('none of these worked, I am opening the UnlockStorageScreen')
     // if not, open the popup to get the password
     RootNavigation.navigate('UnlockStorageScreen', {})
-
-    console.log('Hopefully I have gone through')
 
     // if (resp === undefined) {
     //   throw new Error('No password provided.')

@@ -1,28 +1,48 @@
-import React, { ReactNode, createContext, useMemo, useState } from 'react'
+import React, {
+  Dispatch,
+  ReactNode,
+  SetStateAction,
+  createContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
 import { NessieRuntime } from '../runtime'
+import { Storage } from '../runtime/modules/storage/storage'
 
-export const RuntimeContext = createContext({
-  nessieRuntime: null,
-  getRuntime: (password: string) => {},
-})
+interface RuntimeState {
+  nessieRuntime: NessieRuntime | null
+  storage: Storage<NessieRuntime> | null
+}
+type RuntimeContextType = [RuntimeState, Dispatch<SetStateAction<RuntimeState>>]
+
+export const RuntimeContext = createContext<RuntimeContextType>([
+  {
+    nessieRuntime: null,
+    storage: null,
+  },
+  () => {},
+])
 
 function RuntimeContextProvider({ children }: { children: ReactNode }) {
-  const [initialisedRuntime, setInitialisedRuntime] = useState<NessieRuntime | null>(null)
+  const [initialised, setInitialised] = useState<RuntimeState>({
+    nessieRuntime: null,
+    storage: null,
+  })
 
-  function getRuntime(password: string) {
-    const runtime = new NessieRuntime(password)
-    setInitialisedRuntime(runtime)
-  }
-
-  const contextValue = useMemo(
+  useMemo(
     () => ({
-      nessieRuntime: initialisedRuntime,
-      getRuntime,
+      nessieRuntime: initialised.nessieRuntime,
+      storage: initialised.storage,
     }),
-    []
+    [initialised]
   )
 
-  return <RuntimeContext.Provider value={contextValue}>{children}</RuntimeContext.Provider>
+  return (
+    <RuntimeContext.Provider value={[initialised, setInitialised]}>
+      {children}
+    </RuntimeContext.Provider>
+  )
 }
 
 export default RuntimeContextProvider

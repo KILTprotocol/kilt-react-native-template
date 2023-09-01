@@ -2,14 +2,15 @@ import React, { useContext } from 'react'
 import { Storage } from '../runtime/modules/storage/storage'
 import { NessieRuntime } from '../runtime/index'
 import { View, Text, TextInput, TouchableOpacity } from 'react-native'
-import * as SecureStore from 'expo-secure-store'
+
 import BouncyCheckbox from 'react-native-bouncy-checkbox'
 import { AuthContext } from '../wrapper/AuthContextProvider'
 import styles from '../styles/styles'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const textEncoder = new TextEncoder()
 
-export default function OnboardUser(): JSX.Element {
+export default function OnboardUser({ navigation }): JSX.Element {
   const [password, setPassword] = React.useState<undefined | string>()
   const [rememberPassword, setRemeberPassword] = React.useState<boolean>(false)
   const authContext = useContext(AuthContext)
@@ -18,13 +19,13 @@ export default function OnboardUser(): JSX.Element {
     if (!password) {
       return
     }
-    const runtime = new NessieRuntime()
+    const runtime = new NessieRuntime(password)
     const store = new Storage(runtime, password)
 
     await store.set('test', textEncoder.encode('test'))
-    await SecureStore.setItemAsync('nessie-initialized', 'true')
+    await AsyncStorage.setItem('nessie-initialized', 'true')
     if (rememberPassword) {
-      await SecureStore.setItemAsync('session-password', password)
+      await AsyncStorage.setItem('session-password', password)
     }
 
     authContext.authenticate()

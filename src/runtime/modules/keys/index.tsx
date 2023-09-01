@@ -84,6 +84,7 @@ export class KeysModule<R extends RuntimeRequirements> implements Module, KeysAp
       case 'generateMnemonic':
         return { result: await this.generateMnemonic() }
       case 'import': {
+        console.log('import index,', req)
         const typed = req as {
           params: {
             mnemonic: string
@@ -98,34 +99,36 @@ export class KeysModule<R extends RuntimeRequirements> implements Module, KeysAp
           typed.params.keyType,
           typed.params.name
         )
+        console.log('I am the info', info)
         return { result: info }
       }
       case 'list': {
         const list = await this.list()
-        if (!(await this.consentCache.check('keys', 'list', req.name))) {
-          const resp = await this.runtime.openPopup('keys-list-consent', {
-            name: req.name,
-            params: {
-              keys: list,
-            },
-          })
-          if (resp.meta !== undefined && resp.meta?.cacheSeconds > 0) {
-            await this.consentCache.cache(
-              'keys',
-              'list',
-              req.name,
-              resp.meta.cacheSeconds,
-              resp.result
-            )
-          }
-          return { result: resp.result }
-        } else {
-          const list = await this.consentCache.getContext('keys', 'list', req.name)
-          if (list === undefined) {
-            throw new Error('consent cache is empty')
-          }
-          return { result: list }
-        }
+        return { result: list }
+        // if (!(await this.consentCache.check('keys', 'list', req.name))) {
+        //   const resp = await this.runtime.openPopup('keys-list-consent', {
+        //     name: req.name,
+        //     params: {
+        //       keys: list,
+        //     },
+        //   })
+        //   if (resp.meta !== undefined && resp.meta?.cacheSeconds > 0) {
+        //     await this.consentCache.cache(
+        //       'keys',
+        //       'list',
+        //       req.name,
+        //       resp.meta.cacheSeconds,
+        //       resp.result
+        //     )
+        //   }
+        //   return { result: resp.result }
+        // } else {
+        //   const list = await this.consentCache.getContext('keys', 'list', req.name)
+        //   if (list === undefined) {
+        //     throw new Error('consent cache is empty')
+        //   }
+        //   return { result: list }
+        // }
       }
       case 'sign': {
         const typed = req as {
@@ -212,6 +215,7 @@ export class KeysModule<R extends RuntimeRequirements> implements Module, KeysAp
   }
 
   saveMetadata(pair: KeyringPair, md: KeyMetadata): void {
+    console.log('save metadata index keys, ', pair, md)
     this.keyring.saveAddress(pair.address, { md })
   }
 
@@ -250,7 +254,9 @@ export class KeysModule<R extends RuntimeRequirements> implements Module, KeysAp
       { keyType, name },
       keyTypeToGenerate as KeypairType
     )
-    console.log('imported pair', pair)
+
+    console.log('I am offically the keypair', pair.toJson())
+
     const meta: KeyMetadata = {
       name: name.length > 0 ? name : generateName(),
       address: pair.address,
@@ -266,7 +272,6 @@ export class KeysModule<R extends RuntimeRequirements> implements Module, KeysAp
       meta.nacl = naclPair
       meta.kid = '0x' + Buffer.from(naclPair.publicKey).toString('hex')
     }
-    console.log('imported meta', meta)
     this.saveMetadata(pair, meta)
     return {
       kid: meta.kid,

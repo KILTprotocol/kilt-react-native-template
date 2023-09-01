@@ -4,7 +4,8 @@ import BouncyCheckbox from 'react-native-bouncy-checkbox'
 import { NessieRuntime } from '../runtime/index'
 import OnboardUser from './OnboardUserScreen'
 import { Storage } from '../runtime/modules/storage/storage'
-import * as SecureStore from 'expo-secure-store'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+
 import { AuthContext } from '../wrapper/AuthContextProvider'
 import styles from '../styles/styles'
 import { RuntimeContext } from '../wrapper/RuntimeContextProvider'
@@ -13,19 +14,17 @@ const textDecoder = new TextDecoder()
 
 // type Props = NativeStackScreenProps<UnlockStorageScreenProps, 'UnlockStorageScreen', 'MyStack'>
 
-export default function UnlockStorageScreen() {
+export default function UnlockStorageScreen({ navigation }) {
   const [enterPassword, setEnterPassword] = useState('Enter your password')
   const [rememberPassword, setRememberPassword] = useState(false)
   const [error, setError] = useState('')
   const [storageInitialized, setStorageInitialized] = useState<boolean | null>(null)
-  const authContext = useContext(AuthContext)
-  const runtimeContext = useContext(RuntimeContext)
 
-  const runtime = new NessieRuntime()
+  const authContext = useContext(AuthContext)
+  const [initialised, setInitialised] = useContext(RuntimeContext)
 
   const checkIfStorageIsInitialized = async (): Promise<boolean> => {
-    const result = await SecureStore.getItemAsync('nessie-initialized')
-    console.log('result handle', result, enterPassword)
+    const result = await AsyncStorage.getItem('nessie-initialized')
     return !!result
   }
 
@@ -35,9 +34,10 @@ export default function UnlockStorageScreen() {
         setStorageInitialized(initialized)
       })
       .catch((e: any) => {})
-  }, [])
+  }, [initialised])
 
   const checkIfPasswordIsCorrect = async (password: string): Promise<boolean> => {
+    const runtime = new NessieRuntime(password)
     const store = new Storage(runtime, password)
 
     try {
@@ -57,13 +57,19 @@ export default function UnlockStorageScreen() {
   }
 
   const checkForCachedPassword = async (): Promise<void> => {
-    const result = await SecureStore.getItemAsync('session-password')
+    const result = await AsyncStorage.getItem('session-password')
     if (result && result !== undefined) {
       const correct = await checkIfPasswordIsCorrect(result)
       if (correct) {
+        const runtime = new NessieRuntime(enterPassword)
+        const store = new Storage(runtime, enterPassword)
         authContext.authenticate()
+        setInitialised({ nessieRuntime: runtime, storage: store })
+
+        console.log('3', initialised.storage)
+        console.log('4', initialised.nessieRuntime)
       } else {
-        await SecureStore.deleteItemAsync('session-password')
+        await AsyncStorage.removeItem('session-password')
       }
     }
   }
@@ -74,12 +80,16 @@ export default function UnlockStorageScreen() {
       .then((correct) => {
         if (correct) {
           if (rememberPassword) {
+            const runtime = new NessieRuntime(enterPassword)
+            const store = new Storage(runtime, enterPassword)
             authContext.authenticate()
-            runtimeContext.getRuntime(enterPassword)
+            setInitialised({ nessieRuntime: runtime, storage: store })
           }
         }
+        const runtime = new NessieRuntime(enterPassword)
+        const store = new Storage(runtime, enterPassword)
         authContext.authenticate()
-        runtimeContext.getRuntime(enterPassword)
+        setInitialised({ nessieRuntime: runtime, storage: store })
       })
       .catch(console.error)
   }
