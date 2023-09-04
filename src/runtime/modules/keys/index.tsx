@@ -13,6 +13,8 @@ import { box, box_open, randomBytes, box_keyPair_fromSecretKey } from 'tweetnacl
 
 import { type KeyringPair } from '@polkadot/keyring/types'
 
+import { Keyring } from '@polkadot/ui-keyring'
+
 import {
   type StorageApiProvider,
   type Module,
@@ -30,7 +32,6 @@ import { Keystore } from './store'
 import generateName from '../../utils/generateName'
 import kid from '../../utils/kid'
 import { u8a } from '../../utils/u8a'
-import { Keyring } from './keyClass'
 
 interface KeyMetadata {
   name: string
@@ -215,7 +216,6 @@ export class KeysModule<R extends RuntimeRequirements> implements Module, KeysAp
   }
 
   saveMetadata(pair: KeyringPair, md: KeyMetadata): void {
-    console.log('save metadata index keys, ', pair, md)
     this.keyring.saveAddress(pair.address, { md })
   }
 
@@ -254,8 +254,6 @@ export class KeysModule<R extends RuntimeRequirements> implements Module, KeysAp
       { keyType, name },
       keyTypeToGenerate as KeypairType
     )
-
-    console.log('I am offically the keypair', pair.toJson())
 
     const meta: KeyMetadata = {
       name: name.length > 0 ? name : generateName(),
