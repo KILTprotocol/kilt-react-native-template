@@ -1,9 +1,7 @@
 import type { Module, StorageApi, NessieRequest, NessieResponse, CoreApi } from '../../interfaces'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-import * as RootNavigation from './../../../RootNavigation'
-
-import { dummyEncryptData as encryptData, dummyDecryptData as decryptData } from './crypto'
+import { encryptData, decryptData } from './crypto'
 
 class Storage<R extends CoreApi> implements StorageApi, Module {
   private readonly runtime: R
@@ -16,23 +14,22 @@ class Storage<R extends CoreApi> implements StorageApi, Module {
 
   async get(key: string): Promise<Uint8Array> {
     const result = await AsyncStorage.getItem(key)
-    console.log('get result', result)
     if (result === undefined) {
       throw new Error(`Key '${key}' not found.`)
     }
     const decoded: Uint8Array = Buffer.from(result as string, 'hex')
-
     return await decryptData(decoded, await this.getPassword())
   }
 
   async set(key: string, value: Uint8Array): Promise<Uint8Array | null> {
-    console.log('I am setting the value', key, value)
     let old: Uint8Array | null = null
     try {
       old = await this.get(key)
     } catch (e) {}
 
-    const encrypted = await encryptData(value, await this.getPassword())
+    const password = await this.getPassword()
+
+    const encrypted = await encryptData(value, password)
     const encoded = Buffer.from(encrypted).toString('hex')
     await AsyncStorage.setItem(key, encoded)
     return old
@@ -43,28 +40,21 @@ class Storage<R extends CoreApi> implements StorageApi, Module {
   }
 
   async all(prefix?: string): Promise<Array<[string, Uint8Array]>> {
-    const result = await AsyncStorage.getAllKeys().then((setKeys) => setKeys)
-    console.log('result,', result)
+    const keys = await AsyncStorage.getAllKeys()
+
     const decrypted: Array<[string, Uint8Array]> = []
     const pw = await this.getPassword()
+    keys.forEach(async (key) => {
+      const storageEntry = await AsyncStorage.getItem(key)
+      if (!storageEntry || (prefix && !key.startsWith(prefix))) return [['', new Uint8Array()]]
+      const val = Buffer.from(storageEntry)
+      console.log('storage.ts: all get candidate for decryption', key, val)
 
-    for (const key of result) {
-      if (!(typeof result[key] === 'string') || (prefix !== undefined && !key.startsWith(prefix))) {
-        continue
-      }
-      try {
-        const val: Uint8Array = Buffer.from(result[key], 'hex')
-        console.log('storage.ts: all get candidate for decryption', key, val)
-        try {
-          const clear = await decryptData(val, pw)
-          decrypted.push([key, clear])
-        } catch (e) {
-          console.error('storage::all decryption failed', e)
-        }
-      } catch (e) {
-        console.error('storage.ts: all', e)
-      }
-    }
+      const clear = await decryptData(val, pw)
+      decrypted.push([key, clear])
+    })
+
+    console.log('all result', decrypted)
     return decrypted
   }
 
@@ -104,22 +94,25 @@ class Storage<R extends CoreApi> implements StorageApi, Module {
         throw new Error('Invalid method.')
     }
   }
-
+  // WARNING THIS MUST BE FIXED
   async getPassword(): Promise<string> {
     // first look at the memory if it is cached
-    if (this.password !== undefined) {
-      return this.password
-    }
+    // console.log('I am the password', this.password)
+
+    // The issue is the password is returning null
+    // My conclusion there is something wrong with the context.
+
     // now check session storage
-    const password = await AsyncStorage.getItem('password')
+    // const password = await AsyncStorage.getItem('session-password')
+    const password = 'Enter your password'
 
-    if (password !== undefined) {
-      this.password = password as string
+    // if (password !== undefined || password !== null) {
+    //   this.password = password as string
 
-      return this.password
-    }
+    //   return password
+    // }
     // if not, open the popup to get the password
-    RootNavigation.navigate('UnlockStorageScreen', {})
+    // RootNavigation.navigate('UnlockStorageScreen', {})
 
     // if (resp === undefined) {
     //   throw new Error('No password provided.')
