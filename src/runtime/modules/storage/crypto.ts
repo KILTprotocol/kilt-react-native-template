@@ -1,77 +1,50 @@
 // based on https://github.com/bradyjoslin/webcrypto-example/blob/master/script.js
 
-const enc = new TextEncoder()
+import { getRandomValues } from 'expo-crypto'
+import cryptoEs from 'crypto-es'
 
-const getPasswordKey = async (password: string): Promise<CryptoKey> =>
-  await crypto.subtle.importKey('raw', enc.encode(password), 'PBKDF2', false, [
-    'deriveKey'
-  ])
-
-const deriveKey = async (
-  passwordKey: CryptoKey,
-  salt: Uint8Array,
-  keyUsage: KeyUsage[]
-): Promise<CryptoKey> =>
-  await crypto.subtle.deriveKey(
-    {
-      name: 'PBKDF2',
-      salt,
-      iterations: 250000,
-      hash: 'SHA-256'
-    },
-    passwordKey,
-    { name: 'AES-GCM', length: 256 },
-    false,
-    keyUsage
-  )
-
-export async function dummyEncryptData (secretData: Uint8Array, password: string): Promise<Uint8Array> {
-  return secretData
+const deriveKey = (password: string, salt: Uint8Array): cryptoEs.lib.WordArray => {
+  return cryptoEs.PBKDF2(password, cryptoEs.lib.WordArray.create(salt))
 }
 
-export async function encryptData (secretData: Uint8Array, password: string): Promise<Uint8Array> {
-  const salt = crypto.getRandomValues(new Uint8Array(16))
-  const iv = crypto.getRandomValues(new Uint8Array(12))
-  const passwordKey = await getPasswordKey(password)
-  const aesKey = await deriveKey(passwordKey, salt, ['encrypt'])
-  const encryptedContent = await crypto.subtle.encrypt(
-    {
-      name: 'AES-GCM',
-      iv
-    },
-    aesKey,
-    secretData
+export async function encryptData(secretData: Uint8Array, password: string): Promise<Uint8Array> {
+  // const aesKey = deriveKey(password, salt)
+  const { ciphertext, iv, salt } = cryptoEs.AES.encrypt(
+    cryptoEs.lib.WordArray.create(secretData),
+    password
   )
+  // console.log(
+  //   'this is the words against int arr',
+  //   Int32Array.from(ciphertext!.words),
+  //   ciphertext!.words
+  // )
 
-  const encryptedContentArr = new Uint8Array(encryptedContent)
-  const buff = new Uint8Array(
-    salt.byteLength + iv.byteLength + encryptedContentArr.byteLength
-  )
-  buff.set(salt, 0)
-  buff.set(iv, salt.byteLength)
-  buff.set(encryptedContentArr, salt.byteLength + iv.byteLength)
-  console.log('encrypted data')
-  return buff
+  const buff = new cryptoEs.lib.WordArray().concat(salt!).concat(iv!).concat(ciphertext!)
+  const encryptedContentArr = new Uint8Array(Int32Array.from(buff!.words).buffer)
+
+  return encryptedContentArr
 }
 
-export async function dummyDecryptData (encryptedData: Uint8Array, password: string): Promise<Uint8Array> {
-  return encryptedData
-}
-
-export async function decryptData (encryptedData: Uint8Array, password: string): Promise<Uint8Array> {
-  const salt = encryptedData.slice(0, 16)
-  const iv = encryptedData.slice(16, 16 + 12)
-  const data = encryptedData.slice(16 + 12)
-  const passwordKey = await getPasswordKey(password)
-  const aesKey = await deriveKey(passwordKey, salt, ['decrypt'])
-  const decryptedContent = await crypto.subtle.decrypt(
+export async function decryptData(
+  encryptedData: Uint8Array,
+  password: string
+): Promise<Uint8Array> {
+  const salt = encryptedData.slice(0, 8)
+  const iv = encryptedData.slice(8, 8 + 16)
+  const data = encryptedData.slice(8 + 16)
+  const decryptedContent = cryptoEs.AES.decrypt(
     {
-      name: 'AES-GCM',
-      iv
+      ciphertext: cryptoEs.lib.WordArray.create(data),
+      iv: cryptoEs.lib.WordArray.create(iv),
+      salt: cryptoEs.lib.WordArray.create(salt),
     },
-    aesKey,
-    data
+    password
   )
-  console.log('decrypted data')
-  return new Uint8Array(decryptedContent)
+  console.log('salt: ', salt)
+  console.log('iv: ', iv)
+
+  console.log('data: ', data)
+
+  console.log('what am I?', decryptedContent)
+  return new Uint8Array(Int32Array.from(decryptedContent.words).buffer)
 }
