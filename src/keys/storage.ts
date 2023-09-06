@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { decryptData, encryptData } from '../utils/crypto'
 
-export async function get(key: string, password: string): Promise<Uint8Array> {
+export async function getStorage(key: string, password: string): Promise<string> {
   const result = await AsyncStorage.getItem(key)
   console.log('get result', result)
   if (result === undefined) {
@@ -12,15 +12,15 @@ export async function get(key: string, password: string): Promise<Uint8Array> {
   return await decryptData(decoded, password)
 }
 
-export async function set(
+export async function setStorage(
   key: string,
-  value: Uint8Array,
+  value: any,
   password: string
-): Promise<Uint8Array | null> {
+): Promise<string | null> {
   console.log('I am setting the value', key, value)
-  let old: Uint8Array | null = null
+  let old: string | null = null
   try {
-    old = await get(key, password)
+    old = await getStorage(key, password)
   } catch (e) {
     console.log('e', e)
   }
@@ -31,24 +31,31 @@ export async function set(
   return old
 }
 
-export async function remove(key: string): Promise<void> {
+export async function removeStorage(key: string): Promise<void> {
   await AsyncStorage.removeItem(key)
 }
 
-export async function all(password: string): Promise<Array<[string, Uint8Array]>> {
+export async function allStorage(password: string, prefix?: string): Promise<Array<[string, any]>> {
   const keys = await AsyncStorage.getAllKeys()
   console.log('I am the keys from the all', keys)
 
-  const decrypted: Array<[string, Uint8Array]> = []
+  const decrypted: Array<[string, string]> = []
   await Promise.all(
     keys.map(async (key) => {
       const storageEntry = await AsyncStorage.getItem(key)
       console.log('sotrage entry', storageEntry)
-      if (!storageEntry) return [['', new Uint8Array()]]
-      const val = Buffer.from(storageEntry)
-      const clear = await decryptData(val, password)
-      decrypted.push([key, clear])
-      console.log('2', decrypted.length)
+      if (!storageEntry) return console.log('no storage for the entry')
+      if (prefix && storageEntry.startsWith(prefix)) {
+        const storageEntryTrimmed = storageEntry.substring(prefix.length)
+        const encodedStorageEntryTrimmed = Buffer.from(storageEntryTrimmed)
+        const decryptedData = await decryptData(encodedStorageEntryTrimmed, password)
+        decrypted.push([key, decryptedData])
+      } else {
+        const val = Buffer.from(storageEntry)
+        const decryptedData = await decryptData(val, password)
+        decrypted.push([key, decryptedData])
+        console.log('2', decrypted.length)
+      }
     })
   )
   console.log('1', decrypted.length)

@@ -1,9 +1,8 @@
 import { TextInput, View, Text, TouchableOpacity } from 'react-native'
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import * as Kilt from '@kiltprotocol/sdk-js'
 import RNPickerSelect from 'react-native-picker-select'
-import { RuntimeContext } from '../wrapper/RuntimeContextProvider'
-import { NessieRuntime } from '../runtime'
+
 import styles from '../styles/styles'
 import QrScanner from '../components/QrScanner'
 
@@ -12,7 +11,7 @@ export default function ImportKeyScreen({ navigation }): JSX.Element {
   const [receiverAddress, setReceiverAddress] = useState('')
   const [scanner, setScanner] = useState(false)
   const [amount, setAmount] = useState('')
-  const [initialised] = useContext(RuntimeContext)
+
   const [itemsList, setItemsList] = useState<{ label: string; value: string }[]>([
     {
       label: 'No Key',
@@ -37,18 +36,17 @@ export default function ImportKeyScreen({ navigation }): JSX.Element {
     })
   }
 
-  useEffect(() => {
-    const handle = async () => {
-      const keysApiList = await initialised.nessieRuntime?.getKeysApi().list()
-      console.log('Fuck you',keysApiList)
-      const keysList = keysApiList.map((val) => {
-        console.log('I am a key', val)
-        return { label: val.name, value: val.kid }
-      })
-      setItemsList(keysList)
-    }
-    handle()
-  })
+  // useEffect(() => {
+  //   const handle = async () => {
+  //     console.log('Fuck you', keysApiList)
+  //     const keysList = keysApiList.map((val) => {
+  //       console.log('I am a key', val)
+  //       return { label: val.name, value: val.kid }
+  //     })
+  //     setItemsList(keysList)
+  //   }
+  //   handle()
+  // })
 
   return (
     <View style={styles.container}>

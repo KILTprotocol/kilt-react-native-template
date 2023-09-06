@@ -4,7 +4,7 @@ import { TextInput, View, Text, TouchableOpacity } from 'react-native'
 import React, { useState } from 'react'
 import generateName from '../utils/generateName'
 import { KeysApi } from '../utils/interfaces'
-
+import { generateMnemonic } from '../keys/keys'
 import RNPickerSelect from 'react-native-picker-select'
 
 import styles from '../styles/styles'
@@ -30,9 +30,7 @@ export default function ImportKeyScreen({ navigation }): JSX.Element {
       <TouchableOpacity
         style={styles.loginBtn}
         onPress={() => {
-          if (!keysApi) return
-
-          return keysApi.generateMnemonic(12).then((mnemonic) => setMnemonic(mnemonic))
+          return generateMnemonic(12)
         }}
       >
         <Text style={styles.text}>Generate a Mnemonic</Text>

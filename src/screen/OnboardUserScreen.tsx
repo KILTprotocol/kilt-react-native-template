@@ -1,16 +1,15 @@
 import React, { useContext } from 'react'
-import { Storage } from '../runtime/modules/storage/storage'
-import { NessieRuntime } from '../runtime/index'
+
 import { View, Text, TextInput, TouchableOpacity } from 'react-native'
 
-import BouncyCheckbox from 'react-native-bouncy-checkbox'
 import { AuthContext } from '../wrapper/AuthContextProvider'
 import styles from '../styles/styles'
-import AsyncStorage from '@react-native-async-storage/async-storage'
+
+import { setStorage } from '../keys/storage'
 
 const textEncoder = new TextEncoder()
 
-export default function OnboardUser(): JSX.Element {
+export default function OnboardUserScreen(): JSX.Element {
   const [password, setPassword] = React.useState<undefined | string>()
   const [rememberPassword, setRemeberPassword] = React.useState<boolean>(false)
   const authContext = useContext(AuthContext)
@@ -19,13 +18,11 @@ export default function OnboardUser(): JSX.Element {
     if (!password) {
       return
     }
-    const runtime = new NessieRuntime(password)
-    const store = new Storage(runtime, password)
 
-    await store.set('test', textEncoder.encode('test'))
-    await AsyncStorage.setItem('nessie-initialized', 'true')
+    await setStorage('test', textEncoder.encode('test'), password)
+    await setStorage('nessie-initialized', 'true', password)
     if (rememberPassword) {
-      await AsyncStorage.setItem('session-password', password)
+      await setStorage('session-password', password, password)
     }
 
     authContext.authenticate()
@@ -44,7 +41,7 @@ export default function OnboardUser(): JSX.Element {
         value={undefined}
         onChangeText={setPassword}
       />
-      <BouncyCheckbox onPress={() => setRemeberPassword(!rememberPassword)} />
+      {/* <BouncyCheckbox onPress={() => setRemeberPassword(!rememberPassword)} /> */}
       <TouchableOpacity style={styles.loginBtn} onPress={createMasterPassword}>
         <Text>Create Master Password</Text>
       </TouchableOpacity>
