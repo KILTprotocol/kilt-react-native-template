@@ -2,7 +2,7 @@ Arguments:
   /Users/dudleyneedham/.nvm/versions/node/v18.15.0/bin/node /usr/local/Cellar/yarn/1.22.19/libexec/bin/yarn.js
 
 PATH: 
-  /Users/dudleyneedham/.nvm/versions/node/v18.15.0/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Users/dudleyneedham/.nvm/versions/node/v18.15.0/bin:/Users/dudleyneedham/.cargo/bin
+  /Users/dudleyneedham/.nvm/versions/node/v18.15.0/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Users/dudleyneedham/.nvm/versions/node/v18.15.0/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/Users/dudleyneedham/.cargo/bin
 
 Yarn version: 
   1.22.19
@@ -14,7 +14,7 @@ Platform:
   darwin x64
 
 Trace: 
-  SyntaxError: /Users/dudleyneedham/Desktop/workspace/kilt-react-native-template/package.json: Unexpected token } in JSON at position 337
+  SyntaxError: /Users/dudleyneedham/Desktop/workspace/kilt-react-native-template/package.json: Unexpected token t in JSON at position 1457
       at JSON.parse (<anonymous>)
       at /usr/local/Cellar/yarn/1.22.19/libexec/lib/cli.js:1629:59
       at Generator.next (<anonymous>)
@@ -32,7 +32,7 @@ npm manifest:
       "ios": "expo start --ios",
       "web": "expo start --web",
       "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-      "lint:fix": "eslint . --fix --ext .js,.jsx,.ts,.tsx",
+      "lint:fix": "eslint . --fix --ext .js,.jsx,.ts,.tsx"
     },
     "dependencies": {
       "@expo/metro-config": "^0.3.22",
@@ -46,14 +46,27 @@ npm manifest:
       "expo-standard-web-crypto": "^1.6.0",
       "expo-crypto": "^12.4.1",
       "expo-status-bar": "^1.6.0",
-      "postinstall-postinstall": "^2.1.0",
       "process": "^0.11.10",
       "react": "^18.2.0",
       "react-dom": "^18.2.0",
       "react-native": "^0.72.4",
       "react-native-web": "^0.18.7",
       "stream-browserify": "^3.0.0",
-      "text-encoding-polyfill": "^0.6.7"
+      "text-encoding-polyfill": "^0.6.7",
+      "@polkadot/keyring": "^12.4.2",
+      "@polkadot/ui-keyring": "^3.6.2",
+      "@polkadot/util": "^12.4.2",
+      "@polkadot/util-crypto": "^12.4.2",
+      "@react-native-assets/slider": "^7.0.3",
+      "@react-native-async-storage/async-storage": "1.18.2",
+      "@react-navigation/drawer": "^6.6.3",
+      "@react-navigation/native": "^6.1.7",
+      "@react-navigation/native-stack": "^6.9.13",
+      "expo-barcode-scanner": "~12.5.3",
+      "expo-notifications": "~0.20.1",
+      "expo-secure-store": "~12.3.1",
+      "react-qr-code": "^2.0.12",
+      tweetnacl-ts": "^1.0.3","uuid": "^9.0.0"
     },
     "devDependencies": {
       "@babel/core": "^7.18.13",
@@ -3278,11 +3291,6 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/@xtuc/long/-/long-4.2.2.tgz#d291c6a4e97989b5c61d9acf396ae4fe133a718d"
     integrity sha512-NuHqBY1PB/D8xU6s/thBgOAiAP7HOYDQ32+BFZILJ8ivkUkAHQnWfn6WhL79Owj1qmUnoN/YPhktdIoucipkAQ==
   
-  "@yarnpkg/lockfile@^1.1.0":
-    version "1.1.0"
-    resolved "https://registry.yarnpkg.com/@yarnpkg/lockfile/-/lockfile-1.1.0.tgz#e77a97fbd345b76d83245edcd17d393b1b41fb31"
-    integrity sha512-GpSwvyXOcOOlV70vbnzjj4fW5xW/FdUF6nQEt1ENy7m4ZCczi1+/buVUPAqmGfqznsORNFzUMjctTIp8a9tuCQ==
-  
   abort-controller@^3.0.0:
     version "3.0.0"
     resolved "https://registry.yarnpkg.com/abort-controller/-/abort-controller-3.0.0.tgz#eaf54d53b62bae4138e809ca225c8439a6efb392"
@@ -4445,7 +4453,7 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/ci-info/-/ci-info-3.3.2.tgz#6d2967ffa407466481c6c90b6e16b3098f080128"
     integrity sha512-xmDt/QIAdeZ9+nfdPsaBCpMvHNLFiLdjj59qjqn+6iPe6YmHGQ35sBnQ8uslRBXFmXkiZQOJRjvQeoGppoTjjg==
   
-  ci-info@^3.3.0, ci-info@^3.7.0:
+  ci-info@^3.3.0:
     version "3.8.0"
     resolved "https://registry.yarnpkg.com/ci-info/-/ci-info-3.8.0.tgz#81408265a5380c929f0bc665d62256628ce9ef91"
     integrity sha512-eXTggHWSooYhq49F2opQhuHWgzucfF2YgODK4e1566GQs5BIfP30B0oenwBJHfWxAs2fyPB1s7Mg949zLf61Yw==
@@ -6470,7 +6478,7 @@ Lockfile:
       locate-path "^6.0.0"
       path-exists "^4.0.0"
   
-  find-yarn-workspace-root@^2.0.0, find-yarn-workspace-root@~2.0.0:
+  find-yarn-workspace-root@~2.0.0:
     version "2.0.0"
     resolved "https://registry.yarnpkg.com/find-yarn-workspace-root/-/find-yarn-workspace-root-2.0.0.tgz#f47fb8d239c900eb78179aa81b66673eac88f7bd"
     integrity sha512-1IMnbjt4KzsQfnhnzNd8wUEgXZ44IzZaZmnLYx7D5FZlaHt2gW20Cri8Q+E/t5tIj4+epTBub+2Zxu/vNILzqQ==
@@ -8060,13 +8068,6 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/json-stable-stringify-without-jsonify/-/json-stable-stringify-without-jsonify-1.0.1.tgz#9db7b59496ad3f3cfef30a75142d2d930ad72651"
     integrity sha512-Bdboy+l7tA3OGW6FjyFHWkP5LuByj1Tk33Ljyq0axyzdk9//JSi2u3fP1QSmd1KNwq6VOKYGlAu87CisVir6Pw==
   
-  json-stable-stringify@^1.0.2:
-    version "1.0.2"
-    resolved "https://registry.yarnpkg.com/json-stable-stringify/-/json-stable-stringify-1.0.2.tgz#e06f23128e0bbe342dc996ed5a19e28b57b580e0"
-    integrity sha512-eunSSaEnxV12z+Z73y/j5N37/In40GK4GmsSy+tEHJMxknvqnA7/djeYtAgW0GsWHUfg+847WJjKaEylk2y09g==
-    dependencies:
-      jsonify "^0.0.1"
-  
   json-stringify-safe@^5.0.1:
     version "5.0.1"
     resolved "https://registry.yarnpkg.com/json-stringify-safe/-/json-stringify-safe-5.0.1.tgz#1296a2d58fd45f19a0f6ce01d65701e2c735b6eb"
@@ -8104,11 +8105,6 @@ Lockfile:
       universalify "^2.0.0"
     optionalDependencies:
       graceful-fs "^4.1.6"
-  
-  jsonify@^0.0.1:
-    version "0.0.1"
-    resolved "https://registry.yarnpkg.com/jsonify/-/jsonify-0.0.1.tgz#2aa3111dae3d34a0f151c63f3a45d995d9420978"
-    integrity sha512-2/Ki0GcmuqSrgFyelQq9M05y7PS0mEwuIzrf3f1fPqkVDVRvZrPZtVSMHxdgo8Aq0sxAOb/cr2aqqA3LeWHVPg==
   
   "jsx-ast-utils@^2.4.1 || ^3.0.0", jsx-ast-utils@^3.3.3:
     version "3.3.5"
@@ -8148,13 +8144,6 @@ Lockfile:
     version "6.0.3"
     resolved "https://registry.yarnpkg.com/kind-of/-/kind-of-6.0.3.tgz#07c05034a6c349fa06e24fa35aa76db4580ce4dd"
     integrity sha512-dcS1ul+9tmeD95T+x28/ehLgd9mENa3LsvDTtzm3vyBEO7RPptvAD+t44WVXaUjTBRcrpFeFlC8WCruUR456hw==
-  
-  klaw-sync@^6.0.0:
-    version "6.0.0"
-    resolved "https://registry.yarnpkg.com/klaw-sync/-/klaw-sync-6.0.0.tgz#1fd2cfd56ebb6250181114f0a581167099c2b28c"
-    integrity sha512-nIeuVSzdCCs6TDPTqI8w1Yre34sSq7AkZ4B3sfOBbI2CgVSB4Du4aLQijFU2+lhAFCwt9+42Hel6lQNIv6AntQ==
-    dependencies:
-      graceful-fs "^4.1.11"
   
   kleur@^3.0.3:
     version "3.0.3"
@@ -9614,7 +9603,7 @@ Lockfile:
     dependencies:
       is-wsl "^1.1.0"
   
-  open@^7.0.2, open@^7.4.2:
+  open@^7.0.2:
     version "7.4.2"
     resolved "https://registry.yarnpkg.com/open/-/open-7.4.2.tgz#b8147e26dcf3e426316c730089fd71edd29c2321"
     integrity sha512-MVHddDVweXZF3awtlAS+6pgKLlm/JgxZ90+/NBurBoQctVOOB/zDdVjcyPzQ+0laDGbsWgrRkflI65sQeOgT9Q==
@@ -9862,27 +9851,6 @@ Lockfile:
     dependencies:
       ansi-escapes "^4.3.2"
       cross-spawn "^7.0.3"
-  
-  patch-package@^8.0.0:
-    version "8.0.0"
-    resolved "https://registry.yarnpkg.com/patch-package/-/patch-package-8.0.0.tgz#d191e2f1b6e06a4624a0116bcb88edd6714ede61"
-    integrity sha512-da8BVIhzjtgScwDJ2TtKsfT5JFWz1hYoBl9rUQ1f38MC2HwnEIkK8VN3dKMKcP7P7bvvgzNDbfNHtx3MsQb5vA==
-    dependencies:
-      "@yarnpkg/lockfile" "^1.1.0"
-      chalk "^4.1.2"
-      ci-info "^3.7.0"
-      cross-spawn "^7.0.3"
-      find-yarn-workspace-root "^2.0.0"
-      fs-extra "^9.0.0"
-      json-stable-stringify "^1.0.2"
-      klaw-sync "^6.0.0"
-      minimist "^1.2.6"
-      open "^7.4.2"
-      rimraf "^2.6.3"
-      semver "^7.5.3"
-      slash "^2.0.0"
-      tmp "^0.0.33"
-      yaml "^2.2.2"
   
   path-browserify@0.0.1:
     version "0.0.1"
@@ -10387,11 +10355,6 @@ Lockfile:
       nanoid "^3.3.6"
       picocolors "^1.0.0"
       source-map-js "^1.0.2"
-  
-  postinstall-postinstall@^2.1.0:
-    version "2.1.0"
-    resolved "https://registry.yarnpkg.com/postinstall-postinstall/-/postinstall-postinstall-2.1.0.tgz#4f7f77441ef539d1512c40bd04c71b06a4704ca3"
-    integrity sha512-7hQX6ZlZXIoRiWNrbMQaLzUUfH+sSx39u8EJ9HYuDc1kLo9IXKWjM5RSquZN1ad5GnH8CGFM78fsAAQi3OKEEQ==
   
   prelude-ls@^1.2.1:
     version "1.2.1"
@@ -11504,11 +11467,6 @@ Lockfile:
     version "1.0.5"
     resolved "https://registry.yarnpkg.com/sisteransi/-/sisteransi-1.0.5.tgz#134d681297756437cc05ca01370d3a7a571075ed"
     integrity sha512-bLGGlR1QxBcynn2d5YmDX4MGjlZvy2MRBDRNHLJ8VI6l6+9FUiyTFNJ0IveOSP0bcXgVDPRcfGqA0pjaqUpfVg==
-  
-  slash@^2.0.0:
-    version "2.0.0"
-    resolved "https://registry.yarnpkg.com/slash/-/slash-2.0.0.tgz#de552851a1759df3a8f206535442f5ec4ddeab44"
-    integrity sha512-ZYKh3Wh2z1PpEXWr0MpSBZ0V6mZHAQfYevttO11c51CaWjGTaadiKZ+wVt1PbMlDV5qhMFslpZCemhwOK7C89A==
   
   slash@^3.0.0:
     version "3.0.0"
@@ -13159,7 +13117,7 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/yallist/-/yallist-4.0.0.tgz#9bb92790d9c0effec63be73519e11a35019a3a72"
     integrity sha512-3wdGidZyq5PB084XLES5TpOSRA3wjXAlIWMhum2kRcv/41Sn2emQ0dycQW4uZXLejwKvg6EsvbdlVL+FYEct7A==
   
-  yaml@^2.2.1, yaml@^2.2.2:
+  yaml@^2.2.1:
     version "2.3.1"
     resolved "https://registry.yarnpkg.com/yaml/-/yaml-2.3.1.tgz#02fe0975d23cd441242aa7204e09fc28ac2ac33b"
     integrity sha512-2eHWfjaoXgTBC2jNM1LRef62VQa0umtvRiDSk6HSzW7RvS5YtkabJrwYLLEKWBc8a5U2PTSCs+dJjUTJdlHsWQ==
