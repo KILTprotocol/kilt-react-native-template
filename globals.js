@@ -20,6 +20,9 @@ global.btoa = encode
 // fixes an issue with @substrate/connect
 window.addEventListener = () => {}
 
+// fixes the keyring ui
+window.location.host = window.location.host ?? []
+
 // fixes issue with json-schema
 self.location.origin = ''
 
