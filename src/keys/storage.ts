@@ -1,34 +1,36 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { decryptData, encryptData } from '../utils/crypto'
 
+const decoder = new TextDecoder()
+const encoder = new TextEncoder()
+
 export async function getStorage(key: string, password: string): Promise<string> {
-  const result = await AsyncStorage.getItem(key)
-  console.log('get result', result)
-  if (result === undefined) {
+  const encodedResult = await AsyncStorage.getItem(key)
+
+  console.log('encoded result,', key, encodedResult)
+
+  if (encodedResult === undefined) {
     throw new Error(`Key '${key}' not found.`)
   }
-  const decoded: Uint8Array = Buffer.from(result as string, 'hex')
 
-  return await decryptData(decoded, password)
+  const decodedResult = Buffer.from(encodedResult as string, 'hex')
+  console.log('decodedResult,', key, decodedResult)
+
+  const decryptedData = await decryptData(decodedResult, password)
+  const decoded = decoder.decode(decryptedData)
+  console.log('decrypted', decoded)
+
+  return decoded
 }
 
-export async function setStorage(
-  key: string,
-  value: any,
-  password: string
-): Promise<string | null> {
-  console.log('I am setting the value', key, value)
-  let old: string | null = null
-  try {
-    old = await getStorage(key, password)
-  } catch (e) {
-    console.log('e', e)
-  }
+export async function setStorage(key: string, value: any, password: string): Promise<void> {
+  const encodedValue = encoder.encode(JSON.stringify(value))
 
-  const encrypted = await encryptData(value, password)
+  const encrypted = await encryptData(encodedValue, password)
+
   const encoded = Buffer.from(encrypted).toString('hex')
+
   await AsyncStorage.setItem(key, encoded)
-  return old
 }
 
 export async function removeStorage(key: string): Promise<void> {

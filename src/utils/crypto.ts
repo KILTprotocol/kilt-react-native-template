@@ -1,22 +1,23 @@
 // based on https://github.com/bradyjoslin/webcrypto-example/blob/master/script.js
 
-const encoder = new TextEncoder()
-const decoder = new TextDecoder()
-
 import cryptoEs from 'crypto-es'
 
-export async function encryptData(secretData: any, password: string): Promise<Uint8Array> {
-  const encodedData = encoder.encode(JSON.stringify(secretData))
+export async function encryptData(secretData: Uint8Array, password: string): Promise<Uint8Array> {
+  // const aesKey = deriveKey(password, salt)
   const { ciphertext, iv, salt } = cryptoEs.AES.encrypt(
-    cryptoEs.lib.WordArray.create(encodedData),
+    cryptoEs.lib.WordArray.create(secretData),
     password
   )
+
   const buff = new cryptoEs.lib.WordArray().concat(salt!).concat(iv!).concat(ciphertext!)
   const encryptedContentArr = new Uint8Array(Int32Array.from(buff!.words).buffer)
   return encryptedContentArr
 }
 
-export async function decryptData(encryptedData: Uint8Array, password: string): Promise<string> {
+export async function decryptData(
+  encryptedData: Uint8Array,
+  password: string
+): Promise<Uint8Array> {
   const salt = encryptedData.slice(0, 8)
   const iv = encryptedData.slice(8, 8 + 16)
   const data = encryptedData.slice(8 + 16)
@@ -29,5 +30,5 @@ export async function decryptData(encryptedData: Uint8Array, password: string): 
     password
   )
 
-  return JSON.parse(decoder.decode(new Uint8Array(Int32Array.from(decryptedContent.words).buffer)))
+  return new Uint8Array(Int32Array.from(decryptedContent.words).buffer)
 }

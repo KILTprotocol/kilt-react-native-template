@@ -38,7 +38,7 @@ export default function UnlockStorageScreen({ navigation }) {
 
       if (test !== 'test') {
         setError('Incorrect password')
-
+        console.log('nope', test)
         return false
       }
     } catch (e) {
@@ -46,12 +46,14 @@ export default function UnlockStorageScreen({ navigation }) {
 
       return false
     }
+    console.log('true', test)
 
     return true
   }
 
   const checkForCachedPassword = async (): Promise<void> => {
     const result = await getStorage('session-password', enterPassword)
+
     if (result && result !== undefined) {
       const correct = await checkIfPasswordIsCorrect(result)
       if (correct) {
@@ -61,7 +63,7 @@ export default function UnlockStorageScreen({ navigation }) {
       }
     }
   }
-  checkForCachedPassword().catch(console.error)
+  checkForCachedPassword().catch((e) => console.log(e))
 
   const onInsertPassword = async (): Promise<void> => {
     await checkIfPasswordIsCorrect(enterPassword)
@@ -73,6 +75,7 @@ export default function UnlockStorageScreen({ navigation }) {
             authContext.authenticate()
           }
         }
+
         await setStorage('session-password', enterPassword, enterPassword)
 
         authContext.authenticate()

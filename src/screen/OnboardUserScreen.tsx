@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 
 import { View, Text, TextInput, TouchableOpacity } from 'react-native'
 
@@ -10,7 +10,7 @@ import { setStorage } from '../keys/storage'
 const textEncoder = new TextEncoder()
 
 export default function OnboardUserScreen(): JSX.Element {
-  const [password, setPassword] = React.useState<undefined | string>()
+  const [password, setPassword] = useState<string>('Enter your password')
   const [rememberPassword, setRemeberPassword] = React.useState<boolean>(false)
   const authContext = useContext(AuthContext)
 
@@ -18,10 +18,14 @@ export default function OnboardUserScreen(): JSX.Element {
     if (!password) {
       return
     }
-
+    console.log('trigger 1')
     await setStorage('test', textEncoder.encode('test'), password)
+    console.log('trigger 2')
+
     await setStorage('nessie-initialized', 'true', password)
     if (rememberPassword) {
+      console.log('trigger 3')
+
       await setStorage('session-password', password, password)
     }
 
@@ -38,7 +42,7 @@ export default function OnboardUserScreen(): JSX.Element {
       <TextInput
         style={styles.textInput}
         placeholder="password"
-        value={undefined}
+        value={password}
         onChangeText={setPassword}
       />
       {/* <BouncyCheckbox onPress={() => setRemeberPassword(!rememberPassword)} /> */}
