@@ -27,6 +27,7 @@
     "base-64": "^1.0.0",
     "buffer": "^6.0.3",
     "cbor": "^9.0.1",
+    "crypto-es": "^2.0.4",
     "events": "^3.3.0",
     "expo": "^49.0.0",
     "expo-barcode-scanner": "~12.5.3",

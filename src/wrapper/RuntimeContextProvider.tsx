@@ -32,8 +32,8 @@ function RuntimeContextProvider({ children }: { children: ReactNode }) {
 
   useMemo(
     () => ({
-      nessieRuntime: initialised.nessieRuntime,
-      storage: initialised.storage,
+      nessieRuntime: { ...initialised.nessieRuntime },
+      storage: { ...initialised.storage },
     }),
     [initialised]
   )

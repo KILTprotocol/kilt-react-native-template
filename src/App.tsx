@@ -25,6 +25,7 @@ import ImportKeyScreen from './pages/ImportKeyScreen'
 import RuntimeContextProvider, { RuntimeContext } from './wrapper/RuntimeContextProvider'
 import ReceiverScreen from './pages/ReceiverScreen'
 import SenderScreen from './pages/SenderScreen'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const Stack = createNativeStackNavigator()
 
@@ -40,44 +41,50 @@ function Main({ navigation }) {
       const api = ConfigService.get('api')
 
       console.log(`Querying the blockchain for the web3name "${web3Name}"`)
-      // Query the owner of the provided web3name.
-      const encodedWeb3NameOwner = await api.call.did.queryByWeb3Name(web3Name)
+      // // Query the owner of the provided web3name.
+      // const encodedWeb3NameOwner = await api.call.did.queryByWeb3Name(web3Name)
 
-      const { document } = Did.linkedInfoFromChain(encodedWeb3NameOwner)
+      // const { document } = Did.linkedInfoFromChain(encodedWeb3NameOwner)
 
-      setDid(document.uri || 'unknown')
+      // setDid(document.uri || 'unknown')
     }
     fetchDid()
-  })
+  }, [did])
 
-  useEffect(() => {
-    if (!initialised.nessieRuntime || !initialised.nessieRuntime.getKeysApi()) return
+  // useEffect(() => {
+  //   if (!initialised.nessieRuntime || !initialised.nessieRuntime.getKeysApi()) return
 
-    const keys = initialised.nessieRuntime?.getKeysApi()
-    console.log(
-      'I am something',
-      keys.list().then((val) => console.log(val[0].name))
-    )
-  }, [])
+  //   const keys = initialised.nessieRuntime?.getKeysApi()
+  //   console.log(
+  //     'I am something',
+  //     keys.list().then((val) => console.log(val[0].name))
+  //   )
+  // }, [])
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Fetching a DID: {did}</Text>
-      <Text>Create Keys</Text>
       <TouchableOpacity style={styles.text} onPress={() => navigation.navigate('ImportKeyScreen')}>
         <Text style={styles.text}>Import or Add keys</Text>
       </TouchableOpacity>
-      <Text>Send or Receive</Text>
+      <TouchableOpacity style={styles.text} onPress={() => AsyncStorage.clear()}>
+        <Text style={styles.text}>Clear Storage Tokens</Text>
+      </TouchableOpacity>
       <TouchableOpacity style={styles.text} onPress={() => navigation.navigate('ReceiverScreen')}>
         <Text style={styles.text}>Receive Tokens</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.text} onPress={() => navigation.navigate('SenderScreen')}>
+      {/* <TouchableOpacity style={styles.text} onPress={() => navigation.navigate('SenderScreen')}>
         <Text style={styles.text}>Send Tokens</Text>
       </TouchableOpacity>
       <Text>Create a DID</Text>
       <TouchableOpacity style={styles.text} onPress={() => navigation.navigate('CreateDidScreen')}>
         <Text style={styles.text}>Create a DID</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.text} onPress={() => authContext.logout()}>
+      </TouchableOpacity> */}
+      <TouchableOpacity
+        style={styles.text}
+        onPress={() => {
+          authContext.logout()
+        }}
+      >
         <Text style={styles.text}>Logout</Text>
       </TouchableOpacity>
     </View>

@@ -23,8 +23,11 @@ export default function UnlockStorageScreen({ navigation }) {
   const authContext = useContext(AuthContext)
   const [initialised, setInitialised] = useContext(RuntimeContext)
 
+  const runtime = new NessieRuntime()
+
   const checkIfStorageIsInitialized = async (): Promise<boolean> => {
     const result = await AsyncStorage.getItem('nessie-initialized')
+
     return !!result
   }
 
@@ -37,7 +40,6 @@ export default function UnlockStorageScreen({ navigation }) {
   }, [initialised])
 
   const checkIfPasswordIsCorrect = async (password: string): Promise<boolean> => {
-    const runtime = new NessieRuntime(password)
     const store = new Storage(runtime, password)
 
     try {
@@ -61,13 +63,10 @@ export default function UnlockStorageScreen({ navigation }) {
     if (result && result !== undefined) {
       const correct = await checkIfPasswordIsCorrect(result)
       if (correct) {
-        const runtime = new NessieRuntime(enterPassword)
         const store = new Storage(runtime, enterPassword)
+
         authContext.authenticate()
         setInitialised({ nessieRuntime: runtime, storage: store })
-
-        console.log('3', initialised.storage)
-        console.log('4', initialised.nessieRuntime)
       } else {
         await AsyncStorage.removeItem('session-password')
       }
@@ -75,19 +74,21 @@ export default function UnlockStorageScreen({ navigation }) {
   }
   checkForCachedPassword().catch(console.error)
 
-  const onInsertPassword = (): void => {
-    checkIfPasswordIsCorrect(enterPassword)
-      .then((correct) => {
+  const onInsertPassword = async (): Promise<void> => {
+    await checkIfPasswordIsCorrect(enterPassword)
+      .then(async (correct) => {
+        const store = new Storage(runtime, enterPassword)
+
         if (correct) {
           if (rememberPassword) {
-            const runtime = new NessieRuntime(enterPassword)
-            const store = new Storage(runtime, enterPassword)
+            await AsyncStorage.setItem('session-password', enterPassword)
+
             authContext.authenticate()
             setInitialised({ nessieRuntime: runtime, storage: store })
           }
         }
-        const runtime = new NessieRuntime(enterPassword)
-        const store = new Storage(runtime, enterPassword)
+        await AsyncStorage.setItem('session-password', enterPassword)
+
         authContext.authenticate()
         setInitialised({ nessieRuntime: runtime, storage: store })
       })

@@ -6,44 +6,32 @@ import generateName from '../runtime/utils/generateName'
 
 import RNPickerSelect from 'react-native-picker-select'
 import { RuntimeContext } from '../wrapper/RuntimeContextProvider'
-import { NessieRuntime } from '../runtime'
+
 import styles from '../styles/styles'
 import { KeysApi } from '../runtime/interfaces'
+import { NessieRuntime } from '../runtime'
 
 export default function ImportKeyScreen({ navigation }): JSX.Element {
   const [initialised] = useContext(RuntimeContext)
-  const [keys, setKeys] = useState<KeysApi | undefined>()
+  const [keysApi, setKeysApi] = useState<KeysApi | undefined>()
+  const [algorithm, setAlgorithm] = useState('sr25519')
+  const [mnemonic, setMnemonic] = useState(mnemonicGenerate())
+  const [name, setName] = useState(generateName())
+  const [derivation, setDerivation] = useState('')
+  
 
   useEffect(() => {
     if (!initialised.nessieRuntime || !initialised.nessieRuntime.getKeysApi())
       throw new Error('nope')
 
-    setKeys(initialised.nessieRuntime?.getKeysApi())
-  }, [])
-
-  const [algorithm, setAlgorithm] = useState('sr25519')
-  const [mnemonic, setMnemonic] = useState(mnemonicGenerate())
-  const [name, setName] = useState(generateName())
-  const [derivation, setDerivation] = useState('')
+    setKeysApi(initialised.nessieRuntime!.getKeysApi())
+  }, [initialised])
 
   const addKey = async (): Promise<void> => {
-    if (!keys) return console.log('hello')
-    console.log('it works')
-    await keys.import(mnemonic, derivation, algorithm as KeypairType | 'x25519', name)
-    const handleList = await keys.list()
-    console.log('What is the handle list', handleList[0].kid)
-    const getKey = await initialised.storage?.get(name)
-    console.log('get the key of this new key', getKey)
-  }
+    if (!keysApi) return
 
-  useEffect(() => {
-    const handler = async () => {
-      if (!keys) return
-      const handleList = await keys.list()
-      console.log('What is the handle list', handleList)
-    }
-    handler()
-  }, [keys])
+    await keysApi.import(mnemonic, derivation, algorithm as KeypairType | 'x25519', name)
+  }
 
   return (
     <View style={styles.container}>
@@ -53,8 +41,9 @@ export default function ImportKeyScreen({ navigation }): JSX.Element {
       <TouchableOpacity
         style={styles.loginBtn}
         onPress={() => {
-          if (!keys) return console.log('silly')
-          return keys.generateMnemonic(12).then((mnemonic) => setMnemonic(mnemonic))
+          if (!keysApi) return
+
+          return keysApi.generateMnemonic(12).then((mnemonic) => setMnemonic(mnemonic))
         }}
       >
         <Text style={styles.text}>Generate a Mnemonic</Text>

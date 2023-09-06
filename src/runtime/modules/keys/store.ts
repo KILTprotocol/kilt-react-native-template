@@ -1,6 +1,7 @@
 import { type KeyringJson, type KeyringStore } from '@polkadot/ui-keyring/types'
 
 import { type StorageApi } from '../../interfaces'
+import { AnyJson } from '@kiltprotocol/sdk-js'
 
 const PREFIX = 'keys-'
 
@@ -23,25 +24,20 @@ export class Keystore implements KeyringStore {
     await this.allWasCalledPromise
   }
 
-  all(cb: (key: string, value: KeyringJson) => void): void {
-    this.storage
-      .all()
-      .then((values: Array<[string, Uint8Array]>) => {
-        values.forEach(([key, value]: [string, Uint8Array]) => {
-          console.log('store all keys', key, value)
-
-          if (key.startsWith(PREFIX)) {
-            console.log('got key candidate', key, 'from storage', value, 'decoding...')
-            const k = key.substring(PREFIX.length)
-            const v = JSON.parse(dec.decode(value))
-            cb(k, v)
-          }
-        })
-        this.resolveAllWasCalled()
-      })
-      .catch((err: Error) => {
-        console.error('error while getting all keys from storage', err)
-      })
+  async all(cb: (key: string, value: KeyringJson) => void): Promise<void> {
+    const storage = await this.storage.all()
+    storage.map(([key, value]: [string, Uint8Array]) => {
+      if (key.startsWith(PREFIX)) {
+        // console.log('got key candidate', key, 'from storage', value, 'decoding...')
+        const k = key.substring(PREFIX.length)
+        const v = JSON.parse(dec.decode(value))
+        cb(k, v)
+      }
+    })
+    // .catch((err: Error) => {
+    //   console.error('error while getting all keys from storage', err)
+    // })
+    this.resolveAllWasCalled()
   }
 
   get(key: string, cb: (value: KeyringJson) => void): void {
@@ -49,7 +45,8 @@ export class Keystore implements KeyringStore {
     this.storage
       .get(PREFIX + key)
       .then((value: Uint8Array) => {
-        const res: KeyringJson = JSON.parse(dec.decode(value))
+        console.log('value, I am a value', value)
+        const res: KeyringJson = JSON.parse(JSON.stringify(dec.decode(value)))
         cb(res)
       })
       .catch((err: Error) => {

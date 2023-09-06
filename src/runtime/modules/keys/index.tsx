@@ -66,6 +66,7 @@ export class KeysModule<R extends RuntimeRequirements> implements Module, KeysAp
   }
 
   private async init(): Promise<void> {
+    console.log(this.isInitialized)
     if (this.isInitialized) {
       return
     }
@@ -255,6 +256,8 @@ export class KeysModule<R extends RuntimeRequirements> implements Module, KeysAp
       keyTypeToGenerate as KeypairType
     )
 
+    console.log('I am the pair', pair)
+
     const meta: KeyMetadata = {
       name: name.length > 0 ? name : generateName(),
       address: pair.address,
@@ -281,6 +284,7 @@ export class KeysModule<R extends RuntimeRequirements> implements Module, KeysAp
   async list(): Promise<KeyInfo[]> {
     await this.init()
     console.log('call keys::list')
+    console.log('I am the What keys', await this.keyring.getPairs())
     return this.keyring.getPairs().map((pair) => {
       const meta = this.loadMetadata(pair)
       console.log('keys::list got meta', meta)

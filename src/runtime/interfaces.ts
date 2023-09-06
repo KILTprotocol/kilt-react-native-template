@@ -42,7 +42,7 @@ interface StorageApi {
   // get returns the value to a given key
   get: (key: string) => Promise<Uint8Array>
   // set sets the value to a given key and returns the previous value if any
-  set: (key: string, value: Uint8Array) => Promise<Uint8Array | null>
+  set: (key: string, value: Uint8Array) => Promise<void>
   // remove removes the value to a given key
   remove: (key: string) => Promise<void>
   // all returns all key-value pairs in the storage

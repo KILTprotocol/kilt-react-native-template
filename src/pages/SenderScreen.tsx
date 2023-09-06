@@ -39,16 +39,17 @@ export default function ImportKeyScreen({ navigation }): JSX.Element {
 
   useEffect(() => {
     const handle = async () => {
-      const keysApiList = await initialised.nessieRuntime?.getKeysApi().list()
-      console.log('Fuck you',keysApiList)
-      const keysList = keysApiList.map((val) => {
-        console.log('I am a key', val)
-        return { label: val.name, value: val.kid }
-      })
-      setItemsList(keysList)
+      // const keysApiList = await initialised.nessieRuntime?.getKeysApi().list()
+      // console.log('Fuck you', keysApiList)
+      // if (!keysApiList) return
+      // const keysList = keysApiList.map((val) => {
+      //   console.log('I am a key', val)
+      //   return { label: val.name, value: val.kid }
+      // })
+      // setItemsList(keysList)
     }
     handle()
-  })
+  }, [initialised])
 
   return (
     <View style={styles.container}>

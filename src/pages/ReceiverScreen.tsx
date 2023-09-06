@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native'
+import { View, Text, TouchableOpacity } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
 
 import RNPickerSelect from 'react-native-picker-select'
@@ -6,6 +6,7 @@ import { RuntimeContext } from '../wrapper/RuntimeContextProvider'
 import { NessieRuntime } from '../runtime'
 import styles from '../styles/styles'
 import QRCode from 'react-qr-code'
+import { KeysApi, KeyInfo } from '../runtime/interfaces'
 
 export default function ReceiverScreen({ navigation }): JSX.Element {
   const [itemsList, setItemsList] = useState<{ label: string; value: string }[]>([
@@ -14,21 +15,12 @@ export default function ReceiverScreen({ navigation }): JSX.Element {
       value: 'No Key',
     },
   ])
-  const [address, setAddress] = useState(itemsList[0].value)
+  const [address, setAddress] = useState(null)
   const [initialised] = useContext(RuntimeContext)
 
-  useEffect(() => {
-    const handle = async () => {
-      const keysApiList = await initialised.nessieRuntime?.getKeysApi().list()
-
-      const keysList = keysApiList.map((val) => {
-        console.log('I am a key', val)
-        return { label: val.name, value: val.kid }
-      })
-      setItemsList(keysList)
-    }
-    handle()
-  }, [])
+  const handle = async () => {
+    await initialised.nessieRuntime?.getKeysApi().list()
+  }
 
   return (
     <View style={styles.container}>
@@ -40,8 +32,10 @@ export default function ReceiverScreen({ navigation }): JSX.Element {
         }}
         items={itemsList}
       />
-
-      <QRCode value={address} />
+      <TouchableOpacity onPress={handle}>
+        <Text style={styles.text}>Refresh</Text>
+      </TouchableOpacity>
+      {address ? <QRCode value={address} /> : null}
 
       <Text>Address: {address}</Text>
     </View>

@@ -13,11 +13,6 @@ export async function encryptData(secretData: Uint8Array, password: string): Pro
     cryptoEs.lib.WordArray.create(secretData),
     password
   )
-  // console.log(
-  //   'this is the words against int arr',
-  //   Int32Array.from(ciphertext!.words),
-  //   ciphertext!.words
-  // )
 
   const buff = new cryptoEs.lib.WordArray().concat(salt!).concat(iv!).concat(ciphertext!)
   const encryptedContentArr = new Uint8Array(Int32Array.from(buff!.words).buffer)
@@ -40,11 +35,6 @@ export async function decryptData(
     },
     password
   )
-  console.log('salt: ', salt)
-  console.log('iv: ', iv)
 
-  console.log('data: ', data)
-
-  console.log('what am I?', decryptedContent)
   return new Uint8Array(Int32Array.from(decryptedContent.words).buffer)
 }

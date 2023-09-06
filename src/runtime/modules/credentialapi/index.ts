@@ -44,6 +44,7 @@ import type { DidDidDetails } from '@kiltprotocol/augment-api'
 // import { didSelectViewContainer } from './DidSelectView'
 // import { credentialSelectView } from '../credentialstore/CredentialSelectView'
 import { DidDocument } from '../dids/DidDocument'
+import Crypto from 'expo-crypto'
 
 type RuntimeRequirements = KiltApiProvider &
   KeysApiProvider &
@@ -148,7 +149,7 @@ class CredentialApiModule<R extends RuntimeRequirements> implements Module {
     }
     this.sessionKeys.set(dAppEncryptionKeyUri, sessionKey)
     console.log('sessionKeys after set:', this.sessionKeys)
-    const nonce = crypto.getRandomValues(new Uint8Array(24))
+    const nonce = Crypto.getRandomValues(new Uint8Array(24))
     const challengeBytes = u8aToU8a(challenge)
     const encryptedChallenge = box(challengeBytes, nonce, sessionKey.dAppPublicKey, secretKey)
     return {
@@ -181,7 +182,7 @@ class CredentialApiModule<R extends RuntimeRequirements> implements Module {
     }
     this.sessionKeys.set(dAppEncryptionKeyUri, sessionKey)
 
-    const nonce = crypto.getRandomValues(new Uint8Array(24))
+    const nonce = Crypto.getRandomValues(new Uint8Array(24))
     const challengeBytes = u8aToU8a(challenge)
     const encryptedChallenge = box(challengeBytes, nonce, sessionKey.dAppPublicKey, secretKey)
     return {
@@ -346,7 +347,7 @@ class CredentialApiModule<R extends RuntimeRequirements> implements Module {
     secretKey: Uint8Array
     publicKey: Uint8Array
   }> {
-    const seed = crypto.getRandomValues(new Uint8Array(32))
+    const seed = Crypto.getRandomValues(new Uint8Array(32))
     const keypair = sr25519PairFromSeed(seed)
     const naclPair = box_keyPair_fromSecretKey(blake2AsU8a(keypair.secretKey))
     const authAddress = encodeAddress(keypair.publicKey, 38)
@@ -404,7 +405,7 @@ class CredentialApiModule<R extends RuntimeRequirements> implements Module {
       },
       sender: did,
       receiver: msg.sender,
-      messageId: u8aToHex(crypto.getRandomValues(new Uint8Array(32))),
+      messageId: u8aToHex(Crypto.getRandomValues(new Uint8Array(32))),
       inReplyTo: msg.messageId,
       createdAt: Date.now(),
     }
@@ -449,7 +450,7 @@ class CredentialApiModule<R extends RuntimeRequirements> implements Module {
       },
       sender: did,
       receiver: msg.sender,
-      messageId: u8aToHex(crypto.getRandomValues(new Uint8Array(32))),
+      messageId: u8aToHex(Crypto.getRandomValues(new Uint8Array(32))),
       inReplyTo: msg.messageId,
       createdAt: Date.now(),
     }
@@ -504,7 +505,7 @@ class CredentialApiModule<R extends RuntimeRequirements> implements Module {
       },
       sender: selectedCredential.claim.owner,
       receiver: msg.sender,
-      messageId: u8aToHex(crypto.getRandomValues(new Uint8Array(32))),
+      messageId: u8aToHex(Crypto.getRandomValues(new Uint8Array(32))),
       inReplyTo: msg.messageId,
       references: [],
       createdAt: Date.now(),
@@ -562,7 +563,7 @@ class CredentialApiModule<R extends RuntimeRequirements> implements Module {
       },
       sender: selectedCredential.claim.owner,
       receiver: msg.sender,
-      messageId: u8aToHex(crypto.getRandomValues(new Uint8Array(32))),
+      messageId: u8aToHex(Crypto.getRandomValues(new Uint8Array(32))),
       inReplyTo: msg.messageId,
       references: [],
       createdAt: Date.now(),

@@ -19,15 +19,13 @@ export default function OnboardUser({ navigation }): JSX.Element {
     if (!password) {
       return
     }
+
+    await AsyncStorage.setItem('nessie-initialized', 'true')
+    await AsyncStorage.setItem('session-password', password)
     const runtime = new NessieRuntime(password)
     const store = new Storage(runtime, password)
 
     await store.set('test', textEncoder.encode('test'))
-    await AsyncStorage.setItem('nessie-initialized', 'true')
-    if (rememberPassword) {
-      await AsyncStorage.setItem('session-password', password)
-    }
-
     authContext.authenticate()
   }
 

@@ -21,18 +21,12 @@ class Storage<R extends CoreApi> implements StorageApi, Module {
     return await decryptData(decoded, await this.getPassword())
   }
 
-  async set(key: string, value: Uint8Array): Promise<Uint8Array | null> {
-    let old: Uint8Array | null = null
-    try {
-      old = await this.get(key)
-    } catch (e) {}
-
+  async set(key: string, value: Uint8Array): Promise<void> {
     const password = await this.getPassword()
 
     const encrypted = await encryptData(value, password)
     const encoded = Buffer.from(encrypted).toString('hex')
     await AsyncStorage.setItem(key, encoded)
-    return old
   }
 
   async remove(key: string): Promise<void> {
@@ -40,21 +34,25 @@ class Storage<R extends CoreApi> implements StorageApi, Module {
   }
 
   async all(prefix?: string): Promise<Array<[string, Uint8Array]>> {
+    console.log('prefix', prefix)
     const keys = await AsyncStorage.getAllKeys()
+    console.log('I am the keys from the all', keys)
 
     const decrypted: Array<[string, Uint8Array]> = []
-    const pw = await this.getPassword()
-    keys.forEach(async (key) => {
-      const storageEntry = await AsyncStorage.getItem(key)
-      if (!storageEntry || (prefix && !key.startsWith(prefix))) return [['', new Uint8Array()]]
-      const val = Buffer.from(storageEntry)
-      console.log('storage.ts: all get candidate for decryption', key, val)
-
-      const clear = await decryptData(val, pw)
-      decrypted.push([key, clear])
-    })
-
-    console.log('all result', decrypted)
+    const password = await this.getPassword()
+    await Promise.all(
+      keys.map(async (key) => {
+        const storageEntry = await AsyncStorage.getItem(key)
+        // console.log('sotrage entry', storageEntry)
+        if (!storageEntry || (prefix !== undefined && !key.startsWith(prefix)))
+          return [['', new Uint8Array()]]
+        const val = Buffer.from(storageEntry)
+        const clear = await decryptData(val, password)
+        decrypted.push([key, clear])
+        console.log('2', decrypted.length)
+      })
+    )
+    console.log('1', decrypted.length)
     return decrypted
   }
 
