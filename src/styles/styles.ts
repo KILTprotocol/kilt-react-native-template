@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   loginBtn: {
-    paddingHorizontal: 25,
+    paddingHorizontal: 20,
     paddingVertical: 10,
     backgroundColor: '#ff1178',
     borderRadius: 25,

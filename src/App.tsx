@@ -40,30 +40,39 @@ function Main({ navigation }) {
   }, [])
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Fetching a DID: {did}</Text>
-      <TouchableOpacity style={styles.text} onPress={() => navigation.navigate('ImportKeyScreen')}>
+      <Text style={styles.text}>Home Screen</Text>
+      <TouchableOpacity
+        style={styles.loginBtn}
+        onPress={() => navigation.navigate('ImportKeyScreen')}
+      >
         <Text style={styles.text}>Import or Add keys</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.text} onPress={() => AsyncStorage.clear()}>
+      {/* <TouchableOpacity style={styles.text} onPress={() => AsyncStorage.clear()}>
         <Text style={styles.text}>Clear Storage Tokens</Text>
+      </TouchableOpacity> */}
+      <TouchableOpacity
+        style={styles.loginBtn}
+        onPress={() => navigation.navigate('ReceiverScreen')}
+      >
+        <Text>Receive Tokens</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.text} onPress={() => navigation.navigate('ReceiverScreen')}>
-        <Text style={styles.text}>Receive Tokens</Text>
-      </TouchableOpacity>
-      {/* <TouchableOpacity style={styles.text} onPress={() => navigation.navigate('SenderScreen')}>
-        <Text style={styles.text}>Send Tokens</Text>
+      <TouchableOpacity style={styles.loginBtn} onPress={() => navigation.navigate('SenderScreen')}>
+        <Text>Send Tokens</Text>
       </TouchableOpacity>
       <Text>Create a DID</Text>
-      <TouchableOpacity style={styles.text} onPress={() => navigation.navigate('CreateDidScreen')}>
-        <Text style={styles.text}>Create a DID</Text>
-      </TouchableOpacity> */}
+      <TouchableOpacity
+        style={styles.loginBtn}
+        onPress={() => navigation.navigate('CreateDidScreen')}
+      >
+        <Text>Create a DID</Text>
+      </TouchableOpacity>
       <TouchableOpacity
         style={styles.text}
         onPress={() => {
           authContext.logout()
         }}
       >
-        <Text style={styles.text}>Logout</Text>
+        <Text>Logout</Text>
       </TouchableOpacity>
     </View>
   )

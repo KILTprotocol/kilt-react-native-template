@@ -5,10 +5,9 @@ import { View, Text, TextInput, TouchableOpacity } from 'react-native'
 import { AuthContext } from '../wrapper/AuthContextProvider'
 import styles from '../styles/styles'
 
-import { setStorage } from '../keys/storage'
+import { setStorage } from '../storage/storage'
 
-const textEncoder = new TextEncoder()
-
+// This would needs to be CHANGED!
 export default function OnboardUserScreen(): JSX.Element {
   const [password, setPassword] = useState<string>('Enter your password')
   const [rememberPassword, setRemeberPassword] = React.useState<boolean>(false)
@@ -18,14 +17,11 @@ export default function OnboardUserScreen(): JSX.Element {
     if (!password) {
       return
     }
-    console.log('trigger 1')
-    await setStorage('test', textEncoder.encode('test'), password)
-    console.log('trigger 2')
+
+    await setStorage('test', 'test', password)
 
     await setStorage('nessie-initialized', 'true', password)
     if (rememberPassword) {
-      console.log('trigger 3')
-
       await setStorage('session-password', password, password)
     }
 

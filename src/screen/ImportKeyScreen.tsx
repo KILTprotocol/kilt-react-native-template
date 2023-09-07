@@ -3,23 +3,23 @@ import { type KeypairType } from '@polkadot/util-crypto/types'
 import { TextInput, View, Text, TouchableOpacity } from 'react-native'
 import React, { useState } from 'react'
 import generateName from '../utils/generateName'
-import { KeysApi } from '../utils/interfaces'
 import { generateMnemonic } from '../keys/keys'
 import RNPickerSelect from 'react-native-picker-select'
+import { importKey } from '../keys/keys'
 
 import styles from '../styles/styles'
+import { getStorage } from '../storage/storage'
 
 export default function ImportKeyScreen({ navigation }): JSX.Element {
-  const [keysApi, setKeysApi] = useState<KeysApi | undefined>()
   const [algorithm, setAlgorithm] = useState('sr25519')
   const [mnemonic, setMnemonic] = useState(mnemonicGenerate())
   const [name, setName] = useState(generateName())
   const [derivation, setDerivation] = useState('')
 
   const addKey = async (): Promise<void> => {
-    if (!keysApi) return
+    const result = await getStorage('session-password', 'Enter your password')
 
-    await keysApi.import(mnemonic, derivation, algorithm as KeypairType | 'x25519', name)
+    await importKey(mnemonic, derivation, algorithm as KeypairType | 'x25519', name, result)
   }
 
   return (
@@ -27,12 +27,7 @@ export default function ImportKeyScreen({ navigation }): JSX.Element {
       <Text style={styles.text}>Import Key</Text>
 
       <TextInput style={styles.textInput} placeholder="Name" value={name} onChangeText={setName} />
-      <TouchableOpacity
-        style={styles.loginBtn}
-        onPress={() => {
-          return generateMnemonic(12)
-        }}
-      >
+      <TouchableOpacity style={styles.loginBtn} onPress={() => setMnemonic(generateMnemonic(12))}>
         <Text style={styles.text}>Generate a Mnemonic</Text>
       </TouchableOpacity>
 

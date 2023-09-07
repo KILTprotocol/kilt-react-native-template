@@ -5,7 +5,7 @@ import OnboardUser from './OnboardUserScreen'
 
 import { AuthContext } from '../wrapper/AuthContextProvider'
 import styles from '../styles/styles'
-import { getStorage, removeStorage, setStorage } from '../keys/storage'
+import { getStorage, removeStorage, setStorage } from '../storage/storage'
 
 const textDecoder = new TextDecoder()
 
@@ -38,7 +38,6 @@ export default function UnlockStorageScreen({ navigation }) {
 
       if (test !== 'test') {
         setError('Incorrect password')
-        console.log('nope', test)
         return false
       }
     } catch (e) {
@@ -46,7 +45,6 @@ export default function UnlockStorageScreen({ navigation }) {
 
       return false
     }
-    console.log('true', test)
 
     return true
   }
@@ -75,7 +73,7 @@ export default function UnlockStorageScreen({ navigation }) {
             authContext.authenticate()
           }
         }
-
+        // This would needs to be CHANGED!
         await setStorage('session-password', enterPassword, enterPassword)
 
         authContext.authenticate()

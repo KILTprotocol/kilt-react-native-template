@@ -1,29 +1,24 @@
-import { View, Text } from 'react-native'
-import React, { useContext, useEffect, useState } from 'react'
-
-import RNPickerSelect from 'react-native-picker-select'
-
+import { View, Text, TouchableOpacity } from 'react-native'
+import React, { useMemo, useEffect, useState } from 'react'
 import styles from '../styles/styles'
 import QRCode from 'react-qr-code'
-import { getKeypairs } from '../keys/keys'
+import { list } from '../keys/keys'
+import { getStorage } from '../storage/storage'
+import { KeyInfo } from '../utils/interfaces'
 
 export default function ReceiverScreen({ navigation }): JSX.Element {
-  const [itemsList, setItemsList] = useState<{ label: string; value: string }[]>([
-    {
-      label: 'No Key',
-      value: 'No Key',
-    },
-  ])
-  const [address, setAddress] = useState(itemsList[0].value)
-  const password = 'Enter your password'
-
+  const [keys, setKeys] = useState<KeyInfo[]>()
+  const [address, setAddress] = useState()
   useEffect(() => {
     const handle = async () => {
-      const keysList = await getKeypairs(password).map((val) => {
-        console.log('I am a key', val)
-        return { label: val.name, value: val.kid }
+      const password = await getStorage('session-password', 'Enter your password')
+      if (!password) return console.log('no password')
+      const keysList = await list(password)
+
+      const keys = keysList.map((val: KeyInfo) => {
+        return JSON.parse(JSON.stringify(val))
       })
-      setItemsList(keysList)
+      setKeys(keys)
     }
     handle()
   }, [])
@@ -31,17 +26,37 @@ export default function ReceiverScreen({ navigation }): JSX.Element {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Receive Tokens</Text>
-
-      <RNPickerSelect
-        onValueChange={(address) => {
-          setAddress(address)
-        }}
-        items={itemsList}
-      />
-
-      <QRCode value={address} />
-
-      <Text>Address: {address}</Text>
+      {keys && !address ? (
+        keys.map((keyInfo: KeyInfo, key) => {
+          return (
+            <View key={key}>
+              <TouchableOpacity
+                style={styles.loginBtn}
+                // I need to fix this metadata stupidity
+                onPress={() => setAddress(keyInfo.metadata.metadata.address)}
+              >
+                <Text>{keyInfo.metadata.metadata.address}</Text>
+              </TouchableOpacity>
+            </View>
+          )
+        })
+      ) : (
+        <></>
+      )}
+      {address ? (
+        <View>
+          <QRCode value={address} />
+          <TouchableOpacity
+            style={styles.loginBtn}
+            // I need to fix this metadata stupidity
+            onPress={() => setAddress(null)}
+          >
+            <Text>Go Back</Text>
+          </TouchableOpacity>
+        </View>
+      ) : (
+        <></>
+      )}
     </View>
   )
 }

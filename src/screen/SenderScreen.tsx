@@ -5,23 +5,26 @@ import RNPickerSelect from 'react-native-picker-select'
 
 import styles from '../styles/styles'
 import QrScanner from '../components/QrScanner'
+import { getStorage } from '../storage/storage'
+import { list } from '../keys/keys'
+import { KeyInfo } from '../utils/interfaces'
 
 export default function ImportKeyScreen({ navigation }): JSX.Element {
-  const [senderAccount, setSenderAccount] = useState<Kilt.KiltKeyringPair | null>(null)
+  const [senderAccount, setSenderAccount] = useState(null)
   const [receiverAddress, setReceiverAddress] = useState('')
   const [scanner, setScanner] = useState(false)
   const [amount, setAmount] = useState('')
+  const [keys, setKeys] = useState<KeyInfo[]>()
 
-  const [itemsList, setItemsList] = useState<{ label: string; value: string }[]>([
-    {
-      label: 'No Key',
-      value: 'No Key',
-    },
-  ])
-
-  const handleScannerAddress = (scannedAddress) => {
-    setReceiverAddress(scannedAddress)
-  }
+  useEffect(() => {
+    const handle = async () => {
+      const keys = keysList.map((val: KeyInfo) => {
+        return JSON.parse(JSON.stringify(val))
+      })
+      setKeys(keys)
+    }
+    handle()
+  }, [])
 
   const handler = async () => {
     if (!senderAccount || !receiverAddress) {
@@ -36,36 +39,45 @@ export default function ImportKeyScreen({ navigation }): JSX.Element {
     })
   }
 
-  // useEffect(() => {
-  //   const handle = async () => {
-  //     console.log('Fuck you', keysApiList)
-  //     const keysList = keysApiList.map((val) => {
-  //       console.log('I am a key', val)
-  //       return { label: val.name, value: val.kid }
-  //     })
-  //     setItemsList(keysList)
-  //   }
-  //   handle()
-  // })
-
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Send Tokens</Text>
       <Text style={styles.text}>Choose an Account</Text>
-      <RNPickerSelect
-        onValueChange={(address) => {
-          setSenderAccount(address)
-        }}
-        items={itemsList}
-      />
+
+      {keys && !senderAccount ? (
+        keys.map((keyInfo: KeyInfo, key) => {
+          return (
+            <View key={key}>
+              <TouchableOpacity
+                style={styles.loginBtn}
+                // I need to fix this metadata stupidity
+                onPress={() => setSenderAccount(keyInfo.keypair)}
+              >
+                <Text>{keyInfo.metadata.metadata.address}</Text>
+              </TouchableOpacity>
+            </View>
+          )
+        })
+      ) : (
+        <></>
+      )}
       {scanner ? (
         <QrScanner handleScannerAddress={handleScannerAddress} />
       ) : (
-        <TouchableOpacity style={styles.loginBtn} onPress={() => setScanner(true)}>
-          <Text style={styles.text}>Turn on Scanners</Text>
-        </TouchableOpacity>
+        <View>
+          <TouchableOpacity style={styles.loginBtn} onPress={() => setScanner(true)}>
+            <Text>Scan Address</Text>
+          </TouchableOpacity>
+          <Text style={styles.text}>Scan for an Address or Enter an address manually </Text>
+          <TextInput
+            style={styles.textInput}
+            placeholder="Enter an address"
+            value={amount}
+            onChangeText={setAmount}
+          />
+        </View>
       )}
-
+      <Text style={styles.textInput}>Enter an amount to send</Text>
       <TextInput
         style={styles.textInput}
         placeholder="Set Amount to send"
@@ -74,7 +86,7 @@ export default function ImportKeyScreen({ navigation }): JSX.Element {
       />
 
       <TouchableOpacity style={styles.loginBtn} onPress={() => handler()}>
-        <Text style={styles.text}>Send Tokens</Text>
+        <Text>Send Tokens</Text>
       </TouchableOpacity>
     </View>
   )
