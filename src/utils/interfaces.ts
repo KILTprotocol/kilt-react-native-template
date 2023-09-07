@@ -1,9 +1,18 @@
 import type { KeypairType } from '@polkadot/util-crypto/types'
-
-export interface KeyInfo {
-  kid: string
+import { KeyringPair } from '@kiltprotocol/sdk-js'
+export interface KeyMetadata {
   name: string
+  address: string
   type: KeypairType | 'x25519'
+  kid: string
+  nacl?: {
+    publicKey: Uint8Array
+    secretKey: Uint8Array
+  }
+}
+export interface KeyInfo {
+  keypair: KeyringPair
+  metadata: KeyMetadata
 }
 
 export interface KeysApi {

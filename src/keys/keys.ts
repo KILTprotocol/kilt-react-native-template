@@ -7,39 +7,28 @@ import { box, box_open, randomBytes } from 'tweetnacl-ts'
 
 import { type KeyringPair } from '@polkadot/keyring/types'
 
-import { getStorage, setStorage, allStorage, removeStorage } from './storage'
+import { getStorage, setStorage, allStorage, removeStorage } from '../storage/storage'
 import generateName from '../utils/generateName'
 import kid from '../utils/kid'
 import u8a from '../utils/u8a'
-import { KeyInfo } from '../utils/interfaces'
+import { KeyInfo, KeyMetadata } from '../utils/interfaces'
 const PREFIX = 'keys:'
-interface KeyMetadata {
-  name: string
-  address: string
-  type: KeypairType | 'x25519'
-  kid: string
-  nacl?: {
-    publicKey: Uint8Array
-    secretKey: Uint8Array
-  }
-}
 
 export async function saveMetadata(
   pair: KeyringPair,
   metadata: KeyMetadata,
   password: string
 ): Promise<void> {
-  await setStorage(pair.address, u8a(JSON.stringify({ metadata })), password)
+  await setStorage(pair.address, JSON.stringify({ metadata }), password)
 }
 
-export async function loadMetadata(pair: KeyringPair, password: string): Promise<KeyMetadata> {
-  const keyMetadata = await getStorage(pair.address, password)
+export async function loadMetadata(key: string, password: string): Promise<KeyMetadata> {
+  const keyMetadata = await getStorage(key, password)
   if (keyMetadata == null) {
     throw new Error("can't find address")
   }
 
   const metadata = JSON.parse(Buffer.from(keyMetadata).toString())
-  console.log('metaData', metadata)
   return metadata as KeyMetadata
 }
 
@@ -67,7 +56,7 @@ export async function importKey(
     { keyType, name },
     keyTypeToGenerate as KeypairType
   )
-  console.log('I am the pair', keyPair)
+
   const meta: KeyMetadata = {
     name: name.length > 0 ? name : generateName(),
     address: keyPair.address,
@@ -88,7 +77,7 @@ export async function importKey(
   }
 }
 
-export async function getKeypairs(password: string): Promise<any> {
+export async function getKeypairs(password: string): Promise<Array<[string, Kilt.KeyringPair]>> {
   return allStorage(password, PREFIX)
 }
 
@@ -102,16 +91,15 @@ export async function removeKeypair(key: string, password: string): Promise<void
 
 export async function list(password: string): Promise<KeyInfo[]> {
   console.log('call keys::list')
-  console.log('I am the What keys', await getKeypairs(password))
+
   const keypairs = await getKeypairs(password)
   return Promise.all(
-    keypairs.map(async (keypair) => {
-      const meta = await loadMetadata(keypair, password)
-      console.log('keys::list got meta', meta)
+    keypairs.map(async ([key, keypair]: [string, Kilt.KeyringPair]) => {
+      const metadata = await loadMetadata(key, password)
+
       return {
-        kid: meta.kid,
-        name: meta.name,
-        type: meta.type,
+        keypair: keypair,
+        metadata,
       }
     })
   )

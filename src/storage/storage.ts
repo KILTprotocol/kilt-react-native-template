@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import * as Kilt from '@kiltprotocol/sdk-js'
 import { decryptData, encryptData } from '../utils/crypto'
 
 export async function getStorage(key: string, password: string): Promise<string> {
@@ -21,27 +22,23 @@ export async function removeStorage(key: string): Promise<void> {
 
 export async function allStorage(password: string, prefix?: string): Promise<Array<[string, any]>> {
   const keys = await AsyncStorage.getAllKeys()
-  console.log('I am the keys from the all', keys)
 
-  const decrypted: Array<[string, string]> = []
+  const decrypted: Array<[string, any]> = []
   await Promise.all(
     keys.map(async (key) => {
-      const storageEntry = await AsyncStorage.getItem(key)
-      console.log('sotrage entry', storageEntry)
-      if (!storageEntry) return console.log('no storage for the entry')
-      if (prefix && storageEntry.startsWith(prefix)) {
-        const storageEntryTrimmed = storageEntry.substring(prefix.length)
-        const encodedStorageEntryTrimmed = Buffer.from(storageEntryTrimmed)
-        const decryptedData = await decryptData(encodedStorageEntryTrimmed, password)
-        decrypted.push([key, decryptedData])
-      } else {
-        const val = Buffer.from(storageEntry)
-        const decryptedData = await decryptData(val, password)
-        decrypted.push([key, decryptedData])
-        console.log('2', decrypted.length)
+      if (prefix && key.startsWith(prefix)) {
+        const storageEntry = await getStorage(key, password)
+        if (storageEntry === undefined || storageEntry === null) {
+          throw new Error(`Key '${key}' not found.`)
+        }
+        const keyTrimmed = key.substring(prefix.length)
+        return decrypted.push([keyTrimmed, storageEntry])
+      }
+      if (!prefix) {
+        const storageEntry = await getStorage(key, password)
+        return decrypted.push([key, storageEntry])
       }
     })
   )
-  console.log('1', decrypted.length)
   return decrypted
 }
