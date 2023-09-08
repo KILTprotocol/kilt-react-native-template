@@ -10,9 +10,10 @@ import { mnemonicToMiniSecret } from '@polkadot/util-crypto'
 import { getStorage } from '../storage/storage'
 import createSimpleFullDid from '../utils/didCreate'
 import SelectAccount from './SelectAccount'
+import { CommonActions } from '@react-navigation/native'
 
 export default function CreateDid({ navigation, route }) {
-  const [did, setDid] = useState()
+  const [didMnemonic, setDidMnemonic] = useState()
   const [account, setAccount] = useState()
 
   useEffect(() => {
@@ -22,35 +23,26 @@ export default function CreateDid({ navigation, route }) {
   }, [route.params?.selectAccount])
 
   const generateDid = async () => {
-    console.log('helo', account.metadata.type)
+    if (!account) return
 
     const keyring = new Keyring({
       type: account.metadata.type,
       ss58Format: 38,
     })
 
-    const { mnemonic } = account
-    console.log('1')
-    if (!mnemonic || !account) return console.log('mnemonic', mnemonic)
-    console.log('2')
-
     const paymentAccount = keyring.addFromMnemonic(account.mnemonic)
-    console.log('3')
 
     const authentication = Kilt.Utils.Crypto.makeKeypairFromSeed(
-      mnemonicToMiniSecret(mnemonic),
+      mnemonicToMiniSecret(didMnemonic || account.mnemonic),
       account.metadata.type
     )
-    console.log('4')
 
     const keyAgreement = Kilt.Utils.Crypto.makeEncryptionKeypairFromSeed(
-      mnemonicToMiniSecret(mnemonic)
+      mnemonicToMiniSecret(didMnemonic || account.mnemonic)
     )
     const didUri = Kilt.Did.getFullDidUriFromKey(authentication)
-    console.log('5')
 
     const fullDid = await Kilt.Did.resolve(didUri)
-    console.log('6')
 
     if (!fullDid?.document) {
       const didDoc = await createSimpleFullDid(
@@ -61,19 +53,57 @@ export default function CreateDid({ navigation, route }) {
           keyType: authentication.type,
         })
       )
-      await DidStore.importDid({ authentication, keyAgreement }, didDoc.uri, 'Enter your password')
-      return console.log('Finished')
+      await DidStore.importDid(
+        {
+          authentication: didMnemonic || account.mnemonic,
+          keyAgreement: didMnemonic || account.mnemonic,
+        },
+        didDoc.uri,
+        'Enter your password'
+      )
     }
-    return console.log('did generated already fetch it instaed.')
+    await DidStore.importDid(
+      {
+        authentication: didMnemonic || account.mnemonic,
+        keyAgreement: didMnemonic || account.mnemonic,
+      },
+      didUri,
+      'Enter your password'
+    )
   }
   return (
     <View>
       <Text style={styles.text}>Create your DID</Text>
-      <SelectAccount navigation={navigation} route={route} />
+      {!account ? (
+        <SelectAccount navigation={navigation} route={route} />
+      ) : (
+        <View>
+          <TouchableOpacity
+            style={styles.loginBtn}
+            onPress={() => navigation.dispatch(CommonActions.setParams({ selectAccount: null }))}
+          >
+            <Text>Choose payment another account</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+      {!didMnemonic ? (
+        <TouchableOpacity
+          style={styles.loginBtn}
+          onPress={() => setDidMnemonic(keyStore.generateMnemonic(12))}
+        >
+          <Text>Generate a Mnemonic for DID Key</Text>
+        </TouchableOpacity>
+      ) : null}
 
       <TouchableOpacity style={styles.loginBtn} onPress={generateDid}>
         <Text>Generate Basic DID</Text>
       </TouchableOpacity>
+
+      <View>
+        <TouchableOpacity style={styles.loginBtn} onPress={() => navigation.goBack()}>
+          <Text>Head back to DID list</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   )
 }

@@ -14,11 +14,13 @@ import ReceiverScreen from './screen/ReceiverScreen'
 import SenderScreen from './screen/SenderScreen'
 import UnlockStorageScreen from './screen/UnlockStorageScreen'
 import AuthContextProvider, { AuthContext } from './wrapper/AuthContextProvider'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import QrScanner from './components/QrScanner'
 import DidScreen from './screen/DidScreen'
 import SelectAccount from './components/SelectAccount'
 import SelectDid from './components/SelectDid'
 import CreateDid from './components/CreateDid'
+import ClaimW3n from './components/ClaimW3n'
 
 const Stack = createNativeStackNavigator()
 
@@ -64,10 +66,7 @@ function Main({ navigation }) {
         <Text>Send Tokens</Text>
       </TouchableOpacity>
       <Text>Create a DID</Text>
-      <TouchableOpacity
-        style={styles.loginBtn}
-        onPress={() => navigation.navigate('CreateDidScreen')}
-      >
+      <TouchableOpacity style={styles.loginBtn} onPress={() => navigation.navigate('DidScreen')}>
         <Text>Create a DID</Text>
       </TouchableOpacity>
       <TouchableOpacity
@@ -103,9 +102,10 @@ function AuthStack() {
             <Stack.Screen name="ImportKeyScreen" component={ImportKeyScreen} />
             <Stack.Screen name="SenderScreen" component={SenderScreen} />
             <Stack.Screen name="ReceiverScreen" component={ReceiverScreen} />
-            <Stack.Screen name="CreateDidScreen" component={DidScreen} />
+            <Stack.Screen name="DidScreen" component={DidScreen} />
           </Stack.Group>
           <Stack.Group>
+            <Stack.Screen name="ClaimW3n" component={ClaimW3n} />
             <Stack.Screen name="SelectAccount" component={SelectAccount} />
             <Stack.Screen name="CreateDid" component={CreateDid} />
             <Stack.Screen name="SelectDid" component={SelectDid} />

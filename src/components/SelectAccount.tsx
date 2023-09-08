@@ -13,7 +13,7 @@ export default function SelectAccount({ navigation, route }) {
   useEffect(() => {
     const handle = async () => {
       const password = await getStorage('session-password', 'Enter your password')
-      if (!password) return console.log('no password')
+      if (!password) return alert('No Password')
       const keysList = await KeyStore.list(password)
 
       const keys = keysList.map((val: KeyInfo) => {

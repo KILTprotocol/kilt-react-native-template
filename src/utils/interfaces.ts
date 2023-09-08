@@ -31,8 +31,8 @@ export interface KeysApi {
 }
 
 export type DidKeys = {
-  authentication: KiltKeyringPair
-  keyAgreement?: KiltEncryptionKeypair
-  assertionMethod?: KiltKeyringPair
-  capabilityDelegation?: KiltKeyringPair
+  authentication: string
+  keyAgreement?: string
+  assertionMethod?: string
+  capabilityDelegation?: string
 }

@@ -9,25 +9,23 @@ import SelectAccount from '../components/SelectAccount'
 import { CommonActions } from '@react-navigation/native'
 
 export default function ReceiverScreen({ navigation, route }): JSX.Element {
-  const [address, setAddress] = useState('')
+  const [account, setAccount] = useState('')
   useEffect(() => {
-    if (!route.params?.selectAccount.metadata) return
-    const { address } = route.params?.selectAccount.metadata
-    setAddress(address)
+    setAccount(route.params?.selectAccount)
   }, [route.params?.selectAccount])
 
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Receive Tokens</Text>
-      {!address ? (
+      {!account ? (
         <SelectAccount navigation={navigation} route={route} />
       ) : (
         <View>
-          <QRCode value={address} />
+          <QRCode value={account.metadata.address} />
           <TouchableOpacity
             style={styles.loginBtn}
             // I need to fix this metadata stupidity
-            onPress={() => navigation.dispatch(CommonActions.setParams({ selectAddress: null }))}
+            onPress={() => navigation.dispatch(CommonActions.setParams({ selectAccount: null }))}
           >
             <Text>Go Back</Text>
           </TouchableOpacity>
