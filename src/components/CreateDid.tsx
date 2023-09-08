@@ -22,31 +22,35 @@ export default function CreateDid({ navigation, route }) {
   }, [route.params?.selectAccount])
 
   const generateDid = async () => {
-    if (!did) return
-    const api = Kilt.ConfigService.get('api')
+    console.log('helo', account.metadata.type)
 
     const keyring = new Keyring({
-      type: did.metadata.metadata.type,
+      type: account.metadata.type,
       ss58Format: 38,
     })
 
-    const { mnemonic } = did
-
+    const { mnemonic } = account
+    console.log('1')
     if (!mnemonic || !account) return console.log('mnemonic', mnemonic)
+    console.log('2')
 
     const paymentAccount = keyring.addFromMnemonic(account.mnemonic)
+    console.log('3')
 
     const authentication = Kilt.Utils.Crypto.makeKeypairFromSeed(
       mnemonicToMiniSecret(mnemonic),
-      did.metadata.type
+      account.metadata.type
     )
+    console.log('4')
 
     const keyAgreement = Kilt.Utils.Crypto.makeEncryptionKeypairFromSeed(
       mnemonicToMiniSecret(mnemonic)
     )
     const didUri = Kilt.Did.getFullDidUriFromKey(authentication)
+    console.log('5')
 
     const fullDid = await Kilt.Did.resolve(didUri)
+    console.log('6')
 
     if (!fullDid?.document) {
       const didDoc = await createSimpleFullDid(

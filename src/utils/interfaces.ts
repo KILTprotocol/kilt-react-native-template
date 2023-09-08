@@ -1,5 +1,5 @@
 import type { KeypairType } from '@polkadot/util-crypto/types'
-import { KeyringPair } from '@kiltprotocol/sdk-js'
+import { KiltEncryptionKeypair, KiltKeyringPair } from '@kiltprotocol/sdk-js'
 export interface KeyMetadata {
   name: string
   address: string
@@ -28,4 +28,11 @@ export interface KeysApi {
   sign: (kid: string, msg: Uint8Array, withType?: boolean) => Promise<Uint8Array>
   encrypt: (kid: string, receiverPubkey: Uint8Array, msg: Uint8Array) => Promise<Uint8Array>
   decrypt: (kid: string, senderPubKey: Uint8Array, msg: Uint8Array) => Promise<Uint8Array>
+}
+
+export type DidKeys = {
+  authentication: KiltKeyringPair
+  keyAgreement?: KiltEncryptionKeypair
+  assertionMethod?: KiltKeyringPair
+  capabilityDelegation?: KiltKeyringPair
 }

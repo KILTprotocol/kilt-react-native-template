@@ -15,10 +15,10 @@ export default function SelectDid({ navigation, route }) {
     const handle = async () => {
       const password = await getStorage('session-password', 'Enter your password')
       if (!password) return console.log('no password')
-      const keysList = await DidStore.list(password)
-
+      const didsList = await DidStore.list(password)
+      console.log('keys,', didsList)
       setDids(
-        keysList.map(({ keypairs, document }: { keypairs: DidKeys; document: DidDocument }) => {
+        didsList.map(({ keypairs, document }: { keypairs: DidKeys; document: DidDocument }) => {
           return JSON.parse(JSON.stringify({ keypairs, document }))
         })
       )
@@ -32,7 +32,8 @@ export default function SelectDid({ navigation, route }) {
         dids.map(({ keypairs, document }, key) => {
           return (
             <View key={key}>
-              <TouchableOpacity
+              <Text style={styles.text}>{document.uri}</Text>
+              {/* <TouchableOpacity
                 style={styles.loginBtn}
                 onPress={() =>
                   navigation.dispatch({
@@ -42,7 +43,7 @@ export default function SelectDid({ navigation, route }) {
                 }
               >
                 <Text>{document.uri}</Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </View>
           )
         })
