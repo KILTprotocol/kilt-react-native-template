@@ -1,15 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import { Text, View, StyleSheet, Button, TouchableOpacity } from 'react-native'
-import { BarCodeScanner } from 'expo-barcode-scanner'
+import { Text, View, StyleSheet, Button, Dimensions, TouchableOpacity } from 'react-native'
+import { BarCodeScanner, BarCodeScannerResult } from 'expo-barcode-scanner'
 import styles from '../styles/styles'
-import { CommonActions } from '@react-navigation/native'
-type props = {
-  handleScannerAddress: (scannedAddress: string) => void
-}
 
-export default function QrScanner({ navigation }, props) {
-  const [hasPermission, setHasPermission] = useState()
-  const [scanned, setScanned] = useState(false)
+export default function QrScanner({ navigation, route }) {
+  const [hasPermission, setHasPermission] = useState<boolean | null>(null)
+  const [type, setType] = useState<any>(BarCodeScanner.Constants.Type.back)
+  const [scanned, setScanned] = useState<boolean>(false)
 
   useEffect(() => {
     const getBarCodeScannerPermissions = async () => {
@@ -20,10 +17,14 @@ export default function QrScanner({ navigation }, props) {
     getBarCodeScannerPermissions()
   }, [])
 
-  const handleBarCodeScanned = ({ type, data }) => {
-    setScanned(true)
-    handleBarCodeScanned(data)
-    alert(`Bar code with type ${type} and data ${data} has been scanned!`)
+  const handleBarCodeScanned = (scanningResult: BarCodeScannerResult) => {
+    if (!scanned) {
+      const { type, data = {} } = scanningResult
+
+      setScanned(true)
+      navigation.navigate({ name: 'SenderScreen', params: { scanAddress: data }, merge: true })
+      alert(`Bar code with type ${type} and data ${data} has been scanned!`)
+    }
   }
 
   if (hasPermission === null) {
@@ -34,19 +35,39 @@ export default function QrScanner({ navigation }, props) {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={{ flex: 1 }}>
       <BarCodeScanner
-        onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-        style={StyleSheet.absoluteFillObject}
-      />
-      {scanned && <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)} />}
-      <TouchableOpacity
-        onPress={() => {
-          navigation.navigate(CommonActions.goBack())
-        }}
+        onBarCodeScanned={handleBarCodeScanned}
+        type={type}
+        barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
+        style={[StyleSheet.absoluteFillObject, styles.container]}
       >
-        <Text>Go back</Text>
-      </TouchableOpacity>
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: 'transparent',
+            flexDirection: 'row',
+          }}
+        >
+          <TouchableOpacity
+            style={{
+              flex: 1,
+              alignItems: 'flex-end',
+            }}
+            onPress={() => {
+              setType(
+                type === BarCodeScanner.Constants.Type.back
+                  ? BarCodeScanner.Constants.Type.front
+                  : BarCodeScanner.Constants.Type.back
+              )
+            }}
+          >
+            <Text style={{ fontSize: 18, margin: 5, color: 'white' }}> Flip </Text>
+          </TouchableOpacity>
+        </View>
+
+        {scanned && <Button title="Scan Again" onPress={() => setScanned(false)} />}
+      </BarCodeScanner>
     </View>
   )
 }

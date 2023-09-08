@@ -14,7 +14,11 @@ import ReceiverScreen from './screen/ReceiverScreen'
 import SenderScreen from './screen/SenderScreen'
 import UnlockStorageScreen from './screen/UnlockStorageScreen'
 import AuthContextProvider, { AuthContext } from './wrapper/AuthContextProvider'
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import QrScanner from './components/QrScanner'
+import DidScreen from './screen/DidScreen'
+import SelectAccount from './components/SelectAccount'
+import SelectDid from './components/SelectDid'
+import CreateDid from './components/CreateDid'
 
 const Stack = createNativeStackNavigator()
 
@@ -45,10 +49,10 @@ function Main({ navigation }) {
         style={styles.loginBtn}
         onPress={() => navigation.navigate('ImportKeyScreen')}
       >
-        <Text style={styles.text}>Import or Add keys</Text>
+        <Text>Import or Add keys</Text>
       </TouchableOpacity>
-      {/* <TouchableOpacity style={styles.text} onPress={() => AsyncStorage.clear()}>
-        <Text style={styles.text}>Clear Storage Tokens</Text>
+      {/* <TouchableOpacity style={styles.loginBtn} onPress={() => AsyncStorage.clear()}>
+        <Text>Clear Storage Tokens</Text>
       </TouchableOpacity> */}
       <TouchableOpacity
         style={styles.loginBtn}
@@ -67,7 +71,7 @@ function Main({ navigation }) {
         <Text>Create a DID</Text>
       </TouchableOpacity>
       <TouchableOpacity
-        style={styles.text}
+        style={styles.loginBtn}
         onPress={() => {
           authContext.logout()
         }}
@@ -93,12 +97,21 @@ function AuthStack() {
           <Stack.Screen name="OnboardUserScreen" component={OnboardUserScreen} />
         </Stack.Group>
       ) : (
-        <Stack.Group>
-          <Stack.Screen name="Main" component={Main} />
-          <Stack.Screen name="ImportKeyScreen" component={ImportKeyScreen} />
-          <Stack.Screen name="SenderScreen" component={SenderScreen} />
-          <Stack.Screen name="ReceiverScreen" component={ReceiverScreen} />
-        </Stack.Group>
+        <>
+          <Stack.Group>
+            <Stack.Screen name="Main" component={Main} />
+            <Stack.Screen name="ImportKeyScreen" component={ImportKeyScreen} />
+            <Stack.Screen name="SenderScreen" component={SenderScreen} />
+            <Stack.Screen name="ReceiverScreen" component={ReceiverScreen} />
+            <Stack.Screen name="CreateDidScreen" component={DidScreen} />
+          </Stack.Group>
+          <Stack.Group>
+            <Stack.Screen name="SelectAccount" component={SelectAccount} />
+            <Stack.Screen name="CreateDid" component={CreateDid} />
+            <Stack.Screen name="SelectDid" component={SelectDid} />
+            <Stack.Screen name="QrScanner" component={QrScanner} />
+          </Stack.Group>
+        </>
       )}
     </Stack.Navigator>
   )

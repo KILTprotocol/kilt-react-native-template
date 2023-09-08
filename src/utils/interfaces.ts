@@ -11,7 +11,7 @@ export interface KeyMetadata {
   }
 }
 export interface KeyInfo {
-  keypair: KeyringPair
+  mnemonic: string
   metadata: KeyMetadata
 }
 
