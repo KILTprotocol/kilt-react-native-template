@@ -7,11 +7,11 @@ import { box, box_open, randomBytes } from 'tweetnacl-ts'
 
 import { type KeyringPair } from '@polkadot/keyring/types'
 
-import { getStorage, setStorage, allStorage, removeStorage } from '../storage/storage'
-import generateName from '../utils/generateName'
-import kid from '../utils/kid'
-import u8a from '../utils/u8a'
-import { KeyInfo, KeyMetadata } from '../utils/interfaces'
+import { getStorage, setStorage, allStorage, removeStorage } from '../storage'
+import generateName from '../../utils/generateName'
+import kid from '../../utils/kid'
+import u8a from '../../utils/u8a'
+import { KeyInfo, KeyMetadata } from '../../utils/interfaces'
 const PREFIX = 'keys:'
 
 export async function saveMetadata(
@@ -19,7 +19,7 @@ export async function saveMetadata(
   metadata: KeyMetadata,
   password: string
 ): Promise<void> {
-  await setStorage(pair.address, JSON.stringify({ metadata }), password)
+  await setStorage(pair.address, JSON.stringify(metadata), password)
 }
 
 export async function loadMetadata(key: string, password: string): Promise<KeyMetadata> {
@@ -51,7 +51,7 @@ export async function importKey(
   if (keyType === 'x25519') {
     keyTypeToGenerate = 'ed25519'
   }
-  const keyPair = new Kilt.Utils.Keyring().addFromUri(
+  const keyPair = new Kilt.Utils.Keyring({ ss58Format: 38 }).addFromUri(
     mnemonic + derivationPath,
     { keyType, name },
     keyTypeToGenerate as KeypairType
@@ -63,26 +63,32 @@ export async function importKey(
     type: keyType,
     kid: kid(keyPair),
   }
+  let naclPair
   if (keyType === 'x25519') {
-    const naclPair = Kilt.Utils.Crypto.makeEncryptionKeypairFromSeed(u8a(mnemonic))
+    naclPair = Kilt.Utils.Crypto.makeEncryptionKeypairFromSeed(u8a(mnemonic + derivationPath))
     meta.nacl = naclPair
     meta.kid = '0x' + Buffer.from(naclPair.publicKey).toString('hex')
   }
   await saveMetadata(keyPair, meta, password)
-  await setKeypair(keyPair, password)
+  await setKeypair(keyPair.address, mnemonic + derivationPath, password)
   return {
-    kid: meta.kid,
-    name: meta.name,
-    type: meta.type,
+    mnemonic: mnemonic + derivationPath,
+    metadata: {
+      kid: meta.kid,
+      name: meta.name,
+      type: meta.type,
+      address: meta.address,
+      nacl: naclPair,
+    },
   }
 }
 
-export async function getKeypairs(password: string): Promise<Array<[string, Kilt.KeyringPair]>> {
+export async function getKeypairs(password: string): Promise<Array<[string, string]>> {
   return allStorage(password, PREFIX)
 }
 
-export async function setKeypair(keyPair: Kilt.KeyringPair, password: string) {
-  await setStorage(PREFIX + keyPair.address, JSON.stringify(keyPair), password)
+export async function setKeypair(address: string, mnemonic: string, password: string) {
+  await setStorage(PREFIX + address, mnemonic, password)
 }
 
 export async function removeKeypair(key: string, password: string): Promise<void> {
@@ -94,12 +100,12 @@ export async function list(password: string): Promise<KeyInfo[]> {
 
   const keypairs = await getKeypairs(password)
   return Promise.all(
-    keypairs.map(async ([key, keypair]: [string, Kilt.KeyringPair]) => {
+    keypairs.map(async ([key, mnemonic]: [string, string]) => {
       const metadata = await loadMetadata(key, password)
 
       return {
-        keypair: keypair,
-        metadata,
+        mnemonic: mnemonic,
+        metadata: metadata,
       }
     })
   )
@@ -111,7 +117,7 @@ async function sign(
   withType = false,
   password: string
 ): Promise<Uint8Array> {
-  const [keypair] = await (await getKeypairs(password)).filter((pair) => kid(pair) === address)
+  const [keypair] = (await getKeypairs(password)).filter((pair) => kid(pair) === address)
   if (keypair === undefined) {
     throw new Error("can't find key")
   }
@@ -127,7 +133,7 @@ export async function encrypt(
   msg: Uint8Array,
   password: string
 ): Promise<Uint8Array> {
-  const [senderMeta] = await (await getKeypairs(password)).filter((pair) => kid(pair) === address)
+  const [senderMeta] = await getKeypairs(password).filter((pair) => kid(pair) === address)
   if (senderMeta.nacl === undefined) {
     throw new Error("can't find sender key")
   }
@@ -156,9 +162,9 @@ export async function decrypt(
   password: string
 ): Promise<Uint8Array> {
   // load receiver key
-  const [receiverMeta] = await (
-    await getKeypairs(password)
-  ).map((pair) => loadMetadata(pair, password).filter((meta) => meta.kid === kid))
+  const [receiverMeta] = await getKeypairs(password).map((pair) =>
+    loadMetadata(pair, password).filter((meta) => meta.kid === kid)
+  )
 
   if (receiverMeta === undefined || receiverMeta.nacl === undefined) {
     throw new Error("can't find receiver key")

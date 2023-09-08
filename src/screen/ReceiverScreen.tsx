@@ -2,60 +2,36 @@ import { View, Text, TouchableOpacity } from 'react-native'
 import React, { useMemo, useEffect, useState } from 'react'
 import styles from '../styles/styles'
 import QRCode from 'react-qr-code'
-import { list } from '../keys/keys'
+import { list } from '../storage/keys/store'
 import { getStorage } from '../storage/storage'
 import { KeyInfo } from '../utils/interfaces'
+import SelectAccount from '../components/SelectAccount'
+import { CommonActions } from '@react-navigation/native'
 
-export default function ReceiverScreen({ navigation }): JSX.Element {
-  const [keys, setKeys] = useState<KeyInfo[]>()
-  const [address, setAddress] = useState()
+export default function ReceiverScreen({ navigation, route }): JSX.Element {
+  const [address, setAddress] = useState('')
   useEffect(() => {
-    const handle = async () => {
-      const password = await getStorage('session-password', 'Enter your password')
-      if (!password) return console.log('no password')
-      const keysList = await list(password)
-
-      const keys = keysList.map((val: KeyInfo) => {
-        return JSON.parse(JSON.stringify(val))
-      })
-      setKeys(keys)
-    }
-    handle()
-  }, [])
+    if (!route.params?.selectAccount.metadata) return
+    const { address } = route.params?.selectAccount.metadata
+    setAddress(address)
+  }, [route.params?.selectAccount])
 
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Receive Tokens</Text>
-      {keys && !address ? (
-        keys.map((keyInfo: KeyInfo, key) => {
-          return (
-            <View key={key}>
-              <TouchableOpacity
-                style={styles.loginBtn}
-                // I need to fix this metadata stupidity
-                onPress={() => setAddress(keyInfo.metadata.metadata.address)}
-              >
-                <Text>{keyInfo.metadata.metadata.address}</Text>
-              </TouchableOpacity>
-            </View>
-          )
-        })
+      {!address ? (
+        <SelectAccount navigation={navigation} route={route} />
       ) : (
-        <></>
-      )}
-      {address ? (
         <View>
           <QRCode value={address} />
           <TouchableOpacity
             style={styles.loginBtn}
             // I need to fix this metadata stupidity
-            onPress={() => setAddress(null)}
+            onPress={() => navigation.dispatch(CommonActions.setParams({ selectAddress: null }))}
           >
             <Text>Go Back</Text>
           </TouchableOpacity>
         </View>
-      ) : (
-        <></>
       )}
     </View>
   )
