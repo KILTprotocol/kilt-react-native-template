@@ -7,6 +7,9 @@ defaultConfig.resolver.sourceExts.push('cjs')
 defaultConfig.resolver.extraNodeModules = {
   stream: require.resolve('stream-browserify'),
   events: require.resolve('events'),
+
+  transformer: true,
 }
+defaultConfig.transformer.unstable_allowRequireContext = true
 
 module.exports = defaultConfig
