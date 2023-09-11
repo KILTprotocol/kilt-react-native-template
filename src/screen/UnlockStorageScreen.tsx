@@ -50,7 +50,7 @@ export default function UnlockStorageScreen({ navigation }) {
   }
 
   const checkForCachedPassword = async (): Promise<void> => {
-    const result = await getStorage('session-password', enterPassword)
+    const result = await getStorage('session-password')
 
     if (result && result !== undefined) {
       const correct = await checkIfPasswordIsCorrect(result)
@@ -68,13 +68,12 @@ export default function UnlockStorageScreen({ navigation }) {
       .then(async (correct) => {
         if (correct) {
           if (rememberPassword) {
-            await setStorage('session-password', enterPassword, enterPassword)
+            await setStorage('session-password', enterPassword)
 
             authContext.authenticate()
           }
         }
-        // This would needs to be CHANGED!
-        await setStorage('session-password', enterPassword, enterPassword)
+        await setStorage('session-password', enterPassword)
 
         authContext.authenticate()
       })

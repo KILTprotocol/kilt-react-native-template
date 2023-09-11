@@ -1,7 +1,9 @@
-import { mnemonicGenerate } from '@polkadot/util-crypto'
 import { type KeypairType } from '@polkadot/util-crypto/types'
+import { mnemonicGenerate } from '@polkadot/util-crypto'
+
+import React, { useState, useContext } from 'react'
 import { TextInput, View, Text, TouchableOpacity } from 'react-native'
-import React, { useState } from 'react'
+
 import generateName from '../utils/generateName'
 import { generateMnemonic } from '../storage/keys/store'
 import RNPickerSelect from 'react-native-picker-select'
@@ -9,17 +11,24 @@ import { importKey } from '../storage/keys/store'
 
 import styles from '../styles/styles'
 import { getStorage } from '../storage/storage'
+import { AuthContext } from '../wrapper/AuthContextProvider'
 
-export default function ImportKeyScreen({ navigation }): JSX.Element {
+export default function ImportKey({ navigation }): JSX.Element {
   const [algorithm, setAlgorithm] = useState('sr25519')
   const [mnemonic, setMnemonic] = useState(mnemonicGenerate())
   const [name, setName] = useState(generateName())
   const [derivation, setDerivation] = useState('')
+  const authContext = useContext(AuthContext)
 
   const addKey = async (): Promise<void> => {
-    const result = await getStorage('session-password', 'Enter your password')
+    const password = await getStorage('session-password')
 
-    await importKey(mnemonic, derivation, algorithm as KeypairType | 'x25519', name, result)
+    if (!password) {
+      authContext.logout()
+      navigation.navigate('UnlockStorageScreen')
+    }
+
+    await importKey(mnemonic, derivation, algorithm as KeypairType | 'x25519', name, password)
   }
 
   return (

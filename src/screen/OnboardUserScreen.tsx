@@ -10,7 +10,7 @@ import { setStorage } from '../storage/storage'
 // This would needs to be CHANGED!
 export default function OnboardUserScreen(): JSX.Element {
   const [password, setPassword] = useState<string>('Enter your password')
-  const [rememberPassword, setRemeberPassword] = React.useState<boolean>(false)
+  const [rememberPassword, setRemeberPassword] = useState<boolean>(false)
   const authContext = useContext(AuthContext)
 
   const createMasterPassword = async (): Promise<void> => {
@@ -21,9 +21,8 @@ export default function OnboardUserScreen(): JSX.Element {
     await setStorage('test', 'test', password)
 
     await setStorage('nessie-initialized', 'true', password)
-    if (rememberPassword) {
-      await setStorage('session-password', password, password)
-    }
+
+    await setStorage('session-password', password)
 
     authContext.authenticate()
   }

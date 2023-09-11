@@ -1,4 +1,4 @@
-import { TouchableOpacity, Text, View } from 'react-native'
+import { TouchableOpacity, Text, View, Image } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import styles from '../styles/styles'
 
@@ -14,19 +14,19 @@ export default function DidScreen({ navigation, route }) {
   const fetch = async () => {
     if (!did) return
     const didFetched = await Did.resolve(JSON.parse(JSON.stringify(did)).document.uri)
-    console.log(didFetched?.web3Name)
+    console.log('issue', didFetched?.web3Name)
   }
 
   useEffect(() => {
     if (!route.params) return
     setDid(route.params.did)
 
-    console.log(fetch())
+    fetch()
   }, [route.params])
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>DIDs</Text>
+      <Text style={styles.text}>Nessie</Text>
 
       {did ? (
         <ClaimW3n navigation={navigation} route={route} />

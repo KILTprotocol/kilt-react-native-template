@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import { TouchableOpacity, View, Text } from 'react-native'
 
 import * as KeyStore from '../storage/keys/store'
@@ -6,14 +6,20 @@ import styles from '../styles/styles'
 import { KeyInfo } from '../utils/interfaces'
 import { getStorage } from '../storage/storage'
 import { CommonActions } from '@react-navigation/native'
+import { AuthContext } from '../wrapper/AuthContextProvider'
 
 export default function SelectAccount({ navigation, route }) {
   const [keys, setKeys] = useState<KeyInfo[]>()
+  const authContext = useContext(AuthContext)
 
   useEffect(() => {
     const handle = async () => {
-      const password = await getStorage('session-password', 'Enter your password')
-      if (!password) return alert('No Password')
+      const password = await getStorage('session-password')
+
+      if (!password) {
+        authContext.logout()
+        navigation.navigate('UnlockStorageScreen')
+      }
       const keysList = await KeyStore.list(password)
 
       const keys = keysList.map((val: KeyInfo) => {

@@ -7,15 +7,15 @@ import styles from '../styles/styles'
 import { KeyInfo } from '../utils/interfaces'
 
 import Keyring from '@polkadot/keyring'
-import SelectAccount from '../components/SelectAccount'
 import { CommonActions } from '@react-navigation/native'
 
-export default function ImportKeyScreen({ navigation, route }): JSX.Element {
+export default function TokenSender({ navigation, route }): JSX.Element {
   const [senderAccount, setSenderAccount] = useState(null)
   const [receiverAddress, setReceiverAddress] = useState('')
   const [amount, setAmount] = useState('')
 
   useEffect(() => {
+    console.log(route.params, 'route.params?')
     setSenderAccount(route.params?.selectAccount)
   }, [route.params?.selectAccount])
 
@@ -50,13 +50,15 @@ export default function ImportKeyScreen({ navigation, route }): JSX.Element {
       <Text style={styles.text}>Send Tokens</Text>
       <Text style={styles.text}>Choose an Account</Text>
 
-      {!senderAccount ? (
-        <SelectAccount navigation={navigation} route={route} />
-      ) : (
+      {!senderAccount ? null : (
         <TouchableOpacity
           style={styles.loginBtn}
-          // I need to fix this metadata stupidity
-          onPress={() => navigation.dispatch(CommonActions.setParams({ selectAccount: null }))}
+          onPress={() =>
+            navigation.dispatch({
+              ...CommonActions.navigate('Account'),
+              params: { selectAccount: null },
+            })
+          }
         >
           <Text>Go Back</Text>
         </TouchableOpacity>

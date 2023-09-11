@@ -1,19 +1,26 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import * as Kilt from '@kiltprotocol/sdk-js'
 import { decryptData, encryptData } from '../utils/crypto'
 
-export async function getStorage(key: string, password: string): Promise<string> {
+export async function getStorage(key: string, password?: string): Promise<string> {
   const encodedResult = await AsyncStorage.getItem(key)
   if (encodedResult === undefined || encodedResult === null) {
     throw new Error(`Key '${key}' not found.`)
   }
-  const decryptedData = decryptData(encodedResult, password)
-  return decryptedData
+  if (password) {
+    const decryptedData = decryptData(encodedResult, password)
+    return decryptedData
+  }
+  return encodedResult
 }
 
-export async function setStorage(key: string, value: string, password: string): Promise<void> {
-  const encrypted = encryptData(value, password)
-  await AsyncStorage.setItem(key, JSON.stringify(encrypted))
+export async function setStorage(key: string, value: string, password?: string): Promise<void> {
+  if (password) {
+    const encrypted = encryptData(value, password)
+    await AsyncStorage.setItem(key, JSON.stringify(encrypted))
+    return
+  }
+
+  await AsyncStorage.setItem(key, value)
 }
 
 export async function removeStorage(key: string): Promise<void> {

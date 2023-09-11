@@ -4,9 +4,10 @@ const screenWidth = Dimensions.get('screen').width
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#1f1f1f',
+    backgroundColor: '#440031',
+
     alignItems: 'center',
-    paddingTop: 250,
+    // paddingTop: 250,
   },
   text: {
     color: 'white',

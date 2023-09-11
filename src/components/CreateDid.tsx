@@ -1,6 +1,6 @@
 import { TouchableOpacity, Text, View } from 'react-native'
 import styles from '../styles/styles'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import * as Kilt from '@kiltprotocol/sdk-js'
 import * as DidStore from '../storage/did/store'
 import * as keyStore from '../storage/keys/store'
@@ -11,24 +11,30 @@ import { getStorage } from '../storage/storage'
 import createSimpleFullDid from '../utils/didCreate'
 import SelectAccount from './SelectAccount'
 import { CommonActions } from '@react-navigation/native'
+import { AuthContext } from '../wrapper/AuthContextProvider'
 
 export default function CreateDid({ navigation, route }) {
   const [didMnemonic, setDidMnemonic] = useState()
-  const [account, setAccount] = useState()
-
+  const [account, setAccount] = useState<null | any>()
+  const authContext = useContext(AuthContext)
   useEffect(() => {
     if (!route.params?.selectAccount) return
 
     setAccount(route.params?.selectAccount)
-  }, [route.params?.selectAccount])
+  }, [route.params])
 
   const generateDid = async () => {
     if (!account) return
-
     const keyring = new Keyring({
       type: account.metadata.type,
       ss58Format: 38,
     })
+    const password = await getStorage('session-password')
+
+    if (!password) {
+      authContext.logout()
+      navigation.navigate('UnlockStorageScreen')
+    }
 
     const paymentAccount = keyring.addFromMnemonic(account.mnemonic)
 
@@ -59,7 +65,7 @@ export default function CreateDid({ navigation, route }) {
           keyAgreement: didMnemonic || account.mnemonic,
         },
         didDoc.uri,
-        'Enter your password'
+        password
       )
     }
     await DidStore.importDid(
@@ -68,7 +74,7 @@ export default function CreateDid({ navigation, route }) {
         keyAgreement: didMnemonic || account.mnemonic,
       },
       didUri,
-      'Enter your password'
+      password
     )
   }
   return (
@@ -78,10 +84,7 @@ export default function CreateDid({ navigation, route }) {
         <SelectAccount navigation={navigation} route={route} />
       ) : (
         <View>
-          <TouchableOpacity
-            style={styles.loginBtn}
-            onPress={() => navigation.dispatch(CommonActions.setParams({ selectAccount: null }))}
-          >
+          <TouchableOpacity style={styles.loginBtn} onPress={() => setAccount(null)}>
             <Text>Choose payment another account</Text>
           </TouchableOpacity>
         </View>
@@ -100,7 +103,13 @@ export default function CreateDid({ navigation, route }) {
       </TouchableOpacity>
 
       <View>
-        <TouchableOpacity style={styles.loginBtn} onPress={() => navigation.goBack()}>
+        <TouchableOpacity
+          style={styles.loginBtn}
+          onPress={() => {
+            setAccount(null)
+            navigation.navigate('Identity')
+          }}
+        >
           <Text>Head back to DID list</Text>
         </TouchableOpacity>
       </View>
