@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import { AuthContext } from '../wrapper/AuthContextProvider'
-import { TouchableOpacity, Text, View } from 'react-native'
+import { TouchableOpacity, Text, View, ScrollView } from 'react-native'
 import styles from '../styles/styles'
 import { removeStorage } from '../storage/storage'
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -9,7 +9,7 @@ export default function SettingScreen({ navigation }) {
   const authContext = useContext(AuthContext)
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.scroll}>
       <TouchableOpacity
         style={styles.loginBtn}
         onPress={async () => {
@@ -37,6 +37,6 @@ export default function SettingScreen({ navigation }) {
       >
         <Text>Export storage</Text>
       </TouchableOpacity>
-    </View>
+    </ScrollView>
   )
 }

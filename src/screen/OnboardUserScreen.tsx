@@ -28,7 +28,7 @@ export default function OnboardUserScreen(): JSX.Element {
   }
 
   return (
-    <View style={styles.container}>
+    <View >
       <Text style={styles.text}>Welcome to Nessie Mobile</Text>
       <Text style={styles.text}>
         This password will be used to encrypt your data. It will not be stored anywhere. Please make

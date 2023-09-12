@@ -1,4 +1,4 @@
-import { TouchableOpacity, Text, View, Image } from 'react-native'
+import { TouchableOpacity, Text, View, Image, ScrollView } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import styles from '../styles/styles'
 
@@ -25,33 +25,31 @@ export default function DidScreen({ navigation, route }) {
   }, [route.params])
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Nessie</Text>
+    <ScrollView style={styles.scroll}>
+      <View >
+        <View style={{ paddingTop: '16.33$' }}>
+          <Image source={require('../../assets/Group.png')} />
+          <Text style={styles.text}>Nessie</Text>
+          <Text>your Identity wallet</Text>
+        </View>
 
-      {did ? (
-        <ClaimW3n navigation={navigation} route={route} />
-      ) : (
-        <SelectDid navigation={navigation} route={route} />
-      )}
+        {did ? (
+          <ClaimW3n navigation={navigation} route={route} />
+        ) : (
+          <SelectDid navigation={navigation} route={route} />
+        )}
 
-      {!!toggleDidCreation ? (
-        <CreateDid navigation={navigation} route={route} />
-      ) : (
-        <>
-          <TouchableOpacity
-            style={styles.loginBtn}
-            onPress={() => setToggleDidCreation(!toggleDidCreation)}
-          >
-            <Text>Create a DID</Text>
-          </TouchableOpacity>
-        </>
-      )}
+        <TouchableOpacity style={styles.loginBtn} onPress={() => navigation.navigate('CreateDid')}>
+          <Text>Create a DID</Text>
+        </TouchableOpacity>
 
+        {/* 
       {did ? (
         <TouchableOpacity style={styles.loginBtn} onPress={fetch}>
           <Text>Get Web3Name</Text>
         </TouchableOpacity>
-      ) : null}
-    </View>
+      ) : null} */}
+      </View>
+    </ScrollView>
   )
 }

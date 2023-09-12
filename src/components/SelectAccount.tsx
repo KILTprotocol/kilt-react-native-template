@@ -31,7 +31,7 @@ export default function SelectAccount({ navigation, route }) {
   }, [])
 
   return (
-    <View>
+    <View style={styles.container}>
       {keys ? (
         keys.map((keyInfo: KeyInfo, key) => {
           return (

@@ -11,7 +11,7 @@ export default function TokenReceiver({ navigation, route }): JSX.Element {
   }, [route.params])
 
   return (
-    <View style={styles.container}>
+    <View>
       <Text style={styles.text}>Receive Tokens</Text>
       {!account ? null : (
         <View>

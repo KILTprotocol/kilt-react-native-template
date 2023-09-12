@@ -85,7 +85,7 @@ export default function UnlockStorageScreen({ navigation }) {
   }
 
   return (
-    <View style={styles.container}>
+    <View >
       <Text style={styles.text}>Unlock Storage</Text>
       <Text style={styles.text}>Enter your password to unlock the storage.</Text>
       <TextInput style={styles.textInput} value={enterPassword} onChangeText={setEnterPassword} />

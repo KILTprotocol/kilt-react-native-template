@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react'
-import { TouchableOpacity, View, Text } from 'react-native'
+import { TouchableOpacity, View, Text, Image } from 'react-native'
 
 import * as DidStore from '../storage/did/store'
 import styles from '../styles/styles'
@@ -33,13 +33,13 @@ export default function SelectDid({ navigation, route }) {
   }, [])
 
   return (
-    <View>
+    <View style={styles.container}>
       {dids ? (
         dids.map(({ keypairs, document }, key) => {
           return (
-            <View key={key}>
+            <View key={key} style={{ paddingTop: '0.5%', paddingBottom: '0.5%' }}>
               <TouchableOpacity
-                style={styles.loginBtn}
+                style={[key % 2 === 0 ? styles.rectangleButtonPink : styles.rectangleButtonPurple]}
                 onPress={() =>
                   navigation.dispatch({
                     ...CommonActions.goBack(),
@@ -47,7 +47,10 @@ export default function SelectDid({ navigation, route }) {
                   })
                 }
               >
-                <Text>{document.uri}</Text>
+                <View style={styles.rectangleButtonContainer}>
+                  <Text style={styles.rectangleButtonText}>{document.uri}</Text>
+                  <Image source={require('../../assets/Manage.png')} />
+                </View>
               </TouchableOpacity>
             </View>
           )

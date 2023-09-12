@@ -1,8 +1,7 @@
 import React, { useContext, useEffect } from 'react'
 import { navigationRef } from './components/RootNavigation'
-import Ionicons from 'react-native-vector-icons/Ionicons'
-
-import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native'
+import { Image, View } from 'react-native'
+import { NavigationContainer } from '@react-navigation/native'
 import { connect } from '@kiltprotocol/sdk-js'
 import { StatusBar } from 'expo-status-bar'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -23,22 +22,7 @@ import TokenReceiver from './components/TokenReceiver'
 import TokenSender from './components/TokenSender'
 import AccountScreen from './screen/AccountScreen'
 import ExportStorageScreen from './screen/ExportStorageScreen'
-import { useColorScheme } from 'react-native'
-
-// style =
-
-// {keyboardHidesTabBar -> tabBarHideOnKeyboard
-// activeTintColor -> tabBarActiveTintColor
-// inactiveTintColor -> tabBarInactiveTintColor
-// activeBackgroundColor -> tabBarActiveBackgroundColor
-// inactiveBackgroundColor -> tabBarInactiveBackgroundColor
-// allowFontScaling -> tabBarAllowFontScaling
-// showLabel -> tabBarShowLabel
-// labelPosition -> tabBarLabelPosition
-// labelStyle -> tabBarLabelStyle
-// iconStyle -> tabBarIconStyle
-// tabStyle -> tabBarItemStyle
-// style -> tabBarStyle}
+import styles from './styles/styles'
 
 const Stack = createNativeStackNavigator()
 const Tab = createBottomTabNavigator()
@@ -50,44 +34,7 @@ function Main({ navigation }) {
     connection()
   })
   return (
-    <Tab.Navigator
-      initialRouteName="Identity"
-      screenOptions={({ route }) => ({
-        tabBarIcon: ({ focused, color, size }) => {
-          let iconName
-
-          if (route.name === 'Account') {
-            iconName = focused ? 'ios-information-circle' : 'ios-information-circle-outline'
-          } else if (route.name === 'Settings') {
-            iconName = focused ? 'ios-list' : 'ios-list-outline'
-          } else if (route.name === 'Identity') {
-            iconName = focused ? 'ios-list' : 'ios-list-outline'
-          }
-
-          // You can return any component that you like here!
-          // return <Ionicons name={iconName} size={size} color={color} />
-          return <> </>
-        },
-        tabBarActiveTintColor: 'tomato',
-        tabBarInactiveTintColor: 'gray',
-        headerStyle: {
-          backgroundColor: '#440031',
-          shadowColor: 'transparent',
-        },
-        headerTitleAlign: 'left',
-        borderColor: 'transparent',
-
-        tabBarStyle: {
-          // height: '79px',
-          backgroundColor: '#440031',
-          borderTopColor: 'transparent',
-        },
-        headerTintColor: '#fff',
-        headerTitleStyle: {
-          fontWeight: 'bold',
-        },
-      })}
-    >
+    <Tab.Navigator initialRouteName="Identity" screenOptions={TabNavigatorStyles}>
       <Tab.Screen name="Account" component={AccountScreen} />
       <Tab.Screen name="Identity" component={DidScreen} options={{}} />
       <Tab.Screen name="Settings" component={SettingScreen} />
@@ -152,12 +99,10 @@ function AuthStack() {
 }
 
 export default function App() {
-  const scheme = useColorScheme()
-
   return (
     <AuthContextProvider>
       <NavigationContainer ref={navigationRef}>
-        <SafeAreaView style={{ flex: 1 }}>
+        <SafeAreaView style={styles.container}>
           <StatusBar backgroundColor="#440031" style="light" />
           <AuthStack />
         </SafeAreaView>
@@ -165,3 +110,45 @@ export default function App() {
     </AuthContextProvider>
   )
 }
+
+const TabNavigatorStyles = ({ route }) => ({
+  tabBarIcon: ({ focused, color, size }) => {
+    if (route.name === 'Account') {
+      return !focused ? (
+        <Image source={require('../assets/Accounts.png')} />
+      ) : (
+        <Image source={require('../assets/account_focused.png')} />
+      )
+    } else if (route.name === 'Settings') {
+      return !focused ? (
+        <Image source={require('../assets/Settings.png')} />
+      ) : (
+        <Image source={require('../assets/setting_focused.png')} />
+      )
+    } else if (route.name === 'Identity') {
+      return !focused ? (
+        <Image source={require('../assets/Identity_small_1.png')} />
+      ) : (
+        <Image source={require('../assets/identity_focused.png')} />
+      )
+    }
+  },
+  tabBarActiveTintColor: 'tomato',
+  tabBarInactiveTintColor: 'gray',
+  headerStyle: {
+    backgroundColor: '#440031',
+    shadowColor: 'transparent',
+  },
+  headerTitleAlign: 'left',
+  borderColor: 'transparent',
+
+  tabBarStyle: {
+    // height: '79px',
+    backgroundColor: '#440031',
+    borderTopColor: 'transparent',
+  },
+  headerTintColor: '#ffffff',
+  headerTitleStyle: {
+    fontWeight: 'bold',
+  },
+})

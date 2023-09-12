@@ -46,7 +46,7 @@ export default function TokenSender({ navigation, route }): JSX.Element {
   }
 
   return (
-    <View style={styles.container}>
+    <View >
       <Text style={styles.text}>Send Tokens</Text>
       <Text style={styles.text}>Choose an Account</Text>
 

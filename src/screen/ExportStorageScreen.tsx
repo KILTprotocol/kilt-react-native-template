@@ -1,7 +1,8 @@
 import React, { useState, useContext } from 'react'
 import { allStorage, getStorage } from '../storage/storage'
 import { AuthContext } from '../wrapper/AuthContextProvider'
-import { TouchableOpacity, Text } from 'react-native'
+import { TouchableOpacity, Text, ScrollView } from 'react-native'
+import styles from '../styles/styles'
 
 export default function ExportStorageScreen({ navigation }) {
   const authContext = useContext(AuthContext)
@@ -19,10 +20,10 @@ export default function ExportStorageScreen({ navigation }) {
   }
 
   return (
-    <>
+    <ScrollView style={styles.scroll}>
       <TouchableOpacity onPress={() => fetchKeys()}>
         <Text>get all Storage</Text>
       </TouchableOpacity>
-    </>
+    </ScrollView>
   )
 }

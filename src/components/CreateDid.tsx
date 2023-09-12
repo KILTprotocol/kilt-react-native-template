@@ -4,13 +4,11 @@ import React, { useContext, useEffect, useState } from 'react'
 import * as Kilt from '@kiltprotocol/sdk-js'
 import * as DidStore from '../storage/did/store'
 import * as keyStore from '../storage/keys/store'
-import { KeyInfo } from '../utils/interfaces'
 import Keyring from '@polkadot/keyring'
 import { mnemonicToMiniSecret } from '@polkadot/util-crypto'
 import { getStorage } from '../storage/storage'
 import createSimpleFullDid from '../utils/didCreate'
 import SelectAccount from './SelectAccount'
-import { CommonActions } from '@react-navigation/native'
 import { AuthContext } from '../wrapper/AuthContextProvider'
 
 export default function CreateDid({ navigation, route }) {

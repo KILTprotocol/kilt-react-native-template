@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { TouchableOpacity, Text, View } from 'react-native'
+import { TouchableOpacity, Text, View, ScrollView } from 'react-native'
 
 import styles from '../styles/styles'
 import SelectAccount from '../components/SelectAccount'
@@ -11,12 +11,12 @@ export default function AccountScreen({ navigation, route }) {
     if (!route.params) {
       return
     }
-    console.log('hello', route.params)
+
     setAccount(route.params.selectAccount)
   }, [route.params])
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.scroll}>
       {account ? (
         <>
           <TouchableOpacity
@@ -53,6 +53,6 @@ export default function AccountScreen({ navigation, route }) {
           </TouchableOpacity>
         </>
       )}
-    </View>
+    </ScrollView>
   )
 }
