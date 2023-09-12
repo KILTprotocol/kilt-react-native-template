@@ -13,7 +13,7 @@ export default function DidManagement({ navigation, route }) {
     const api = ConfigService.get('api')
     setDid(route.params.did.document)
     const fetchedW3n = await api.query.web3Names.owner(route.params.did.document.uri)
-    console.log(fetchedW3n.toString())
+
     if (fetchedW3n) {
       setW3n(fetchedW3n.toString())
     }

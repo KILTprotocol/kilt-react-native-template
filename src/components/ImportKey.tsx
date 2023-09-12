@@ -12,13 +12,14 @@ import styles from '../styles/styles'
 import { getStorage } from '../storage/storage'
 import { AuthContext } from '../wrapper/AuthContextProvider'
 import RadioButton from './RadioButton'
+import { CommonActions } from '@react-navigation/native'
 
 const alogrithmList = [
   { label: 'Sr25519', value: 'sr25519' },
   { label: 'Ed25519', value: 'ed25519' },
-  { label: 'Ecdsa', value: 'ecdsa' },
-  { label: 'Ethereum', value: 'ethereum' },
-  { label: 'x25519', value: 'x25519' },
+  // { label: 'Ecdsa', value: 'ecdsa' },
+  // { label: 'Ethereum', value: 'ethereum' },
+  // { label: 'x25519', value: 'x25519' },
 ]
 
 export default function ImportKey({ navigation }): JSX.Element {
@@ -85,10 +86,18 @@ export default function ImportKey({ navigation }): JSX.Element {
           />
         )
       })}
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity
+          style={styles.redButton}
+          onPress={() => navigation.dispatch(CommonActions.goBack())}
+        >
+          <Text style={styles.redButtonText}>CANCEL</Text>
+        </TouchableOpacity>
 
-      <TouchableOpacity style={styles.textInput} onPress={addKey}>
-        <Text style={styles.text}>Add Key</Text>
-      </TouchableOpacity>
+        <TouchableOpacity style={styles.orangeButton} onPress={addKey}>
+          <Text style={styles.orangeButtonText}>ADD ACCOUNT</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   )
 }

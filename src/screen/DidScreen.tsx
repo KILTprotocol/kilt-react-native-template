@@ -43,7 +43,7 @@ export default function DidScreen({ navigation, route }) {
           })
         }
       >
-        <Text style={styles.orangeButtonText}>Create a DID</Text>
+        <Text style={styles.orangeButtonText}>ADD IDENTITY</Text>
       </TouchableOpacity>
     </ScrollView>
   )

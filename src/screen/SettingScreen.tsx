@@ -27,15 +27,6 @@ export default function SettingScreen({ navigation }) {
       >
         <Text style={styles.orangeButtonText}>Clear Storage</Text>
       </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.orangeButton}
-        onPress={async () => {
-          await removeStorage('session-password')
-          authContext.logout()
-        }}
-      >
-        <Text style={styles.orangeButtonText}>Logout</Text>
-      </TouchableOpacity>
     </ScrollView>
   )
 }

@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react'
 import { navigationRef } from './components/RootNavigation'
-import { Image } from 'react-native'
+import { Image, TouchableOpacity, Text } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native'
 import { connect } from '@kiltprotocol/sdk-js'
 import { StatusBar } from 'expo-status-bar'
@@ -24,18 +24,62 @@ import AccountScreen from './screen/AccountScreen'
 import ExportStorageScreen from './screen/ExportStorageScreen'
 import styles from './styles/styles'
 import DidManagement from './components/DidManagement'
+import { removeStorage } from './storage/storage'
+
+const connection = async () => await connect('wss://peregrine.kilt.io/parachain-public-ws/')
 
 const Stack = createNativeStackNavigator()
 const Tab = createBottomTabNavigator()
 
 function Main({ navigation }) {
-  useEffect(() => {
-    const connection = async () => await connect('wss://peregrine.kilt.io/parachain-public-ws/')
+  const authContext = useContext(AuthContext)
 
-    connection()
-  }, [])
+  useEffect(() => {}, [authContext])
   return (
-    <Tab.Navigator initialRouteName="Identity" screenOptions={TabNavigatorStyles}>
+    <Tab.Navigator
+      initialRouteName="Identity"
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, color, size }) => {
+          if (route.name === 'Account') {
+            return !focused ? (
+              <Image source={require('../assets/Accounts.png')} />
+            ) : (
+              <Image source={require('../assets/account_focused.png')} />
+            )
+          } else if (route.name === 'Settings') {
+            return !focused ? (
+              <Image source={require('../assets/Settings.png')} />
+            ) : (
+              <Image source={require('../assets/setting_focused.png')} />
+            )
+          } else if (route.name === 'Identity') {
+            return !focused ? (
+              <Image source={require('../assets/Identity_small_1.png')} />
+            ) : (
+              <Image source={require('../assets/identity_focused.png')} />
+            )
+          }
+        },
+        tabBarActiveTintColor: 'tomato',
+        tabBarInactiveTintColor: 'white',
+        headerStyle: {
+          backgroundColor: '#440031',
+          shadowColor: 'transparent',
+        },
+        headerTitleAlign: 'left',
+        borderColor: 'transparent',
+
+        tabBarStyle: {
+          backgroundColor: '#440031',
+          borderTopColor: 'transparent',
+        },
+        headerTintColor: '#ffffff',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+        headerBackVisible: false,
+      })}
+    >
       <Tab.Screen name="Account" component={AccountScreen} />
       <Tab.Screen name="Identity" component={DidScreen} options={{}} />
       <Tab.Screen name="Settings" component={SettingScreen} />
@@ -55,11 +99,22 @@ function AuthStack() {
           backgroundColor: '#440031',
         },
         headerTitleAlign: 'left',
-        headerTintColor: '#fff',
+        headerTintColor: 'white',
         headerTitleStyle: {
           fontWeight: 'bold',
         },
-        headerShown: false,
+        headerBackVisible: false,
+
+        headerRight: () => (
+          <TouchableOpacity
+            onPress={async () => {
+              await removeStorage('session-password')
+              authContext.logout()
+            }}
+          >
+            <Text style={{ color: 'white' }}>Log out</Text>
+          </TouchableOpacity>
+        ),
       }}
     >
       {!authContext.isAuthenticated ? (
@@ -69,7 +124,7 @@ function AuthStack() {
         </Stack.Group>
       ) : (
         <>
-          <Stack.Group screenOptions={{}}>
+          <Stack.Group>
             <Stack.Screen name="Nessie" component={Main} />
             <Stack.Screen name="Export Storage" component={ExportStorageScreen} />
 
@@ -91,8 +146,6 @@ function AuthStack() {
 
 export default function App() {
   useEffect(() => {
-    const connection = async () => await connect('wss://peregrine.kilt.io/parachain-public-ws/')
-
     connection()
   }, [])
   return (
@@ -106,45 +159,3 @@ export default function App() {
     </AuthContextProvider>
   )
 }
-
-const TabNavigatorStyles = ({ route }) => ({
-  tabBarIcon: ({ focused, color, size }) => {
-    if (route.name === 'Account') {
-      return !focused ? (
-        <Image source={require('../assets/Accounts.png')} />
-      ) : (
-        <Image source={require('../assets/account_focused.png')} />
-      )
-    } else if (route.name === 'Settings') {
-      return !focused ? (
-        <Image source={require('../assets/Settings.png')} />
-      ) : (
-        <Image source={require('../assets/setting_focused.png')} />
-      )
-    } else if (route.name === 'Identity') {
-      return !focused ? (
-        <Image source={require('../assets/Identity_small_1.png')} />
-      ) : (
-        <Image source={require('../assets/identity_focused.png')} />
-      )
-    }
-  },
-  tabBarActiveTintColor: 'tomato',
-  tabBarInactiveTintColor: 'white',
-  headerStyle: {
-    backgroundColor: '#440031',
-    shadowColor: 'transparent',
-  },
-  headerTitleAlign: 'left',
-  borderColor: 'transparent',
-
-  tabBarStyle: {
-    // height: '79px',
-    backgroundColor: '#440031',
-    borderTopColor: 'transparent',
-  },
-  headerTintColor: '#ffffff',
-  headerTitleStyle: {
-    fontWeight: 'bold',
-  },
-})

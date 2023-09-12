@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { TouchableOpacity, Text, View, ScrollView } from 'react-native'
+import { TouchableOpacity, Text, View, ScrollView, Image } from 'react-native'
 
 import styles from '../styles/styles'
 import SelectAccount from '../components/SelectAccount'
@@ -17,32 +17,51 @@ export default function AccountScreen({ navigation, route }) {
 
   return (
     <ScrollView style={styles.scroll}>
-      <SelectAccount navigation={navigation} route={route} />
-      <View>
-        <TouchableOpacity
-          style={styles.orangeButton}
-          onPress={() => navigation.navigate('TokenSender', { selectAccount: account })}
+      <View style={{ paddingTop: '16.33%', alignItems: 'center', paddingBottom: '15%' }}>
+        <Image source={require('../../assets/Group.png')} />
+        <Text
+          style={{
+            color: 'white',
+            fontSize: 16,
+          }}
         >
-          <Text style={styles.orangeButtonText}>Send</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.orangeButton}
-          onPress={() => navigation.navigate('TokenReceiver', { selectAccount: account })}
+          Nessie
+        </Text>
+        <Text
+          style={{
+            color: 'white',
+            fontSize: 12,
+          }}
         >
-          <Text style={styles.orangeButtonText}>Receive</Text>
-        </TouchableOpacity>
+          your Identity wallet
+        </Text>
       </View>
 
-      <>
-        <Text>Please select an account, if you have no account please create a key</Text>
-        <TouchableOpacity
-          style={styles.orangeButton}
-          onPress={() => navigation.navigate('ImportKey')}
-        >
-          <Text>Add or Import Key</Text>
-        </TouchableOpacity>
-      </>
+      <SelectAccount navigation={navigation} route={route} />
+      {account ? (
+        <View>
+          <TouchableOpacity
+            style={styles.orangeButton}
+            onPress={() => navigation.navigate('TokenSender', { selectAccount: account })}
+          >
+            <Text style={styles.orangeButtonText}>SEND</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.orangeButton}
+            onPress={() => navigation.navigate('TokenReceiver', { selectAccount: account })}
+          >
+            <Text style={styles.orangeButtonText}>RECEIVE</Text>
+          </TouchableOpacity>
+        </View>
+      ) : null}
+
+      <TouchableOpacity
+        style={styles.orangeButton}
+        onPress={() => navigation.navigate('ImportKey')}
+      >
+        <Text style={styles.orangeButtonText}>ADD ACCOUNT</Text>
+      </TouchableOpacity>
     </ScrollView>
   )
 }

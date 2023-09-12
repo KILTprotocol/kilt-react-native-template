@@ -12,6 +12,8 @@ import { CommonActions } from '@react-navigation/native'
 export default function TokenSender({ navigation, route }): JSX.Element {
   const [senderAccount, setSenderAccount] = useState(null)
   const [receiverAddress, setReceiverAddress] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+
   const [amount, setAmount] = useState('')
   const [balance, setBalance] = useState()
 
@@ -33,7 +35,9 @@ export default function TokenSender({ navigation, route }): JSX.Element {
   }, [senderAccount])
 
   const handler = async () => {
+    setIsLoading(true)
     if (!senderAccount || !receiverAddress || (!senderAccount && !receiverAddress)) {
+      setIsLoading(false)
       throw new Error('get an account ')
     }
     console.log('senderAccount.metadata.type,', senderAccount.metadata.type)
@@ -50,27 +54,13 @@ export default function TokenSender({ navigation, route }): JSX.Element {
       Kilt.BalanceUtils.toFemtoKilt(amount)
     )
     await Kilt.Blockchain.signAndSubmitTx(transferTx, account, {}).catch((e) => console.log(e))
-    console.log('finalised')
+    setIsLoading(false)
   }
 
   return (
-    <View>
+    <View style={styles.container}>
       <Text style={styles.text}>Send Tokens</Text>
       <Text style={styles.text}>Choose an Account</Text>
-
-      {!senderAccount ? null : (
-        <TouchableOpacity
-          style={styles.orangeButton}
-          onPress={() =>
-            navigation.dispatch({
-              ...CommonActions.navigate('Account'),
-              params: { selectAccount: null },
-            })
-          }
-        >
-          <Text style={styles.orangeButtonText}>Cancel</Text>
-        </TouchableOpacity>
-      )}
 
       <View>
         <TouchableOpacity
@@ -95,10 +85,26 @@ export default function TokenSender({ navigation, route }): JSX.Element {
         value={amount}
         onChangeText={setAmount}
       />
-
-      <TouchableOpacity style={styles.orangeButton} onPress={() => handler()}>
-        <Text>Send Tokens</Text>
-      </TouchableOpacity>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity
+          style={styles.redButton}
+          onPress={() =>
+            navigation.dispatch({
+              ...CommonActions.navigate('Account'),
+              params: { selectAccount: null },
+            })
+          }
+        >
+          <Text style={styles.redButtonText}>CANCEL</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.orangeButton}
+          onPress={() => handler()}
+          disabled={amount || senderAccount || receiverAddress || isLoading ? true : false}
+        >
+          <Text style={styles.orangeButtonText}>Send Tokens</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   )
 }

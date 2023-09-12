@@ -13,6 +13,8 @@ const styles = StyleSheet.create({
   },
   text: {
     color: '#FFFFFF',
+    // marginBottom: 5,
+    // fontSize: 14,
   },
   textInput: {
     padding: 5,
@@ -34,6 +36,21 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   orangeButtonText: {
+    fontSize: 14,
+    textAlign: 'center',
+    width: '100%',
+    color: '#FFFFFF',
+  },
+  redButton: {
+    backgroundColor: '#AB2400',
+    borderRadius: 5,
+    height: screenHeight * 0.043,
+    width: screenWidth * 0.4,
+    justifyContent: 'center',
+    alignSelf: 'center',
+    marginVertical: 10,
+  },
+  redButtonText: {
     fontSize: 14,
     textAlign: 'center',
     width: '100%',
@@ -82,6 +99,10 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: 'bold',
     color: '#FFFFFF',
+  buttonContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-evenly',
   },
 })
 
