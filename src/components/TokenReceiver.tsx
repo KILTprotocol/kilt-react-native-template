@@ -1,23 +1,45 @@
-import { View, Text, TouchableOpacity } from 'react-native'
+import { View, Text, TouchableOpacity, SafeAreaView, StyleSheet } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import styles from '../styles/styles'
 import QRCode from 'react-qr-code'
 import { CommonActions } from '@react-navigation/native'
+import styles from '../styles/styles'
+import { KeyInfo } from '../utils/interfaces'
+
+const componentStyles = StyleSheet.create({
+  main: {
+    display: 'flex',
+    alignItems: 'center',
+    paddingTop: 40,
+  },
+  code: {
+    marginTop: 40,
+  },
+  address: {
+    marginTop: 12,
+    marginHorizontal: 70,
+  },
+  button: {
+    marginTop: 36,
+  },
+})
 
 export default function TokenReceiver({ navigation, route }): JSX.Element {
-  const [account, setAccount] = useState('')
+  const [address, setAddress] = useState('')
   useEffect(() => {
-    setAccount(route.params?.selectAccount)
+    setAddress((route.params?.selectAccount as KeyInfo).metadata.address)
   }, [route.params])
 
   return (
-    <View>
-      <Text style={styles.text}>Receive Tokens</Text>
-      {!account ? null : (
-        <View>
-          <QRCode value={account.metadata.address} />
+    <SafeAreaView style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.headerText}>Receive Tokens</Text>
+      </View>
+      {address && (
+        <View style={componentStyles.main}>
+          <QRCode value={address} />
+          <Text style={{ ...styles.text, ...componentStyles.address }}>{address}</Text>
           <TouchableOpacity
-            style={styles.orangeButton}
+            style={{ ...styles.orangeButton, ...componentStyles.button }}
             onPress={() =>
               navigation.dispatch({
                 ...CommonActions.navigate('Account'),
@@ -29,6 +51,6 @@ export default function TokenReceiver({ navigation, route }): JSX.Element {
           </TouchableOpacity>
         </View>
       )}
-    </View>
+    </SafeAreaView>
   )
 }

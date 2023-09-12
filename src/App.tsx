@@ -1,10 +1,10 @@
 import React, { useContext, useEffect } from 'react'
 import { navigationRef } from './components/RootNavigation'
-import { Image, View } from 'react-native'
+import { Image } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native'
 import { connect } from '@kiltprotocol/sdk-js'
 import { StatusBar } from 'expo-status-bar'
-import { SafeAreaView } from 'react-native-safe-area-context'
+import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import OnboardUserScreen from './screen/OnboardUserScreen'
@@ -98,10 +98,10 @@ export default function App() {
   return (
     <AuthContextProvider>
       <NavigationContainer ref={navigationRef}>
-        <SafeAreaView style={styles.container}>
+        <SafeAreaProvider style={styles.container}>
           <StatusBar backgroundColor="#440031" style="light" />
           <AuthStack />
-        </SafeAreaView>
+        </SafeAreaProvider>
       </NavigationContainer>
     </AuthContextProvider>
   )

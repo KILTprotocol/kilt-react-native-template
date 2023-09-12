@@ -13,8 +13,6 @@ const styles = StyleSheet.create({
   },
   text: {
     color: '#FFFFFF',
-    marginBottom: 20,
-    fontSize: 30,
   },
   textInput: {
     padding: 5,
@@ -69,6 +67,21 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+  },
+  header: {
+    height: 40,
+    backgroundColor: 'rgba(0, 169, 157, 0.15)',
+    fontSize: 14,
+    fontWeight: 'bold',
+    display: 'flex',
+    justifyContent: 'center',
+    color: '#fff',
+    paddingLeft: 12,
+  },
+  headerText: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
   },
 })
 
