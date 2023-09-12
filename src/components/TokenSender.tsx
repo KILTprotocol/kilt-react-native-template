@@ -13,15 +13,27 @@ export default function TokenSender({ navigation, route }): JSX.Element {
   const [senderAccount, setSenderAccount] = useState(null)
   const [receiverAddress, setReceiverAddress] = useState('')
   const [amount, setAmount] = useState('')
+  const [balance, setBalance] = useState()
 
   useEffect(() => {
-    console.log(route.params, 'route.params?')
     setSenderAccount(route.params?.selectAccount)
-  }, [route.params?.selectAccount])
+  }, [route.params])
 
   useEffect(() => {
     setReceiverAddress(route.params?.scanAddress)
-  }, [route.params?.scanAddress])
+  }, [route.params])
+
+  useEffect(() => {
+    if (!senderAccount) return
+    const handler = async () => {
+      const api = Kilt.ConfigService.get('api')
+
+      const balances = await api.query.system.account(senderAccount.metadata.address)
+      const freeBalance = Kilt.BalanceUtils.fromFemtoKilt(balances.data.free)
+      setBalance(freeBalance.toString())
+    }
+    handler()
+  }, [])
 
   const handler = async () => {
     if (!senderAccount || !receiverAddress || (!senderAccount && !receiverAddress)) {
@@ -35,7 +47,6 @@ export default function TokenSender({ navigation, route }): JSX.Element {
 
     const account = keyring.addFromMnemonic(senderAccount.mnemonic)
 
-    console.log('i am the account', amount)
     const api = Kilt.ConfigService.get('api')
     const transferTx = api.tx.balances.transfer(
       receiverAddress,
@@ -76,7 +87,7 @@ export default function TokenSender({ navigation, route }): JSX.Element {
           onChangeText={setReceiverAddress}
         />
       </View>
-
+      {balance ? <Text>{balance}</Text> : null}
       <Text style={styles.textInput}>Enter an amount to send</Text>
       <TextInput
         style={styles.textInput}

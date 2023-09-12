@@ -25,8 +25,6 @@ export default function SelectDid({ navigation, route }) {
     const didsList = await DidStore.list(password)
     const d = await Promise.all(
       didsList.map(async ({ keypairs, document }: { keypairs: DidKeys; document: DidDocument }) => {
-        await connect('wss://spiritnet.io')
-
         const fetchedW3n = await getWeb3NameForDid(document.uri)
 
         return { keypairs: keypairs, document: document, w3n: fetchedW3n }

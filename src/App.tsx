@@ -30,7 +30,7 @@ const Tab = createBottomTabNavigator()
 
 function Main({ navigation }) {
   useEffect(() => {
-    const connection = async () => await connect('wss://spiritnet.kilt.io')
+    const connection = async () => await connect('wss://peregrine.kilt.io/parachain-public-ws/')
 
     connection()
   })
