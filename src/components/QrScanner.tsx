@@ -22,7 +22,7 @@ export default function QrScanner({ navigation, route }) {
       const { type, data = {} } = scanningResult
 
       setScanned(true)
-      navigation.navigate({ name: 'SenderScreen', params: { scanAddress: data }, merge: true })
+      navigation.navigate({ name: 'TokenSender', params: { scanAddress: data }, merge: true })
       alert(`Bar code with type ${type} and data ${data} has been scanned!`)
     }
   }

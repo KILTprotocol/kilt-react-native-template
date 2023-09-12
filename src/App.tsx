@@ -125,7 +125,7 @@ const TabNavigatorStyles = ({ route }) => ({
     }
   },
   tabBarActiveTintColor: 'tomato',
-  tabBarInactiveTintColor: 'gray',
+  tabBarInactiveTintColor: 'white',
   headerStyle: {
     backgroundColor: '#440031',
     shadowColor: 'transparent',
