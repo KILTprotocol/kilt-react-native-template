@@ -16,9 +16,8 @@ export default function CreateDid({ navigation, route }) {
   const [account, setAccount] = useState<null | any>()
   const authContext = useContext(AuthContext)
   useEffect(() => {
-    if (!route.params?.selectAccount) return
-
-    setAccount(route.params?.selectAccount)
+    if (!route.params.selectAccount) return
+    setAccount(route.params.selectAccount)
   }, [route.params])
 
   const generateDid = async () => {
@@ -76,17 +75,12 @@ export default function CreateDid({ navigation, route }) {
     )
   }
   return (
-    <View>
+    <View style={styles.container}>
       <Text style={styles.text}>Create your DID</Text>
-      {!account ? (
-        <SelectAccount navigation={navigation} route={route} />
-      ) : (
-        <View>
-          <TouchableOpacity style={styles.loginBtn} onPress={() => setAccount(null)}>
-            <Text>Choose payment another account</Text>
-          </TouchableOpacity>
-        </View>
-      )}
+
+      {!account ? <SelectAccount navigation={navigation} route={route} /> : null}
+      {/* 
+      This would be more advanced usecases at the moment we will use the keygeneration bassed on what is available from sporran 
       {!didMnemonic ? (
         <TouchableOpacity
           style={styles.loginBtn}
@@ -94,7 +88,7 @@ export default function CreateDid({ navigation, route }) {
         >
           <Text>Generate a Mnemonic for DID Key</Text>
         </TouchableOpacity>
-      ) : null}
+      ) : null} */}
 
       <TouchableOpacity style={styles.loginBtn} onPress={generateDid}>
         <Text>Generate Basic DID</Text>

@@ -38,31 +38,31 @@ const styles = StyleSheet.create({
     height: screenHeight * 0.1,
     width: screenWidth,
     backgroundColor: 'rgba(249,105,67,0.2)',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    justifyContent: 'center',
     padding: '1%',
   },
   rectangleButtonPurple: {
     height: screenHeight * 0.1,
     width: screenWidth,
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     padding: '1%',
     backgroundColor: 'rgba(0,169,157,0.15)',
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   rectangleButtonText: {
     paddingLeft: '9.33%',
     paddingRight: '29.33%',
     color: '#FFFFFF',
+    fontSize: 12,
     // justifyContent: 'flex-end',
-  },
-  rectangleButtonManager: {
-    // paddingRight: '29.33%',
   },
   rectangleButtonContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
   },
 })
 

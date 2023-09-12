@@ -23,6 +23,7 @@ import TokenSender from './components/TokenSender'
 import AccountScreen from './screen/AccountScreen'
 import ExportStorageScreen from './screen/ExportStorageScreen'
 import styles from './styles/styles'
+import DidManagement from './components/DidManagement'
 
 const Stack = createNativeStackNavigator()
 const Tab = createBottomTabNavigator()
@@ -58,6 +59,7 @@ function AuthStack() {
         headerTitleStyle: {
           fontWeight: 'bold',
         },
+        headerShown: false,
       }}
     >
       {!authContext.isAuthenticated ? (
@@ -67,22 +69,10 @@ function AuthStack() {
         </Stack.Group>
       ) : (
         <>
-          <Stack.Group>
-            <Stack.Screen
-              options={{
-                headerStyle: {
-                  backgroundColor: '#440031',
-                },
-                headerTitleAlign: 'left',
-
-                headerShown: false,
-              }}
-              name="Nessie"
-              component={Main}
-            />
+          <Stack.Group screenOptions={{}}>
+            <Stack.Screen name="Nessie" component={Main} />
             <Stack.Screen name="Export Storage" component={ExportStorageScreen} />
-          </Stack.Group>
-          <Stack.Group>
+
             <Stack.Screen name="ClaimW3n" component={ClaimW3n} />
             <Stack.Screen name="ImportKey" component={ImportKey} />
             <Stack.Screen name="TokenSender" component={TokenSender} />
@@ -91,6 +81,7 @@ function AuthStack() {
             <Stack.Screen name="CreateDid" component={CreateDid} />
             <Stack.Screen name="SelectDid" component={SelectDid} />
             <Stack.Screen name="QrScanner" component={QrScanner} />
+            <Stack.Screen name="DidManagement" component={DidManagement} />
           </Stack.Group>
         </>
       )}

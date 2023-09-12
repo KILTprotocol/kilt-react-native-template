@@ -17,9 +17,10 @@ export default function ClaimW3n({ navigation, route }) {
   const [w3n, setW3n] = useState()
 
   useEffect(() => {
+    console.log(route.params)
     if (!route.params) return
     setPaymentAccount(route.params.selectAccount)
-  }, [route.params.selectAccount])
+  }, [route.params])
 
   const claimW3n = async () => {
     if (!paymentAccount || !route.params.did || !w3n) return
@@ -48,9 +49,8 @@ export default function ClaimW3n({ navigation, route }) {
     console.log('claimed')
   }
   return (
-    <View>
+    <View style={styles.container}>
       <Text style={styles.text}>Claim your W3N</Text>
-
       {!paymentAccount ? (
         <SelectAccount navigation={navigation} route={route} />
       ) : (
@@ -63,8 +63,6 @@ export default function ClaimW3n({ navigation, route }) {
           </TouchableOpacity>
         </View>
       )}
-
-      <TextInput style={styles.textInput} placeholder="Name" value={w3n} onChangeText={setW3n} />
 
       <TouchableOpacity style={styles.loginBtn} onPress={() => claimW3n()}>
         <Text>Confirm your w3n name</Text>

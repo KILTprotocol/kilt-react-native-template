@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { Text, View, TextInput, TouchableOpacity } from 'react-native'
+import { Text, View, TextInput, TouchableOpacity, Image } from 'react-native'
 
 import OnboardUser from './OnboardUserScreen'
 
@@ -85,11 +85,51 @@ export default function UnlockStorageScreen({ navigation }) {
   }
 
   return (
-    <View >
-      <Text style={styles.text}>Unlock Storage</Text>
-      <Text style={styles.text}>Enter your password to unlock the storage.</Text>
+    <View style={styles.container}>
+      <View style={{ paddingTop: '16.33%', alignItems: 'center' }}>
+        <Image source={require('../../assets/Group.png')} />
+        <Text
+          style={{
+            color: 'white',
+            fontSize: 16,
+          }}
+        >
+          Nessie
+        </Text>
+        <Text
+          style={{
+            color: 'white',
+            fontSize: 12,
+          }}
+        >
+          your Identity wallet
+        </Text>
+      </View>
+      <Text
+        style={{
+          color: 'white',
+          fontSize: 16,
+        }}
+      >
+        Unlock Nessie
+      </Text>
+      <Text
+        style={{
+          color: 'white',
+          fontSize: 16,
+        }}
+      >
+        Enter your password to unlock the storage.
+      </Text>
       <TextInput style={styles.textInput} value={enterPassword} onChangeText={setEnterPassword} />
-      <Text style={styles.text}>Remember Password</Text>
+      <Text
+        style={{
+          color: 'white',
+          fontSize: 16,
+        }}
+      >
+        Remember Password
+      </Text>
       {/* <BouncyCheckbox onPress={() => setRememberPassword(!rememberPassword)} /> */}
       <TouchableOpacity style={styles.loginBtn} onPress={onInsertPassword}>
         <Text>Unlock with your Password</Text>

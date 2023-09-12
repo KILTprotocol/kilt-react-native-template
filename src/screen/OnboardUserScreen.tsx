@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react'
 
-import { View, Text, TextInput, TouchableOpacity } from 'react-native'
+import { View, Text, TextInput, TouchableOpacity, Image } from 'react-native'
 
 import { AuthContext } from '../wrapper/AuthContextProvider'
 import styles from '../styles/styles'
@@ -28,7 +28,26 @@ export default function OnboardUserScreen(): JSX.Element {
   }
 
   return (
-    <View >
+    <View style={styles.container}>
+      <View style={{ paddingTop: '16.33%', alignItems: 'center' }}>
+        <Image source={require('../../assets/Group.png')} />
+        <Text
+          style={{
+            color: 'white',
+            fontSize: 16,
+          }}
+        >
+          Nessie
+        </Text>
+        <Text
+          style={{
+            color: 'white',
+            fontSize: 12,
+          }}
+        >
+          your Identity wallet
+        </Text>
+      </View>
       <Text style={styles.text}>Welcome to Nessie Mobile</Text>
       <Text style={styles.text}>
         This password will be used to encrypt your data. It will not be stored anywhere. Please make

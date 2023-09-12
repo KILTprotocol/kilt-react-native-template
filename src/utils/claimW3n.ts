@@ -1,19 +1,27 @@
-import * as Kilt from '@kiltprotocol/sdk-js'
+import {
+  Blockchain,
+  ConfigService,
+  Did,
+  DidUri,
+  KiltKeyringPair,
+  SignExtrinsicCallback,
+  connect,
+} from '@kiltprotocol/sdk-js'
 
 export async function claimWeb3Name(
-  did: Kilt.DidUri,
-  submitterAccount: Kilt.KiltKeyringPair,
-  name: Kilt.Did.Web3Name,
-  signCallback: Kilt.SignExtrinsicCallback
+  did: DidUri,
+  submitterAccount: KiltKeyringPair,
+  name: Did.Web3Name,
+  signCallback: SignExtrinsicCallback
 ): Promise<void> {
-  const api = Kilt.ConfigService.get('api')
+  const api = ConfigService.get('api')
 
   const web3NameClaimTx = api.tx.web3Names.claim(name)
-  const authorizedWeb3NameClaimTx = await Kilt.Did.authorizeTx(
+  const authorizedWeb3NameClaimTx = await Did.authorizeTx(
     did,
     web3NameClaimTx,
     signCallback,
     submitterAccount.address
   )
-  await Kilt.Blockchain.signAndSubmitTx(authorizedWeb3NameClaimTx, submitterAccount)
+  await Blockchain.signAndSubmitTx(authorizedWeb3NameClaimTx, submitterAccount)
 }

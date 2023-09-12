@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react'
-import { TouchableOpacity, View, Text } from 'react-native'
+import { TouchableOpacity, View, Text, Image } from 'react-native'
 
 import * as KeyStore from '../storage/keys/store'
 import styles from '../styles/styles'
@@ -31,13 +31,13 @@ export default function SelectAccount({ navigation, route }) {
   }, [])
 
   return (
-    <View style={styles.container}>
+    <View>
       {keys ? (
         keys.map((keyInfo: KeyInfo, key) => {
           return (
-            <View key={key}>
+            <View key={key} style={{ paddingTop: '0.5%', paddingBottom: '0.5%' }}>
               <TouchableOpacity
-                style={styles.loginBtn}
+                style={styles.rectangleButtonPurple}
                 onPress={() =>
                   navigation.dispatch({
                     ...CommonActions.goBack(),
@@ -45,7 +45,10 @@ export default function SelectAccount({ navigation, route }) {
                   })
                 }
               >
-                <Text>{keyInfo.metadata.address}</Text>
+                <Text style={styles.rectangleButtonText}>{keyInfo.metadata.address}</Text>
+                <View style={{ right: '40%' }}>
+                  <Image source={require('../../assets/Manage.png')} />
+                </View>
               </TouchableOpacity>
             </View>
           )
