@@ -131,7 +131,7 @@ export default function UnlockStorageScreen({ navigation }) {
         Remember Password
       </Text>
       {/* <BouncyCheckbox onPress={() => setRememberPassword(!rememberPassword)} /> */}
-      <TouchableOpacity style={styles.loginBtn} onPress={onInsertPassword}>
+      <TouchableOpacity style={styles.orangeButton} onPress={onInsertPassword}>
         <Text>Unlock with your Password</Text>
       </TouchableOpacity>
       <Text>{error}</Text>

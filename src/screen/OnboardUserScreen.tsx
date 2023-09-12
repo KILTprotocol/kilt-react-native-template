@@ -60,8 +60,8 @@ export default function OnboardUserScreen(): JSX.Element {
         onChangeText={setPassword}
       />
       {/* <BouncyCheckbox onPress={() => setRemeberPassword(!rememberPassword)} /> */}
-      <TouchableOpacity style={styles.loginBtn} onPress={createMasterPassword}>
-        <Text>Create Master Password</Text>
+      <TouchableOpacity style={styles.orangeButton} onPress={createMasterPassword}>
+        <Text style={styles.orangeButtonText}>Create Master Password</Text>
       </TouchableOpacity>
     </View>
   )

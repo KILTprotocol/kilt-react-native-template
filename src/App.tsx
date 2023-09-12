@@ -33,7 +33,7 @@ function Main({ navigation }) {
     const connection = async () => await connect('wss://peregrine.kilt.io/parachain-public-ws/')
 
     connection()
-  })
+  }, [])
   return (
     <Tab.Navigator initialRouteName="Identity" screenOptions={TabNavigatorStyles}>
       <Tab.Screen name="Account" component={AccountScreen} />
@@ -90,6 +90,11 @@ function AuthStack() {
 }
 
 export default function App() {
+  useEffect(() => {
+    const connection = async () => await connect('wss://peregrine.kilt.io/parachain-public-ws/')
+
+    connection()
+  }, [])
   return (
     <AuthContextProvider>
       <NavigationContainer ref={navigationRef}>

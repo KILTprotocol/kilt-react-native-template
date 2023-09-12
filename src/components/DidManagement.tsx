@@ -46,7 +46,7 @@ export default function DidManagement({ navigation, route }) {
         <TextInput style={styles.textInput} placeholder="Name" value={w3n} onChangeText={setW3n} />
 
         <TouchableOpacity
-          style={styles.loginBtn}
+          style={styles.orangeButton}
           onPress={() =>
             navigation.dispatch({
               ...CommonActions.navigate('ClaimW3n'),
@@ -54,12 +54,12 @@ export default function DidManagement({ navigation, route }) {
             })
           }
         >
-          <Text>Claim w3n name</Text>
+          <Text style={styles.orangeButtonText}>Claim w3n name</Text>
         </TouchableOpacity>
       </>
 
       <TouchableOpacity
-        style={styles.loginBtn}
+        style={styles.orangeButton}
         onPress={() =>
           navigation.dispatch({
             ...CommonActions.navigate('Identity'),

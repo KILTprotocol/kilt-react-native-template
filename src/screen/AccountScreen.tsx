@@ -17,42 +17,32 @@ export default function AccountScreen({ navigation, route }) {
 
   return (
     <ScrollView style={styles.scroll}>
-      {account ? (
-        <>
-          <TouchableOpacity
-            style={styles.loginBtn}
-            onPress={() => navigation.navigate('TokenSender', { selectAccount: account })}
-          >
-            <Text>Send</Text>
-          </TouchableOpacity>
+      <SelectAccount navigation={navigation} route={route} />
+      <View>
+        <TouchableOpacity
+          style={styles.orangeButton}
+          onPress={() => navigation.navigate('TokenSender', { selectAccount: account })}
+        >
+          <Text style={styles.orangeButtonText}>Send</Text>
+        </TouchableOpacity>
 
-          <TouchableOpacity
-            style={styles.loginBtn}
-            onPress={() => navigation.navigate('TokenReceiver', { selectAccount: account })}
-          >
-            <Text>Receive</Text>
-          </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.orangeButton}
+          onPress={() => navigation.navigate('TokenReceiver', { selectAccount: account })}
+        >
+          <Text style={styles.orangeButtonText}>Receive</Text>
+        </TouchableOpacity>
+      </View>
 
-          <TouchableOpacity
-            style={styles.loginBtn}
-            onPress={() => navigation.dispatch(CommonActions.setParams({ selectAccount: null }))}
-          >
-            <Text>Select another account</Text>
-          </TouchableOpacity>
-        </>
-      ) : (
-        <>
-          <SelectAccount navigation={navigation} route={route} />
-
-          <Text>Please select an account, if you have no account please create a key</Text>
-          <TouchableOpacity
-            style={styles.loginBtn}
-            onPress={() => navigation.navigate('ImportKey')}
-          >
-            <Text>Add or Import Key</Text>
-          </TouchableOpacity>
-        </>
-      )}
+      <>
+        <Text>Please select an account, if you have no account please create a key</Text>
+        <TouchableOpacity
+          style={styles.orangeButton}
+          onPress={() => navigation.navigate('ImportKey')}
+        >
+          <Text>Add or Import Key</Text>
+        </TouchableOpacity>
+      </>
     </ScrollView>
   )
 }

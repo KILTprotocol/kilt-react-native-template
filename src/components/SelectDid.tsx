@@ -43,7 +43,7 @@ export default function SelectDid({ navigation, route }) {
           return (
             <View key={key} style={{ paddingTop: '0.5%', paddingBottom: '0.5%' }}>
               <TouchableOpacity
-                style={styles.rectangleButtonPurple}
+                style={styles.rectangleButtonPink}
                 onPress={() =>
                   navigation.dispatch({
                     ...CommonActions.navigate({

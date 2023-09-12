@@ -16,11 +16,8 @@ export default function TokenSender({ navigation, route }): JSX.Element {
   const [balance, setBalance] = useState()
 
   useEffect(() => {
-    setSenderAccount(route.params?.selectAccount)
-  }, [route.params])
-
-  useEffect(() => {
     setReceiverAddress(route.params?.scanAddress)
+    setSenderAccount(route.params?.selectAccount)
   }, [route.params])
 
   useEffect(() => {
@@ -33,7 +30,7 @@ export default function TokenSender({ navigation, route }): JSX.Element {
       setBalance(freeBalance.toString())
     }
     handler()
-  }, [])
+  }, [senderAccount])
 
   const handler = async () => {
     if (!senderAccount || !receiverAddress || (!senderAccount && !receiverAddress)) {
@@ -63,7 +60,7 @@ export default function TokenSender({ navigation, route }): JSX.Element {
 
       {!senderAccount ? null : (
         <TouchableOpacity
-          style={styles.loginBtn}
+          style={styles.orangeButton}
           onPress={() =>
             navigation.dispatch({
               ...CommonActions.navigate('Account'),
@@ -71,13 +68,16 @@ export default function TokenSender({ navigation, route }): JSX.Element {
             })
           }
         >
-          <Text>Go Back</Text>
+          <Text style={styles.orangeButtonText}>Cancel</Text>
         </TouchableOpacity>
       )}
 
       <View>
-        <TouchableOpacity style={styles.loginBtn} onPress={() => navigation.navigate('QrScanner')}>
-          <Text>Scan Address</Text>
+        <TouchableOpacity
+          style={styles.orangeButton}
+          onPress={() => navigation.navigate('QrScanner')}
+        >
+          <Text style={styles.orangeButtonText}>Scan Address</Text>
         </TouchableOpacity>
         <Text style={styles.text}>Scan for an Address or Enter an address manually </Text>
         <TextInput
@@ -96,7 +96,7 @@ export default function TokenSender({ navigation, route }): JSX.Element {
         onChangeText={setAmount}
       />
 
-      <TouchableOpacity style={styles.loginBtn} onPress={() => handler()}>
+      <TouchableOpacity style={styles.orangeButton} onPress={() => handler()}>
         <Text>Send Tokens</Text>
       </TouchableOpacity>
     </View>

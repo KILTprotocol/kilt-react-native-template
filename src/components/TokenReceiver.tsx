@@ -17,7 +17,7 @@ export default function TokenReceiver({ navigation, route }): JSX.Element {
         <View>
           <QRCode value={account.metadata.address} />
           <TouchableOpacity
-            style={styles.loginBtn}
+            style={styles.orangeButton}
             onPress={() =>
               navigation.dispatch({
                 ...CommonActions.navigate('Account'),
@@ -25,7 +25,7 @@ export default function TokenReceiver({ navigation, route }): JSX.Element {
               })
             }
           >
-            <Text>Go Back</Text>
+            <Text style={styles.orangeButtonText}>Cancel</Text>
           </TouchableOpacity>
         </View>
       )}

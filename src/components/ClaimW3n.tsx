@@ -56,15 +56,15 @@ export default function ClaimW3n({ navigation, route }) {
       ) : (
         <View>
           <TouchableOpacity
-            style={styles.loginBtn}
+            style={styles.orangeButton}
             onPress={() => navigation.dispatch(CommonActions.setParams({ selectAccount: null }))}
           >
-            <Text>Choose payment another account</Text>
+            <Text style={styles.orangeButtonText}>Choose payment another account</Text>
           </TouchableOpacity>
         </View>
       )}
 
-      <TouchableOpacity style={styles.loginBtn} onPress={() => claimW3n()}>
+      <TouchableOpacity style={styles.orangeButton} onPress={() => claimW3n()}>
         <Text>Confirm your w3n name</Text>
       </TouchableOpacity>
     </View>

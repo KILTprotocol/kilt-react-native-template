@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#440031',
   },
   text: {
-    color: 'white',
+    color: '#FFFFFF',
     marginBottom: 20,
     fontSize: 30,
   },
@@ -23,16 +23,23 @@ const styles = StyleSheet.create({
     width: screenWidth * 0.8,
     borderRadius: 25,
     marginBottom: 15,
-    color: 'white',
+    color: '#FFFFFF',
     fontWeight: '600',
   },
-  loginBtn: {
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    backgroundColor: '#ff1178',
-    borderRadius: 25,
-    color: 'white',
+  orangeButton: {
+    backgroundColor: '#F96943',
+    borderRadius: 5,
+    height: screenHeight * 0.043,
+    width: screenWidth * 0.4,
+    justifyContent: 'center',
+    alignSelf: 'center',
+    marginVertical: 10,
+  },
+  orangeButtonText: {
+    fontSize: 14,
     textAlign: 'center',
+    width: '100%',
+    color: '#FFFFFF',
   },
   rectangleButtonPink: {
     height: screenHeight * 0.1,
@@ -57,7 +64,6 @@ const styles = StyleSheet.create({
     paddingRight: '29.33%',
     color: '#FFFFFF',
     fontSize: 12,
-    // justifyContent: 'flex-end',
   },
   rectangleButtonContainer: {
     flexDirection: 'row',

@@ -50,8 +50,11 @@ export default function ImportKey({ navigation }): JSX.Element {
 
       <Text style={styles.text}>Account name (optional)</Text>
       <TextInput style={styles.textInput} value={name} onChangeText={setName} />
-      <TouchableOpacity style={styles.loginBtn} onPress={() => setMnemonic(generateMnemonic(12))}>
-        <Text style={styles.text}>Mnemonic</Text>
+      <TouchableOpacity
+        style={styles.orangeButton}
+        onPress={() => setMnemonic(generateMnemonic(12))}
+      >
+        <Text style={styles.orangeButtonText}>Mnemonic</Text>
       </TouchableOpacity>
       <Text style={styles.text}>Mnemonic</Text>
       <TextInput

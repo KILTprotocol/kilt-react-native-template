@@ -34,18 +34,24 @@ export default function CreateDid({ navigation, route }) {
     }
 
     const paymentAccount = keyring.addFromMnemonic(account.mnemonic)
-
+    console.log('hello')
     const authentication = Kilt.Utils.Crypto.makeKeypairFromSeed(
       mnemonicToMiniSecret(didMnemonic || account.mnemonic),
       account.metadata.type
     )
+    console.log('hello 1')
 
     const keyAgreement = Kilt.Utils.Crypto.makeEncryptionKeypairFromSeed(
       mnemonicToMiniSecret(didMnemonic || account.mnemonic)
     )
+
+    console.log('hello 2')
+
     const didUri = Kilt.Did.getFullDidUriFromKey(authentication)
+    console.log('hello 3')
 
     const fullDid = await Kilt.Did.resolve(didUri)
+    console.log('hello 4')
 
     if (!fullDid?.document) {
       const didDoc = await createSimpleFullDid(
@@ -56,6 +62,8 @@ export default function CreateDid({ navigation, route }) {
           keyType: authentication.type,
         })
       )
+      console.log('hello 5')
+
       await DidStore.importDid(
         {
           authentication: didMnemonic || account.mnemonic,
@@ -65,6 +73,8 @@ export default function CreateDid({ navigation, route }) {
         password
       )
     }
+    console.log('hello 6')
+
     await DidStore.importDid(
       {
         authentication: didMnemonic || account.mnemonic,
@@ -83,26 +93,26 @@ export default function CreateDid({ navigation, route }) {
       This would be more advanced usecases at the moment we will use the keygeneration bassed on what is available from sporran 
       {!didMnemonic ? (
         <TouchableOpacity
-          style={styles.loginBtn}
+          style={styles.orangeButton}
           onPress={() => setDidMnemonic(keyStore.generateMnemonic(12))}
         >
           <Text>Generate a Mnemonic for DID Key</Text>
         </TouchableOpacity>
       ) : null} */}
 
-      <TouchableOpacity style={styles.loginBtn} onPress={generateDid}>
-        <Text>Generate Basic DID</Text>
+      <TouchableOpacity style={styles.orangeButton} onPress={generateDid}>
+        <Text style={styles.orangeButtonText}>Generate Basic DID</Text>
       </TouchableOpacity>
 
       <View>
         <TouchableOpacity
-          style={styles.loginBtn}
+          style={styles.orangeButton}
           onPress={() => {
             setAccount(null)
             navigation.navigate('Identity')
           }}
         >
-          <Text>Head back to DID list</Text>
+          <Text style={styles.orangeButtonText}>Head back to DID list</Text>
         </TouchableOpacity>
       </View>
     </View>
