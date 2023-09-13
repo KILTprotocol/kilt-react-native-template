@@ -1,21 +1,12 @@
-import {
-  TextInput,
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  KeyboardAvoidingView,
-  Image,
-} from 'react-native'
+import { TextInput, View, Text, TouchableOpacity, KeyboardAvoidingView, Image } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import * as Kilt from '@kiltprotocol/sdk-js'
 
+import Keyring from '@polkadot/keyring'
+import { CommonActions } from '@react-navigation/native'
 import styles from '../styles/styles'
 
 import { KeyInfo } from '../utils/interfaces'
-
-import Keyring from '@polkadot/keyring'
-import { CommonActions } from '@react-navigation/native'
 
 import getBalance from '../utils/getBalance'
 
@@ -129,7 +120,6 @@ export default function TokenSender({ navigation, route }): JSX.Element {
             }
             onPress={() => sendTokens()}
             disabled={isDisabled}
-            activeOpacity={0.5}
           >
             <Text style={styles.orangeButtonText}>SEND</Text>
           </TouchableOpacity>

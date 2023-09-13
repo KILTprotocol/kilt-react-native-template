@@ -19,7 +19,6 @@ import SettingScreen from './screen/SettingScreen'
 import TokenReceiver from './components/TokenReceiver'
 import TokenSender from './components/TokenSender'
 import AccountScreen from './screen/AccountScreen'
-import styles from './styles/styles'
 import DidManagement from './components/DidManagement'
 import { removeStorage } from './storage/storage'
 import Warning from './components/Warning'
@@ -62,15 +61,22 @@ function Main({ navigation }) {
         tabBarActiveTintColor: 'tomato',
         tabBarInactiveTintColor: 'white',
         headerStyle: {
-          backgroundColor: '#440031',
+          backgroundColor: '#530832',
           shadowColor: 'transparent',
         },
         headerTitleAlign: 'left',
         borderColor: 'transparent',
 
         tabBarStyle: {
-          backgroundColor: '#440031',
+          backgroundColor: '#530832',
           borderTopColor: 'transparent',
+          height: 70,
+        },
+        tabBarLabelStyle: {
+          fontSize: 12,
+        },
+        tabBarIconStyle: {
+          marginTop: 10,
         },
         headerTintColor: '#ffffff',
         headerTitleStyle: {
@@ -80,7 +86,7 @@ function Main({ navigation }) {
       })}
     >
       <Tab.Screen name="Accounts" component={AccountScreen} />
-      <Tab.Screen name="Identity" component={DidScreen} options={{}} />
+      <Tab.Screen name="Identity" component={DidScreen} />
       <Tab.Screen name="Settings" component={SettingScreen} />
     </Tab.Navigator>
   )
@@ -95,7 +101,7 @@ function AuthStack() {
     <Stack.Navigator
       screenOptions={{
         headerStyle: {
-          backgroundColor: '#440031',
+          backgroundColor: '#530832',
         },
         headerTitleAlign: 'left',
         headerTintColor: 'white',
@@ -122,21 +128,19 @@ function AuthStack() {
           <Stack.Screen name="New Nessie User" component={OnboardUserScreen} />
         </Stack.Group>
       ) : (
-        <>
-          <Stack.Group>
-            <Stack.Screen name="Nessie" component={Main} />
-            <Stack.Screen name="ClaimW3n" component={ClaimW3n} />
-            <Stack.Screen name="Add Account" component={AddAccount} />
-            <Stack.Screen name="TokenSender" component={TokenSender} />
-            <Stack.Screen name="TokenReceiver" component={TokenReceiver} />
-            <Stack.Screen name="SelectAccount" component={SelectAccount} />
-            <Stack.Screen name="CreateDid" component={CreateDid} />
-            <Stack.Screen name="SelectDid" component={SelectDid} />
-            <Stack.Screen name="QrScanner" component={QrScanner} />
-            <Stack.Screen name="DidManagement" component={DidManagement} />
-            <Stack.Screen name="Warning" component={Warning} />
-          </Stack.Group>
-        </>
+        <Stack.Group>
+          <Stack.Screen name="Nessie" component={Main} />
+          <Stack.Screen name="ClaimW3n" component={ClaimW3n} />
+          <Stack.Screen name="Add Account" component={AddAccount} />
+          <Stack.Screen name="TokenSender" component={TokenSender} />
+          <Stack.Screen name="TokenReceiver" component={TokenReceiver} />
+          <Stack.Screen name="SelectAccount" component={SelectAccount} />
+          <Stack.Screen name="CreateDid" component={CreateDid} />
+          <Stack.Screen name="SelectDid" component={SelectDid} />
+          <Stack.Screen name="QrScanner" component={QrScanner} />
+          <Stack.Screen name="DidManagement" component={DidManagement} />
+          <Stack.Screen name="Warning" component={Warning} />
+        </Stack.Group>
       )}
     </Stack.Navigator>
   )
@@ -149,7 +153,7 @@ export default function App() {
   return (
     <AuthContextProvider>
       <NavigationContainer ref={navigationRef}>
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: '#530832' }}>
           <StatusBar backgroundColor="#440031" style="light" />
           <AuthStack />
         </SafeAreaView>
