@@ -42,8 +42,8 @@ export default function SelectAccount({ navigation, route }) {
   }, [])
 
   return (
-    <ScrollView>
-      <Text style={styles.text}>Select payment account</Text>
+    <ScrollView style={{ width: '100%' }}>
+      <Text style={{ ...styles.text, alignSelf: 'flex-start', margin: 15 }}>Select Account</Text>
       <View style={styles.selectAccountRadioContainer}>
         {keys
           ? keys.map((keyInfo: KeyInfo, key) => {

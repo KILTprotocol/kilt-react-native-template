@@ -1,4 +1,4 @@
-import { TouchableOpacity, Text, View, ScrollView } from 'react-native'
+import { TouchableOpacity, Text, View } from 'react-native'
 import styles from '../styles/styles'
 import React, { useContext, useEffect, useState } from 'react'
 import * as Kilt from '@kiltprotocol/sdk-js'
@@ -10,11 +10,13 @@ import { getStorage } from '../storage/storage'
 import createSimpleFullDid from '../utils/didCreate'
 import SelectAccount from './SelectAccount'
 import { AuthContext } from '../wrapper/AuthContextProvider'
+import getBalance from '../utils/getBalance'
 
 export default function CreateDid({ navigation, route }) {
   const [didMnemonic, setDidMnemonic] = useState()
   const [account, setAccount] = useState<null | any>()
   const [isLoading, setIsLoading] = useState(false)
+  const [balance, setBalance] = useState<null | string>()
 
   const authContext = useContext(AuthContext)
   useEffect(() => {
@@ -22,6 +24,15 @@ export default function CreateDid({ navigation, route }) {
     if (!route.params.selectAccount) return
     setAccount(route.params.selectAccount)
   }, [route.params])
+
+  useEffect(() => {
+    if (!account) return setBalance(null)
+    ;(async () => {
+      const addressBalance = await getBalance(account.metadata.address)
+      console.log(addressBalance)
+      setBalance(addressBalance)
+    })()
+  })
 
   const generateDid = async () => {
     setIsLoading(true)
@@ -89,11 +100,13 @@ export default function CreateDid({ navigation, route }) {
     setIsLoading(false)
   }
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.text}>Select an Account to create your Identity</Text>
-
-      <SelectAccount navigation={navigation} route={route} />
-      {/* 
+    <View style={styles.container}>
+      <View style={{ ...styles.header, backgroundColor: 'rgba(249,105,67,0.2)' }}>
+        <Text style={styles.headerText}>Add Identity</Text>
+      </View>
+      <View style={{ flex: 1 }}>
+        <SelectAccount navigation={navigation} route={route} />
+        {/* 
       This would be more advanced usecases at the moment we will use the keygeneration bassed on what is available from sporran 
       {!didMnemonic ? (
         <TouchableOpacity
@@ -104,25 +117,28 @@ export default function CreateDid({ navigation, route }) {
         </TouchableOpacity>
       ) : null} */}
 
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={styles.redButton}
-          disabled={isLoading}
-          onPress={() => {
-            setAccount(null)
-            navigation.navigate('Identity')
-          }}
-        >
-          <Text style={styles.redButtonText}>CANCEL</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.orangeButton}
-          disabled={!account || isLoading}
-          onPress={generateDid}
-        >
-          <Text style={styles.orangeButtonText}>CONFIRM</Text>
-        </TouchableOpacity>
+        {!!balance ? <Text style={styles.text}>Balance : {balance} KILT</Text> : null}
+
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={styles.redButton}
+            disabled={isLoading}
+            onPress={() => {
+              setAccount(null)
+              navigation.navigate('Identity')
+            }}
+          >
+            <Text style={styles.redButtonText}>CANCEL</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.orangeButton}
+            disabled={!account || isLoading}
+            onPress={generateDid}
+          >
+            <Text style={styles.orangeButtonText}>ADD IDENTITY</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    </ScrollView>
+    </View>
   )
 }

@@ -45,8 +45,24 @@ export default function AccountScreen({ navigation, route }) {
 
   return (
     <ScrollView style={styles.scroll}>
-      <NessieLogo />
+      <NessieLogo pink={true} purple={false} />
+      <View style={styles.header}>
+        <Text style={styles.headerText}>Your Accounts</Text>
+      </View>
 
+      {!!keys && keys.length === 0 && (
+        <Text
+          style={{
+            ...styles.text,
+            paddingVertical: 20,
+            width: '50%',
+            textAlign: 'center',
+            alignSelf: 'center',
+          }}
+        >
+          Start by adding one or many accounts first.
+        </Text>
+      )}
       {keys
         ? keys.map((keyInfo: KeyInfo, key) => {
             return (
@@ -56,7 +72,8 @@ export default function AccountScreen({ navigation, route }) {
                   onPress={() => setAccount(keyInfo)}
                 >
                   <Text numberOfLines={1} style={styles.rectangleButtonText}>
-                    {keyInfo.metadata.name}:{balance} KILT
+                    {keyInfo.metadata.name}
+                    {balance && <Text>:{balance} KILT</Text>}
                   </Text>
                   <View style={{ right: '40%' }}>
                     <Image source={require('../../assets/Manage.png')} />
@@ -91,13 +108,14 @@ export default function AccountScreen({ navigation, route }) {
             )
           })
         : null}
-
-      <TouchableOpacity
-        style={styles.orangeButton}
-        onPress={() => navigation.navigate('Add Account')}
-      >
-        <Text style={styles.orangeButtonText}>ADD ACCOUNT</Text>
-      </TouchableOpacity>
+      <View style={{ paddingTop: 30 }}>
+        <TouchableOpacity
+          style={styles.orangeButton}
+          onPress={() => navigation.navigate('Add Account')}
+        >
+          <Text style={styles.orangeButtonText}>ADD ACCOUNT</Text>
+        </TouchableOpacity>
+      </View>
     </ScrollView>
   )
 }
