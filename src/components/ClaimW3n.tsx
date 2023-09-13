@@ -48,7 +48,7 @@ export default function ClaimW3n({ navigation, route }) {
     await claimWeb3Name(did.uri, account, w3n.toLowerCase(), async ({ data }) => ({
       signature: authentication.sign(data),
       keyType: authentication.type,
-    }))
+    })).catch((e) => setIsLoading(false))
     setIsLoading(false)
     navigation.dispatch(CommonActions.goBack())
   }
