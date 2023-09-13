@@ -68,17 +68,17 @@ export default function TokenSender({ navigation, route }): JSX.Element {
     <KeyboardAvoidingView style={{ ...styles.container }} behavior="position">
       <View style={styles.header}>
         <Text style={styles.headerText}>
-          Send Tokens from:{' '}
+          Send Tokens from:
           <Text style={{ fontStyle: 'italic' }}>{senderAccount?.metadata.name}</Text>
         </Text>
       </View>
 
-      <View style={componentStyles.main}>
+      <View style={styles.main}>
         <Text style={{ ...styles.text, marginBottom: 45, alignSelf: 'flex-start' }}>
           Scan for an address
         </Text>
         <TouchableOpacity
-          style={{ ...styles.orangeButton, ...componentStyles.qrButton }}
+          style={{ ...styles.orangeButton, ...styles.qrButton }}
           onPress={() => navigation.navigate('QrScanner')}
         >
           <Image source={require('../../assets/qr-code.png')} height={42} width={42} />
@@ -89,7 +89,7 @@ export default function TokenSender({ navigation, route }): JSX.Element {
           or enter it manually
         </Text>
         <TextInput
-          style={componentStyles.input}
+          style={styles.input}
           placeholder="Enter address"
           placeholderTextColor="rgba(255,255,255,0.5)"
           value={receiverAddress}
@@ -100,7 +100,7 @@ export default function TokenSender({ navigation, route }): JSX.Element {
           Enter amount of KILTs
         </Text>
         <TextInput
-          style={componentStyles.borderlessInput}
+          style={styles.borderlessInput}
           placeholder="0.0000"
           placeholderTextColor="#FFFFFF"
           value={amount}
@@ -114,7 +114,7 @@ export default function TokenSender({ navigation, route }): JSX.Element {
             style={styles.redButton}
             onPress={() =>
               navigation.dispatch({
-                ...CommonActions.navigate('Account'),
+                ...CommonActions.navigate('Accounts'),
                 params: { selectAccount: null },
               })
             }
@@ -138,33 +138,3 @@ export default function TokenSender({ navigation, route }): JSX.Element {
     </KeyboardAvoidingView>
   )
 }
-
-const componentStyles = StyleSheet.create({
-  main: {
-    paddingTop: 32,
-    paddingHorizontal: 12,
-    display: 'flex',
-    alignItems: 'center',
-  },
-  qrButton: {
-    height: 100,
-    width: 100,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  input: {
-    width: '100%',
-    height: 30,
-    padding: 7,
-    backgroundColor: 'rgba(0,169,157,0.15)',
-    borderWidth: 1,
-    borderColor: '#5B5B5B',
-    borderRadius: 3,
-    color: '#FFFFFF',
-  },
-  borderlessInput: {
-    fontSize: 36,
-    color: '#FFFFFF',
-  },
-})

@@ -45,22 +45,21 @@ export default function SelectAccount({ navigation, route }) {
     <ScrollView>
       <Text style={styles.text}>Select payment account</Text>
       <View style={styles.selectAccountRadioContainer}>
-        {keys ? (
-          keys.map((keyInfo: KeyInfo, key) => {
-            return (
-              <RadioButton
-                key={key}
-                label={keyInfo.metadata.address}
-                selected={account === keyInfo}
-                onPress={() => handleSelectKeyInfo(keyInfo)}
-                first={key === 0}
-                last={keys.length - 1 === key}
-              />
-            )
-          })
-        ) : (
-          <></>
-        )}
+        {keys
+          ? keys.map((keyInfo: KeyInfo, key) => {
+              return (
+                <RadioButton
+                  key={key}
+                  label={keyInfo.metadata.address}
+                  selected={account === keyInfo}
+                  onPress={() => handleSelectKeyInfo(keyInfo)}
+                  first={key === 0}
+                  last={keys.length - 1 === key}
+                  backgroundColor={'rgba(249,105,67,0.2)'}
+                />
+              )
+            })
+          : null}
       </View>
     </ScrollView>
   )
