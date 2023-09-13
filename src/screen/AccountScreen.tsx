@@ -1,19 +1,35 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { TouchableOpacity, Text, View, ScrollView, Image } from 'react-native'
 
 import styles from '../styles/styles'
-import SelectAccount from '../components/SelectAccount'
-import { CommonActions } from '@react-navigation/native'
+
+import { getStorage } from '../storage/storage'
+import * as KeyStore from '../storage/keys/store'
+import { KeyInfo } from '../utils/interfaces'
+import { AuthContext } from '../wrapper/AuthContextProvider'
 
 export default function AccountScreen({ navigation, route }) {
-  const [account, setAccount] = useState()
-  useEffect(() => {
-    if (!route.params) {
-      return
-    }
+  const [account, setAccount] = useState<KeyInfo | null>()
+  const [keys, setKeys] = useState<KeyInfo[]>()
+  const authContext = useContext(AuthContext)
 
-    setAccount(route.params.selectAccount)
-  }, [route.params])
+  useEffect(() => {
+    const handle = async () => {
+      const password = await getStorage('session-password')
+
+      if (!password) {
+        authContext.logout()
+        navigation.navigate('UnlockStorageScreen')
+      }
+      const keysList = await KeyStore.list(password)
+
+      const keys = keysList.map((val: KeyInfo) => {
+        return JSON.parse(JSON.stringify(val))
+      })
+      setKeys(keys)
+    }
+    handle()
+  }, [])
 
   return (
     <ScrollView style={styles.scroll}>
@@ -37,24 +53,53 @@ export default function AccountScreen({ navigation, route }) {
         </Text>
       </View>
 
-      <SelectAccount navigation={navigation} route={route} />
-      {account ? (
-        <View>
-          <TouchableOpacity
-            style={styles.orangeButton}
-            onPress={() => navigation.navigate('TokenSender', { selectAccount: account })}
-          >
-            <Text style={styles.orangeButtonText}>SEND</Text>
-          </TouchableOpacity>
+      {keys
+        ? keys.map((keyInfo: KeyInfo, key) => {
+            return (
+              <View key={key} style={{ paddingTop: '0.5%', paddingBottom: '0.5%' }}>
+                <TouchableOpacity
+                  style={styles.rectangleButtonPurple}
+                  onPress={() => {
+                    if (account) {
+                      return setAccount(null)
+                    }
+                    return setAccount(keyInfo)
+                  }}
+                >
+                  <Text style={styles.rectangleButtonText}>{keyInfo.metadata.address}</Text>
+                  <View style={{ right: '40%' }}>
+                    <Image source={require('../../assets/Manage.png')} />
+                  </View>
+                </TouchableOpacity>
+                {account === keyInfo ? (
+                  <View
+                    style={{
+                      ...styles.buttonContainer,
+                      ...styles.rectangleButtonPurple,
+                      justifyContent: 'space-evenly',
+                    }}
+                  >
+                    <TouchableOpacity
+                      style={styles.orangeButton}
+                      onPress={() => navigation.navigate('TokenSender', { selectAccount: account })}
+                    >
+                      <Text style={styles.orangeButtonText}>SEND</Text>
+                    </TouchableOpacity>
 
-          <TouchableOpacity
-            style={styles.orangeButton}
-            onPress={() => navigation.navigate('TokenReceiver', { selectAccount: account })}
-          >
-            <Text style={styles.orangeButtonText}>RECEIVE</Text>
-          </TouchableOpacity>
-        </View>
-      ) : null}
+                    <TouchableOpacity
+                      style={styles.orangeButton}
+                      onPress={() =>
+                        navigation.navigate('TokenReceiver', { selectAccount: account })
+                      }
+                    >
+                      <Text style={styles.orangeButtonText}>RECEIVE</Text>
+                    </TouchableOpacity>
+                  </View>
+                ) : null}
+              </View>
+            )
+          })
+        : null}
 
       <TouchableOpacity
         style={styles.orangeButton}

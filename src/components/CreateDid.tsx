@@ -1,9 +1,9 @@
-import { TouchableOpacity, Text, View } from 'react-native'
+import { TouchableOpacity, Text, View, ScrollView } from 'react-native'
 import styles from '../styles/styles'
 import React, { useContext, useEffect, useState } from 'react'
 import * as Kilt from '@kiltprotocol/sdk-js'
 import * as DidStore from '../storage/did/store'
-import * as keyStore from '../storage/keys/store'
+
 import Keyring from '@polkadot/keyring'
 import { mnemonicToMiniSecret } from '@polkadot/util-crypto'
 import { getStorage } from '../storage/storage'
@@ -18,11 +18,13 @@ export default function CreateDid({ navigation, route }) {
 
   const authContext = useContext(AuthContext)
   useEffect(() => {
+    console.log('handled', route.params.selectAccount)
     if (!route.params.selectAccount) return
     setAccount(route.params.selectAccount)
   }, [route.params])
 
   const generateDid = async () => {
+    setIsLoading(true)
     if (!account) return
     try {
       const keyring = new Keyring({
@@ -87,7 +89,7 @@ export default function CreateDid({ navigation, route }) {
     setIsLoading(false)
   }
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Text style={styles.text}>Select an Account to create your Identity</Text>
 
       <SelectAccount navigation={navigation} route={route} />
@@ -103,12 +105,9 @@ export default function CreateDid({ navigation, route }) {
       ) : null} */}
 
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.orangeButton} disabled={isLoading} onPress={generateDid}>
-          <Text style={styles.orangeButtonText}>CONFIRM</Text>
-        </TouchableOpacity>
-
         <TouchableOpacity
           style={styles.redButton}
+          disabled={isLoading}
           onPress={() => {
             setAccount(null)
             navigation.navigate('Identity')
@@ -116,7 +115,14 @@ export default function CreateDid({ navigation, route }) {
         >
           <Text style={styles.redButtonText}>CANCEL</Text>
         </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.orangeButton}
+          disabled={!account || isLoading}
+          onPress={generateDid}
+        >
+          <Text style={styles.orangeButtonText}>CONFIRM</Text>
+        </TouchableOpacity>
       </View>
-    </View>
+    </ScrollView>
   )
 }

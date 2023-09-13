@@ -1,16 +1,27 @@
 import React, { useEffect, useState, useContext } from 'react'
-import { TouchableOpacity, View, Text, Image } from 'react-native'
+import { View, Text, ScrollView } from 'react-native'
 
 import * as KeyStore from '../storage/keys/store'
-import styles from '../styles/styles'
+
 import { KeyInfo } from '../utils/interfaces'
 import { getStorage } from '../storage/storage'
 import { CommonActions } from '@react-navigation/native'
 import { AuthContext } from '../wrapper/AuthContextProvider'
+import RadioButton from './RadioButton'
+import styles from '../styles/styles'
 
 export default function SelectAccount({ navigation, route }) {
   const [keys, setKeys] = useState<KeyInfo[]>()
+  const [account, setAccount] = useState<KeyInfo | null>()
   const authContext = useContext(AuthContext)
+
+  const handleSelectKeyInfo = (selectKeyInfo) => {
+    setAccount(selectKeyInfo)
+  }
+
+  useEffect(() => {
+    navigation.dispatch({ ...CommonActions.setParams({ selectAccount: account }) })
+  }, [account])
 
   useEffect(() => {
     const handle = async () => {
@@ -31,31 +42,26 @@ export default function SelectAccount({ navigation, route }) {
   }, [])
 
   return (
-    <View>
-      {keys ? (
-        keys.map((keyInfo: KeyInfo, key) => {
-          return (
-            <View key={key} style={{ paddingTop: '0.5%', paddingBottom: '0.5%' }}>
-              <TouchableOpacity
-                style={styles.rectangleButtonPurple}
-                onPress={() =>
-                  navigation.dispatch({
-                    ...CommonActions.goBack(),
-                    ...CommonActions.setParams({ selectAccount: keyInfo }),
-                  })
-                }
-              >
-                <Text style={styles.rectangleButtonText}>{keyInfo.metadata.address}</Text>
-                <View style={{ right: '40%' }}>
-                  <Image source={require('../../assets/Manage.png')} />
-                </View>
-              </TouchableOpacity>
-            </View>
-          )
-        })
-      ) : (
-        <></>
-      )}
-    </View>
+    <ScrollView>
+      <Text style={styles.text}>Select payment account</Text>
+      <View style={styles.selectAccountRadioContainer}>
+        {keys ? (
+          keys.map((keyInfo: KeyInfo, key) => {
+            return (
+              <RadioButton
+                key={key}
+                label={keyInfo.metadata.address}
+                selected={account === keyInfo}
+                onPress={() => handleSelectKeyInfo(keyInfo)}
+                first={key === 0}
+                last={keys.length - 1 === key}
+              />
+            )
+          })
+        ) : (
+          <></>
+        )}
+      </View>
+    </ScrollView>
   )
 }

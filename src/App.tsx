@@ -21,10 +21,10 @@ import ImportKey from './components/ImportKey'
 import TokenReceiver from './components/TokenReceiver'
 import TokenSender from './components/TokenSender'
 import AccountScreen from './screen/AccountScreen'
-import ExportStorageScreen from './screen/ExportStorageScreen'
 import styles from './styles/styles'
 import DidManagement from './components/DidManagement'
 import { removeStorage } from './storage/storage'
+import Warning from './components/Warning'
 
 const connection = async () => await connect('wss://peregrine.kilt.io/parachain-public-ws/')
 
@@ -126,8 +126,6 @@ function AuthStack() {
         <>
           <Stack.Group>
             <Stack.Screen name="Nessie" component={Main} />
-            <Stack.Screen name="Export Storage" component={ExportStorageScreen} />
-
             <Stack.Screen name="ClaimW3n" component={ClaimW3n} />
             <Stack.Screen name="ImportKey" component={ImportKey} />
             <Stack.Screen name="TokenSender" component={TokenSender} />
@@ -137,6 +135,7 @@ function AuthStack() {
             <Stack.Screen name="SelectDid" component={SelectDid} />
             <Stack.Screen name="QrScanner" component={QrScanner} />
             <Stack.Screen name="DidManagement" component={DidManagement} />
+            <Stack.Screen name="Warning" component={Warning} />
           </Stack.Group>
         </>
       )}

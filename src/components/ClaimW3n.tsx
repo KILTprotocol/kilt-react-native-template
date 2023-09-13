@@ -1,16 +1,11 @@
-import { Utils, DidDocument, DidUri } from '@kiltprotocol/sdk-js'
+import { Utils } from '@kiltprotocol/sdk-js'
 
 import React, { useEffect, useState } from 'react'
-import { TouchableOpacity, Text, View, TextInput } from 'react-native'
+import { TouchableOpacity, Text, View, ScrollView } from 'react-native'
 
 import styles from '../styles/styles'
-import * as DidStore from '../storage/did/store'
-
-import SelectDid from './SelectDid'
 import { claimWeb3Name } from '../utils/claimW3n'
 import SelectAccount from './SelectAccount'
-import { CommonActions } from '@react-navigation/native'
-import { DidKeys } from '../utils/interfaces'
 
 export default function ClaimW3n({ navigation, route }) {
   const [paymentAccount, setPaymentAccount] = useState()
@@ -20,6 +15,7 @@ export default function ClaimW3n({ navigation, route }) {
     console.log(route.params)
     if (!route.params) return
     setPaymentAccount(route.params.selectAccount)
+    setW3n(route.params.w3n)
   }, [route.params])
 
   const claimW3n = async () => {
@@ -49,24 +45,20 @@ export default function ClaimW3n({ navigation, route }) {
     console.log('claimed')
   }
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Claim your W3N</Text>
-      {!paymentAccount ? (
-        <SelectAccount navigation={navigation} route={route} />
-      ) : (
-        <View>
-          <TouchableOpacity
-            style={styles.orangeButton}
-            onPress={() => navigation.dispatch(CommonActions.setParams({ selectAccount: null }))}
-          >
-            <Text style={styles.orangeButtonText}>Choose payment another account</Text>
-          </TouchableOpacity>
-        </View>
-      )}
+    <ScrollView style={styles.container}>
+      <Text style={styles.text}>Claim your web3name: {w3n}</Text>
 
-      <TouchableOpacity style={styles.orangeButton} onPress={() => claimW3n()}>
-        <Text>Confirm your w3n name</Text>
-      </TouchableOpacity>
-    </View>
+      <SelectAccount navigation={navigation} route={route} />
+
+      <View style={{ ...styles.buttonContainer, paddingTop: '10%' }}>
+        <TouchableOpacity style={styles.redButton} onPress={() => claimW3n()}>
+          <Text style={styles.redButtonText}>CANCEL</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.orangeButton} onPress={() => claimW3n()}>
+          <Text style={styles.orangeButtonText}>CLAIM</Text>
+        </TouchableOpacity>
+      </View>
+    </ScrollView>
   )
 }

@@ -1,4 +1,4 @@
-import { TouchableOpacity, Text, View, TextInput } from 'react-native'
+import { TouchableOpacity, Text, View, TextInput, ScrollView } from 'react-native'
 import styles from '../styles/styles'
 import React, { useEffect, useState } from 'react'
 import ClaimW3n from './ClaimW3n'
@@ -22,7 +22,7 @@ export default function DidManagement({ navigation, route }) {
     handler()
   }, [route.params])
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.scroll}>
       <Text style={styles.text}>DID Manage</Text>
       {did ? (
         <>
@@ -41,12 +41,11 @@ export default function DidManagement({ navigation, route }) {
           </Text>
         </>
       ) : null}
-
-      <>
+      <View style={styles.buttonContainer}>
         <TextInput style={styles.textInput} placeholder="Name" value={w3n} onChangeText={setW3n} />
-
         <TouchableOpacity
           style={styles.orangeButton}
+          disabled={!w3n}
           onPress={() =>
             navigation.dispatch({
               ...CommonActions.navigate('ClaimW3n'),
@@ -54,21 +53,81 @@ export default function DidManagement({ navigation, route }) {
             })
           }
         >
-          <Text style={styles.orangeButtonText}>Claim w3n name</Text>
+          <Text style={styles.orangeButtonText}>CLAIM</Text>
         </TouchableOpacity>
-      </>
+      </View>
 
-      <TouchableOpacity
-        style={styles.orangeButton}
-        onPress={() =>
-          navigation.dispatch({
-            ...CommonActions.navigate('Identity'),
-            params: { did: null },
-          })
-        }
-      >
-        <Text>Go Back</Text>
-      </TouchableOpacity>
-    </View>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity
+          style={styles.redButton}
+          onPress={() =>
+            navigation.dispatch({
+              ...CommonActions.navigate('Identity'),
+              params: { did: null },
+            })
+          }
+        >
+          <Text style={styles.redButtonText}>CLOSE</Text>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.buttonContainer}>
+        <TextInput style={styles.textInput} placeholder="Name" value={w3n} onChangeText={setW3n} />
+        <TouchableOpacity
+          style={styles.orangeButton}
+          disabled={!w3n}
+          onPress={() =>
+            navigation.dispatch({
+              ...CommonActions.navigate('ClaimW3n'),
+              params: { w3n },
+            })
+          }
+        >
+          <Text style={styles.orangeButtonText}>CLAIM</Text>
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity
+          style={styles.redButton}
+          onPress={() =>
+            navigation.dispatch({
+              ...CommonActions.navigate('Identity'),
+              params: { did: null },
+            })
+          }
+        >
+          <Text style={styles.redButtonText}>CLOSE</Text>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.buttonContainer}>
+        <TextInput style={styles.textInput} placeholder="Name" value={w3n} onChangeText={setW3n} />
+        <TouchableOpacity
+          style={styles.orangeButton}
+          disabled={!w3n}
+          onPress={() =>
+            navigation.dispatch({
+              ...CommonActions.navigate('ClaimW3n'),
+              params: { w3n },
+            })
+          }
+        >
+          <Text style={styles.orangeButtonText}>CLAIM</Text>
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity
+          style={styles.redButton}
+          onPress={() =>
+            navigation.dispatch({
+              ...CommonActions.navigate('Identity'),
+              params: { did: null },
+            })
+          }
+        >
+          <Text style={styles.redButtonText}>CLOSE</Text>
+        </TouchableOpacity>
+      </View>
+    </ScrollView>
   )
 }

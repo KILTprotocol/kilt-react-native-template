@@ -39,7 +39,7 @@ export default function TokenReceiver({ navigation, route }): JSX.Element {
           <QRCode value={address} />
           <Text style={{ ...styles.text, ...componentStyles.address }}>{address}</Text>
           <TouchableOpacity
-            style={{ ...styles.orangeButton, ...componentStyles.button }}
+            style={{ ...styles.redButton, ...componentStyles.button }}
             onPress={() =>
               navigation.dispatch({
                 ...CommonActions.navigate('Account'),
@@ -47,7 +47,7 @@ export default function TokenReceiver({ navigation, route }): JSX.Element {
               })
             }
           >
-            <Text style={styles.orangeButtonText}>Cancel</Text>
+            <Text style={styles.orangeButtonText}>CANCEL</Text>
           </TouchableOpacity>
         </View>
       )}

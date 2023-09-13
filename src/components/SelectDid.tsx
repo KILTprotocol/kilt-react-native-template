@@ -38,32 +38,30 @@ export default function SelectDid({ navigation, route }) {
 
   return (
     <View style={styles.container}>
-      {dids ? (
-        dids.map(({ keypairs, document, w3n }, key) => {
-          return (
-            <View key={key} style={{ paddingTop: '0.5%', paddingBottom: '0.5%' }}>
-              <TouchableOpacity
-                style={styles.rectangleButtonPink}
-                onPress={() =>
-                  navigation.dispatch({
-                    ...CommonActions.navigate({
-                      name: 'DidManagement',
-                      params: { did: { keypairs, document } },
-                    }),
-                  })
-                }
-              >
-                <Text style={styles.rectangleButtonText}>{w3n ? w3n : document.uri}</Text>
-                <View style={{ right: '40%' }}>
-                  <Image source={require('../../assets/Manage.png')} />
-                </View>
-              </TouchableOpacity>
-            </View>
-          )
-        })
-      ) : (
-        <></>
-      )}
+      {dids
+        ? dids.map(({ keypairs, document, w3n }, key) => {
+            return (
+              <View key={key} style={{ paddingTop: '0.5%', paddingBottom: '0.5%' }}>
+                <TouchableOpacity
+                  style={styles.rectangleButtonPink}
+                  onPress={() =>
+                    navigation.dispatch({
+                      ...CommonActions.navigate({
+                        name: 'DidManagement',
+                        params: { did: { keypairs, document } },
+                      }),
+                    })
+                  }
+                >
+                  <Text style={styles.rectangleButtonText}>{w3n ? w3n : document.uri}</Text>
+                  <View style={{ right: '40%' }}>
+                    <Image source={require('../../assets/Manage.png')} />
+                  </View>
+                </TouchableOpacity>
+              </View>
+            )
+          })
+        : null}
     </View>
   )
 }
