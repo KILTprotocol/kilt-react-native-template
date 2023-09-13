@@ -86,7 +86,7 @@ export default function UnlockStorageScreen({ navigation }) {
   return (
     <KeyboardAvoidingView style={styles.container} behavior="position">
       <View style={styles.main}>
-        <NessieLogo />
+        <NessieLogo pink={false} purple={true} />
 
         <Text style={{ ...styles.text, fontWeight: 'bold', marginBottom: 10 }}>Unleash Nessie</Text>
 

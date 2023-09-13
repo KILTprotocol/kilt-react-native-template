@@ -33,7 +33,7 @@ export default function DidScreen({ navigation, route }) {
         <Text style={styles.headerText}>Your Identities</Text>
       </View>
       <SelectDid navigation={navigation} route={route} />
-      {!isDisabled && (
+      {isDisabled && (
         <Text
           style={{
             ...styles.text,
@@ -51,7 +51,7 @@ export default function DidScreen({ navigation, route }) {
           style={
             !isDisabled ? { ...styles.orangeButton, ...styles.buttonDisabled } : styles.orangeButton
           }
-          disabled={!isDisabled}
+          disabled={isDisabled}
           onPress={() =>
             navigation.dispatch({
               ...CommonActions.navigate({

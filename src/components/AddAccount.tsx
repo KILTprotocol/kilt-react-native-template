@@ -11,6 +11,7 @@ import { getStorage } from '../storage/storage'
 import { AuthContext } from '../wrapper/AuthContextProvider'
 import RadioButton from './RadioButton'
 import { CommonActions } from '@react-navigation/native'
+import { mnemonicValidate } from '@polkadot/util-crypto'
 
 const alogrithmList = [
   { label: 'Sr25519', value: 'sr25519' },
@@ -38,9 +39,13 @@ export default function AddAccount({ navigation }): JSX.Element {
       authContext.logout()
       navigation.navigate('UnlockStorageScreen')
     }
-
+    if (!mnemonicValidate(mnemonic)) {
+      setIsLoading(false)
+      return setMnemonic('Add a correct mnemonic')
+    }
     await importKey(mnemonic, derivation, algorithm as KeypairType | 'x25519', name, password)
     setIsLoading(false)
+    navigation.dispatch(CommonActions.goBack())
   }
 
   const handleSelectAlgorithm = (selectAlgorithm) => {

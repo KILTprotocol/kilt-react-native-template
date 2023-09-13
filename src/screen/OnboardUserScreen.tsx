@@ -32,7 +32,7 @@ export default function OnboardUserScreen(): JSX.Element {
   return (
     <KeyboardAvoidingView style={styles.container} behavior="position">
       <View style={styles.main}>
-        <NessieLogo />
+        <NessieLogo pink={false} purple={true} />
 
         <Text style={{ ...styles.text, marginBottom: 10 }}>Create Master Password</Text>
         <Text style={{ ...styles.text, textAlign: 'center', marginBottom: 10 }}>

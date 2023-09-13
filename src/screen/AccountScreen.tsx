@@ -16,22 +16,21 @@ export default function AccountScreen({ navigation, route }) {
   const [balance, setBalance] = useState('')
 
   const authContext = useContext(AuthContext)
+  const fetchAccounts = async () => {
+    const password = await getStorage('session-password')
 
-  useEffect(() => {
-    const fetchAccounts = async () => {
-      const password = await getStorage('session-password')
-
-      if (!password) {
-        authContext.logout()
-        navigation.navigate('UnlockStorageScreen')
-      }
-      const keysList = await KeyStore.list(password)
-
-      const keys = keysList.map((val: KeyInfo) => {
-        return JSON.parse(JSON.stringify(val))
-      })
-      setKeys(keys)
+    if (!password) {
+      authContext.logout()
+      navigation.navigate('UnlockStorageScreen')
     }
+    const keysList = await KeyStore.list(password)
+
+    const keys = keysList.map((val: KeyInfo) => {
+      return JSON.parse(JSON.stringify(val))
+    })
+    setKeys(keys)
+  }
+  useEffect(() => {
     fetchAccounts()
   }, [])
 
