@@ -104,8 +104,9 @@ export default function CreateDid({ navigation, route }) {
       <View style={{ ...styles.header, backgroundColor: 'rgba(249,105,67,0.2)' }}>
         <Text style={styles.headerText}>Add Identity</Text>
       </View>
-      <View style={{ flex: 1 }}>
+      <View style={{ height: '50%' }}>
         <SelectAccount navigation={navigation} route={route} />
+
         {/* 
       This would be more advanced usecases at the moment we will use the keygeneration bassed on what is available from sporran 
       {!didMnemonic ? (
@@ -117,7 +118,11 @@ export default function CreateDid({ navigation, route }) {
         </TouchableOpacity>
       ) : null} */}
 
-        {!!balance ? <Text style={styles.text}>Balance : {balance} KILT</Text> : null}
+        {!!balance ? (
+          <Text numberOfLines={1} style={styles.rectangleButtonText}>
+            Balance : {balance}
+          </Text>
+        ) : null}
 
         <View style={styles.buttonContainer}>
           <TouchableOpacity

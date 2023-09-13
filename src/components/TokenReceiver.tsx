@@ -37,7 +37,9 @@ export default function TokenReceiver({ navigation, route }): JSX.Element {
       {address && (
         <View style={componentStyles.main}>
           <QRCode value={address} />
-          <Text style={{ ...styles.text, ...componentStyles.address }}>{address}</Text>
+          <Text style={{ ...styles.text, ...componentStyles.address }} selectable>
+            {address}
+          </Text>
           <TouchableOpacity
             style={{ ...styles.redButton, ...componentStyles.button }}
             onPress={() =>

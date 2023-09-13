@@ -69,17 +69,22 @@ export default function AccountScreen({ navigation, route }) {
               <View key={key} style={{ paddingTop: '0.5%', paddingBottom: '0.5%' }}>
                 <TouchableOpacity
                   style={styles.rectangleButtonPurple}
-                  onPress={() => setAccount(keyInfo)}
+                  onPress={() => {
+                    if (account === keyInfo) {
+                      return setAccount(null)
+                    }
+                    setAccount(keyInfo)
+                  }}
                 >
                   <Text numberOfLines={1} style={styles.rectangleButtonText}>
                     {keyInfo.metadata.name}
-                    {balance && <Text>:{balance} KILT</Text>}
+                    {account === keyInfo && balance && <Text>:{balance}</Text>}
                   </Text>
                   <View style={{ right: '40%' }}>
                     <Image source={require('../../assets/Manage.png')} />
                   </View>
                 </TouchableOpacity>
-                {account === keyInfo ? (
+                {account === keyInfo && (
                   <View
                     style={{
                       ...styles.buttonContainer,
@@ -103,7 +108,7 @@ export default function AccountScreen({ navigation, route }) {
                       <Text style={styles.orangeButtonText}>RECEIVE</Text>
                     </TouchableOpacity>
                   </View>
-                ) : null}
+                )}
               </View>
             )
           })
