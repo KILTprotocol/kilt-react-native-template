@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { Text, View, StyleSheet, Button, Dimensions, TouchableOpacity } from 'react-native'
+import { Text, View, StyleSheet, Button, TouchableOpacity } from 'react-native'
 import { BarCodeScanner, BarCodeScannerResult } from 'expo-barcode-scanner'
 import styles from '../styles/styles'
+import { isAddress } from '@polkadot/util-crypto'
+import { Credential } from '@kiltprotocol/sdk-js'
 
 export default function QrScanner({ navigation, route }) {
   const [hasPermission, setHasPermission] = useState<boolean | null>(null)
@@ -21,8 +23,26 @@ export default function QrScanner({ navigation, route }) {
       const { type, data = {} } = scanningResult
 
       setScanned(true)
-      navigation.navigate({ name: 'TokenSender', params: { scanAddress: data }, merge: true })
-      alert(`Bar code with data ${data} has been scanned!`)
+      if (isAddress(data)) {
+        alert(`Bar code with data ${data} has been scanned!`)
+        return navigation.navigate({
+          name: 'TokenSender',
+          params: { scanAddress: data },
+          merge: true,
+        })
+      }
+      const verifiedCredential = Credential.isICredential(data)
+
+      if (verifiedCredential) {
+        alert(`Bar code with the credential data has been scanned!`)
+        return navigation.navigate({
+          name: 'ImportCredential',
+          params: { credential: data },
+          merge: true,
+        })
+      }
+
+      alert(`Bar code with data ${data} has been scanned it isn't valid!`)
     }
   }
 

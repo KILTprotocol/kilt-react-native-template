@@ -1,4 +1,4 @@
-import { TouchableOpacity, Text, View } from 'react-native'
+import { TouchableOpacity, Text, View, ActivityIndicator } from 'react-native'
 import styles from '../styles/styles'
 import React, { useContext, useEffect, useState } from 'react'
 import * as Kilt from '@kiltprotocol/sdk-js'
@@ -11,6 +11,7 @@ import createSimpleFullDid from '../utils/didCreate'
 import SelectAccount from './SelectAccount'
 import { AuthContext } from '../wrapper/AuthContextProvider'
 import getBalance from '../utils/getBalance'
+import { CommonActions } from '@react-navigation/native'
 
 export default function CreateDid({ navigation, route }) {
   const [didMnemonic, setDidMnemonic] = useState()
@@ -20,7 +21,6 @@ export default function CreateDid({ navigation, route }) {
 
   const authContext = useContext(AuthContext)
   useEffect(() => {
-    console.log('handled', route.params.selectAccount)
     if (!route.params.selectAccount) return
     setAccount(route.params.selectAccount)
   }, [route.params])
@@ -37,66 +37,64 @@ export default function CreateDid({ navigation, route }) {
   const generateDid = async () => {
     setIsLoading(true)
     if (!account) return
-    try {
-      const keyring = new Keyring({
-        type: account.metadata.type,
-        ss58Format: 38,
-      })
-      const password = await getStorage('session-password')
 
-      if (!password) {
-        authContext.logout()
-        navigation.navigate('UnlockStorageScreen')
-      }
+    const keyring = new Keyring({
+      type: account.metadata.type,
+      ss58Format: 38,
+    })
+    const password = await getStorage('session-password')
 
-      const paymentAccount = keyring.addFromMnemonic(account.mnemonic)
+    if (!password) {
+      authContext.logout()
+      navigation.navigate('UnlockStorageScreen')
+    }
 
-      const authentication = Kilt.Utils.Crypto.makeKeypairFromSeed(
-        mnemonicToMiniSecret(didMnemonic || account.mnemonic),
-        account.metadata.type
+    const paymentAccount = keyring.addFromMnemonic(account.mnemonic)
+
+    const authentication = Kilt.Utils.Crypto.makeKeypairFromSeed(
+      mnemonicToMiniSecret(didMnemonic || account.mnemonic),
+      account.metadata.type
+    )
+
+    const keyAgreement = Kilt.Utils.Crypto.makeEncryptionKeypairFromSeed(
+      mnemonicToMiniSecret(didMnemonic || account.mnemonic)
+    )
+
+    const didUri = Kilt.Did.getFullDidUriFromKey(authentication)
+
+    const fullDid = await Kilt.Did.resolve(didUri)
+
+    if (!fullDid?.document) {
+      const didDoc = await createSimpleFullDid(
+        paymentAccount,
+        { authentication, keyAgreement },
+        async ({ data }) => ({
+          signature: authentication.sign(data),
+          keyType: authentication.type,
+        })
       )
-
-      const keyAgreement = Kilt.Utils.Crypto.makeEncryptionKeypairFromSeed(
-        mnemonicToMiniSecret(didMnemonic || account.mnemonic)
-      )
-
-      const didUri = Kilt.Did.getFullDidUriFromKey(authentication)
-
-      const fullDid = await Kilt.Did.resolve(didUri)
-
-      if (!fullDid?.document) {
-        const didDoc = await createSimpleFullDid(
-          paymentAccount,
-          { authentication, keyAgreement },
-          async ({ data }) => ({
-            signature: authentication.sign(data),
-            keyType: authentication.type,
-          })
-        )
-
-        await DidStore.importDid(
-          {
-            authentication: didMnemonic || account.mnemonic,
-            keyAgreement: didMnemonic || account.mnemonic,
-          },
-          didDoc.uri,
-          password
-        )
-      }
-      console.log('hello 6')
 
       await DidStore.importDid(
         {
           authentication: didMnemonic || account.mnemonic,
           keyAgreement: didMnemonic || account.mnemonic,
         },
-        didUri,
+        didDoc.uri,
         password
       )
-    } catch (e) {
-      console.log(e)
-      setIsLoading(false)
+      navigation.dispatch(CommonActions.goBack())
     }
+
+    await DidStore.importDid(
+      {
+        authentication: didMnemonic || account.mnemonic,
+        keyAgreement: didMnemonic || account.mnemonic,
+      },
+      didUri,
+      password
+    )
+    navigation.dispatch(CommonActions.goBack())
+
     setIsLoading(false)
   }
   return (
@@ -106,7 +104,7 @@ export default function CreateDid({ navigation, route }) {
       </View>
       <View style={{ height: '50%' }}>
         <SelectAccount navigation={navigation} route={route} />
-
+        <ActivityIndicator color="orange" animating={isLoading} />
         {/* 
       This would be more advanced usecases at the moment we will use the keygeneration bassed on what is available from sporran 
       {!didMnemonic ? (

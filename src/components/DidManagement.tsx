@@ -11,6 +11,7 @@ import React, { useEffect, useState } from 'react'
 
 import { CommonActions } from '@react-navigation/native'
 import { DidDocument, connect } from '@kiltprotocol/sdk-js'
+import SelectCredential from './SelectCredential'
 
 export default function DidManagement({ navigation, route }) {
   const did = route.params.did.document as DidDocument
@@ -33,6 +34,7 @@ export default function DidManagement({ navigation, route }) {
       <View style={{ ...styles.header, backgroundColor: 'rgba(249,105,67,0.2)', marginBottom: 6 }}>
         <Text style={styles.headerText}>Inspect Identity</Text>
       </View>
+      {/* <SelectCredential navigation={navigation} route={route} /> */}
 
       <ScrollView>
         <View
