@@ -5,7 +5,6 @@ import styles from '../styles/styles'
 
 export default function QrScanner({ navigation, route }) {
   const [hasPermission, setHasPermission] = useState<boolean | null>(null)
-  const [type, setType] = useState<any>(BarCodeScanner.Constants.Type.back)
   const [scanned, setScanned] = useState<boolean>(false)
 
   useEffect(() => {
@@ -23,7 +22,7 @@ export default function QrScanner({ navigation, route }) {
 
       setScanned(true)
       navigation.navigate({ name: 'TokenSender', params: { scanAddress: data }, merge: true })
-      alert(`Bar code with type ${type} and data ${data} has been scanned!`)
+      alert(`Bar code with data ${data} has been scanned!`)
     }
   }
 
@@ -38,7 +37,6 @@ export default function QrScanner({ navigation, route }) {
     <View style={{ flex: 1 }}>
       <BarCodeScanner
         onBarCodeScanned={handleBarCodeScanned}
-        type={type}
         barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
         style={[StyleSheet.absoluteFillObject, styles.container]}
       >
@@ -54,16 +52,8 @@ export default function QrScanner({ navigation, route }) {
               flex: 1,
               alignItems: 'flex-end',
             }}
-            onPress={() => {
-              setType(
-                type === BarCodeScanner.Constants.Type.back
-                  ? BarCodeScanner.Constants.Type.front
-                  : BarCodeScanner.Constants.Type.back
-              )
-            }}
-          >
-            <Text style={{ fontSize: 18, margin: 5, color: 'white' }}> Flip </Text>
-          </TouchableOpacity>
+            onPress={() => navigation.goBack()}
+          ></TouchableOpacity>
         </View>
 
         {scanned && <Button title="Scan Again" onPress={() => setScanned(false)} />}

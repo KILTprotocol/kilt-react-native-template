@@ -18,8 +18,6 @@ const styles = StyleSheet.create({
   },
   text: {
     color: '#FFFFFF',
-    // marginBottom: 5,
-    // fontSize: 14,
   },
   textInput: {
     padding: 5,
@@ -64,6 +62,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     width: '100%',
     color: '#FFFFFF',
+    textTransform: 'uppercase',
   },
   redButton: {
     backgroundColor: '#AB2400',
@@ -127,6 +126,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
     paddingTop: 20,
     width: '100%',
+  },
+  buttonDisabled: {
+    opacity: 0.2,
   },
 })
 

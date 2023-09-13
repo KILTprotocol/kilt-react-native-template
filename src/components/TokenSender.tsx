@@ -1,4 +1,12 @@
-import { TextInput, View, Text, TouchableOpacity } from 'react-native'
+import {
+  TextInput,
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  KeyboardAvoidingView,
+  ScrollView,
+} from 'react-native'
 import React, { useEffect, useState } from 'react'
 import * as Kilt from '@kiltprotocol/sdk-js'
 
@@ -8,15 +16,17 @@ import { KeyInfo } from '../utils/interfaces'
 
 import Keyring from '@polkadot/keyring'
 import { CommonActions } from '@react-navigation/native'
+import { Image } from 'react-native'
 
 export default function TokenSender({ navigation, route }): JSX.Element {
-  const [senderAccount, setSenderAccount] = useState(null)
+  const [senderAccount, setSenderAccount] = useState<KeyInfo>()
   const [receiverAddress, setReceiverAddress] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
   const [amount, setAmount] = useState('')
   const [balance, setBalance] = useState()
 
+  const isDisabled = !amount || !receiverAddress || !senderAccount || isLoading
   useEffect(() => {
     setReceiverAddress(route.params?.scanAddress)
     setSenderAccount(route.params?.selectAccount)
@@ -36,7 +46,7 @@ export default function TokenSender({ navigation, route }): JSX.Element {
 
   const handler = async () => {
     setIsLoading(true)
-    if (!senderAccount || !receiverAddress || (!senderAccount && !receiverAddress)) {
+    if (!senderAccount || !receiverAddress) {
       setIsLoading(false)
       throw new Error('get an account ')
     }
@@ -58,53 +68,106 @@ export default function TokenSender({ navigation, route }): JSX.Element {
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Send Tokens</Text>
-      <Text style={styles.text}>Choose an Account</Text>
+    <KeyboardAvoidingView style={{ ...styles.container }} behavior="position">
+      <View style={styles.header}>
+        <Text style={styles.headerText}>
+          Send Tokens from:{' '}
+          <Text style={{ fontStyle: 'italic' }}>{senderAccount?.metadata.name}</Text>
+        </Text>
+      </View>
 
-      <View>
+      <View style={componentStyles.main}>
+        <Text style={{ ...styles.text, marginBottom: 45, alignSelf: 'flex-start' }}>
+          Scan for an address
+        </Text>
         <TouchableOpacity
-          style={styles.orangeButton}
+          style={{ ...styles.orangeButton, ...componentStyles.qrButton }}
           onPress={() => navigation.navigate('QrScanner')}
         >
-          <Text style={styles.orangeButtonText}>Scan Address</Text>
+          <Image source={require('../../assets/qr-code.png')} height={42} width={42} />
         </TouchableOpacity>
-        <Text style={styles.text}>Scan for an Address or Enter an address manually </Text>
+        <Text style={styles.text}>(opens your camera)</Text>
+
+        <Text style={{ ...styles.text, marginTop: 22, marginBottom: 12, alignSelf: 'flex-start' }}>
+          or enter it manually
+        </Text>
         <TextInput
-          style={styles.textInput}
-          placeholder="Enter an address"
+          style={componentStyles.input}
+          placeholder="Enter address"
+          placeholderTextColor="rgba(255,255,255,0.5)"
           value={receiverAddress}
           onChangeText={setReceiverAddress}
         />
+
+        <Text style={{ ...styles.text, marginVertical: 20, alignSelf: 'flex-start' }}>
+          Enter amount of KILTs
+        </Text>
+        <TextInput
+          style={componentStyles.borderlessInput}
+          placeholder="0.0000"
+          placeholderTextColor="#FFFFFF"
+          value={amount}
+          onChangeText={setAmount}
+          keyboardType="numbers-and-punctuation"
+        />
+        {balance && <Text style={styles.text}>Balance: {balance}</Text>}
+
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={styles.redButton}
+            onPress={() =>
+              navigation.dispatch({
+                ...CommonActions.navigate('Account'),
+                params: { selectAccount: null },
+              })
+            }
+          >
+            <Text style={styles.redButtonText}>CANCEL</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={
+              isDisabled
+                ? { ...styles.orangeButton, ...styles.buttonDisabled }
+                : styles.orangeButton
+            }
+            onPress={() => handler()}
+            disabled={isDisabled}
+            activeOpacity={0.5}
+          >
+            <Text style={styles.orangeButtonText}>Send</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-      {balance ? <Text>{balance}</Text> : null}
-      <Text style={styles.textInput}>Enter an amount to send</Text>
-      <TextInput
-        style={styles.textInput}
-        placeholder="Set Amount to send"
-        value={amount}
-        onChangeText={setAmount}
-      />
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={styles.redButton}
-          onPress={() =>
-            navigation.dispatch({
-              ...CommonActions.navigate('Account'),
-              params: { selectAccount: null },
-            })
-          }
-        >
-          <Text style={styles.redButtonText}>CANCEL</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.orangeButton}
-          onPress={() => handler()}
-          disabled={amount || senderAccount || receiverAddress || isLoading ? true : false}
-        >
-          <Text style={styles.orangeButtonText}>Send Tokens</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+    </KeyboardAvoidingView>
   )
 }
+
+const componentStyles = StyleSheet.create({
+  main: {
+    paddingTop: 32,
+    paddingHorizontal: 12,
+    display: 'flex',
+    alignItems: 'center',
+  },
+  qrButton: {
+    height: 100,
+    width: 100,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  input: {
+    width: '100%',
+    height: 30,
+    padding: 7,
+    backgroundColor: 'rgba(0,169,157,0.15)',
+    borderWidth: 1,
+    borderColor: '#5B5B5B',
+    borderRadius: 3,
+    color: '#FFFFFF',
+  },
+  borderlessInput: {
+    fontSize: 36,
+    color: '#FFFFFF',
+  },
+})
