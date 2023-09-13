@@ -108,22 +108,23 @@ function AuthStack() {
         },
         headerBackVisible: false,
 
-        headerRight: () => (
-          <TouchableOpacity
-            onPress={async () => {
-              await removeStorage('session-password')
-              authContext.logout()
-            }}
-          >
-            <Text style={{ color: 'white' }}>Log out</Text>
-          </TouchableOpacity>
-        ),
+        headerRight: () =>
+          authContext.isAuthenticated ? (
+            <TouchableOpacity
+              onPress={async () => {
+                await removeStorage('session-password')
+                authContext.logout()
+              }}
+            >
+              <Text style={{ color: 'white' }}>Log out</Text>
+            </TouchableOpacity>
+          ) : null,
       }}
     >
       {!authContext.isAuthenticated ? (
         <Stack.Group>
           <Stack.Screen name="Unlock Nessie" component={UnlockStorageScreen} />
-          <Stack.Screen name="New Nessie User" component={OnboardUserScreen} />
+          <Stack.Screen name="Welcome" component={OnboardUserScreen} />
         </Stack.Group>
       ) : (
         <Stack.Group>

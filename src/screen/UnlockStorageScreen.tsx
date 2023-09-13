@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { Text, View, TextInput, TouchableOpacity, Image } from 'react-native'
+import { Text, View, TextInput, TouchableOpacity, KeyboardAvoidingView } from 'react-native'
 
 import OnboardUser from './OnboardUserScreen'
 
@@ -16,7 +16,7 @@ export default function UnlockStorageScreen({ navigation }) {
   const [enterPassword, setEnterPassword] = useState('Enter your password')
   const [rememberPassword, setRememberPassword] = useState(false)
   const [error, setError] = useState('')
-  const [storageInitialized, setStorageInitialized] = useState<boolean | null>(null)
+  const [hidePassword, setHidePassword] = useState(true)
 
   const authContext = useContext(AuthContext)
 
@@ -28,10 +28,12 @@ export default function UnlockStorageScreen({ navigation }) {
   useEffect((): void => {
     checkIfStorageIsInitialized()
       .then((initialized) => {
-        setStorageInitialized(initialized)
+        if (!initialized) {
+          navigation.navigate('Welcome')
+        }
       })
       .catch((e: any) => {})
-  }, [])
+  }, [checkIfStorageIsInitialized, navigation])
 
   const checkIfPasswordIsCorrect = async (password: string): Promise<boolean> => {
     try {
@@ -81,43 +83,32 @@ export default function UnlockStorageScreen({ navigation }) {
       .catch(console.error)
   }
 
-  if (!storageInitialized) {
-    return <OnboardUser />
-  }
-
   return (
-    <View style={styles.container}>
-      <NessieLogo />
-      <Text
-        style={{
-          color: 'white',
-          fontSize: 16,
-        }}
-      >
-        Unlock Nessie
-      </Text>
-      <Text
-        style={{
-          color: 'white',
-          fontSize: 16,
-        }}
-      >
-        Enter your password to unlock the storage.
-      </Text>
-      <TextInput style={styles.textInput} value={enterPassword} onChangeText={setEnterPassword} />
-      <Text
-        style={{
-          color: 'white',
-          fontSize: 16,
-        }}
-      >
-        Remember Password
-      </Text>
-      {/* <BouncyCheckbox onPress={() => setRememberPassword(!rememberPassword)} /> */}
-      <TouchableOpacity style={styles.orangeButton} onPress={onInsertPassword}>
-        <Text>Unlock with your Password</Text>
-      </TouchableOpacity>
-      <Text>{error}</Text>
-    </View>
+    <KeyboardAvoidingView style={styles.container} behavior="position">
+      <View style={styles.main}>
+        <NessieLogo />
+
+        <Text style={{ ...styles.text, fontWeight: 'bold', marginBottom: 10 }}>Unleash Nessie</Text>
+
+        <Text style={{ ...styles.text, marginBottom: 24 }}>
+          Enter your master password to login.
+        </Text>
+        <TextInput
+          style={{ ...styles.input, width: '80%', marginBottom: 24 }}
+          value={enterPassword}
+          onChangeText={setEnterPassword}
+          placeholder="Enter password"
+          placeholderTextColor="rgba(255,255,255,0.5)"
+          secureTextEntry={hidePassword}
+        />
+
+        {/* <Text style={styles.text}>Remember Password</Text> */}
+        {/* <BouncyCheckbox onPress={() => setRememberPassword(!rememberPassword)} /> */}
+        <TouchableOpacity style={styles.orangeButton} onPress={onInsertPassword}>
+          <Text style={styles.orangeButtonText}>OK</Text>
+        </TouchableOpacity>
+        <Text>{error}</Text>
+      </View>
+    </KeyboardAvoidingView>
   )
 }

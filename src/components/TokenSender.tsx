@@ -63,7 +63,7 @@ export default function TokenSender({ navigation, route }): JSX.Element {
         </Text>
       </View>
 
-      <View style={styles.main}>
+      <View style={{ ...styles.main, paddingTop: 32 }}>
         <Text style={{ ...styles.text, marginBottom: 45, alignSelf: 'flex-start' }}>
           Scan for an address
         </Text>
