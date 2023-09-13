@@ -8,6 +8,7 @@ import * as KeyStore from '../storage/keys/store'
 import { KeyInfo } from '../utils/interfaces'
 import { AuthContext } from '../wrapper/AuthContextProvider'
 import getBalance from '../utils/getBalance'
+import NessieLogo from '../components/NessieLogo'
 
 export default function AccountScreen({ navigation, route }) {
   const [account, setAccount] = useState<KeyInfo | null>()
@@ -44,25 +45,7 @@ export default function AccountScreen({ navigation, route }) {
 
   return (
     <ScrollView style={styles.scroll}>
-      <View style={{ paddingTop: '16.33%', alignItems: 'center', paddingBottom: '15%' }}>
-        <Image source={require('../../assets/Group.png')} />
-        <Text
-          style={{
-            color: 'white',
-            fontSize: 16,
-          }}
-        >
-          Nessie
-        </Text>
-        <Text
-          style={{
-            color: 'white',
-            fontSize: 12,
-          }}
-        >
-          your Identity wallet
-        </Text>
-      </View>
+      <NessieLogo />
 
       {keys
         ? keys.map((keyInfo: KeyInfo, key) => {

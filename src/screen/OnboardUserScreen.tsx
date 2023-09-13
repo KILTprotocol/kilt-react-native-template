@@ -6,6 +6,7 @@ import { AuthContext } from '../wrapper/AuthContextProvider'
 import styles from '../styles/styles'
 
 import { setStorage } from '../storage/storage'
+import NessieLogo from '../components/NessieLogo'
 
 // This would needs to be CHANGED!
 export default function OnboardUserScreen(): JSX.Element {
@@ -29,25 +30,7 @@ export default function OnboardUserScreen(): JSX.Element {
 
   return (
     <View style={styles.container}>
-      <View style={{ paddingTop: '16.33%', alignItems: 'center' }}>
-        <Image source={require('../../assets/Group.png')} />
-        <Text
-          style={{
-            color: 'white',
-            fontSize: 16,
-          }}
-        >
-          Nessie
-        </Text>
-        <Text
-          style={{
-            color: 'white',
-            fontSize: 12,
-          }}
-        >
-          your Identity wallet
-        </Text>
-      </View>
+      <NessieLogo />
       <Text style={styles.text}>Welcome to Nessie Mobile</Text>
       <Text style={styles.text}>
         This password will be used to encrypt your data. It will not be stored anywhere. Please make

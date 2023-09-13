@@ -6,6 +6,7 @@ import OnboardUser from './OnboardUserScreen'
 import { AuthContext } from '../wrapper/AuthContextProvider'
 import styles from '../styles/styles'
 import { getStorage, removeStorage, setStorage } from '../storage/storage'
+import NessieLogo from '../components/NessieLogo'
 
 const textDecoder = new TextDecoder()
 
@@ -86,25 +87,7 @@ export default function UnlockStorageScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <View style={{ paddingTop: '16.33%', alignItems: 'center' }}>
-        <Image source={require('../../assets/Group.png')} />
-        <Text
-          style={{
-            color: 'white',
-            fontSize: 16,
-          }}
-        >
-          Nessie
-        </Text>
-        <Text
-          style={{
-            color: 'white',
-            fontSize: 12,
-          }}
-        >
-          your Identity wallet
-        </Text>
-      </View>
+      <NessieLogo />
       <Text
         style={{
           color: 'white',

@@ -6,29 +6,12 @@ import React, { useEffect, useState } from 'react'
 import styles from '../styles/styles'
 import SelectDid from '../components/SelectDid'
 import { CommonActions } from '@react-navigation/native'
+import NessieLogo from '../components/NessieLogo'
 
 export default function DidScreen({ navigation, route }) {
   return (
     <ScrollView style={styles.scroll}>
-      <View style={{ paddingTop: '16.33%', alignItems: 'center', paddingBottom: '15%' }}>
-        <Image source={require('../../assets/Group.png')} />
-        <Text
-          style={{
-            color: 'white',
-            fontSize: 16,
-          }}
-        >
-          Nessie
-        </Text>
-        <Text
-          style={{
-            color: 'white',
-            fontSize: 12,
-          }}
-        >
-          your Identity wallet
-        </Text>
-      </View>
+      <NessieLogo />
 
       <SelectDid navigation={navigation} route={route} />
 
