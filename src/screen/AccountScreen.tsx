@@ -70,12 +70,7 @@ export default function AccountScreen({ navigation, route }) {
               <View key={key} style={{ paddingTop: '0.5%', paddingBottom: '0.5%' }}>
                 <TouchableOpacity
                   style={styles.rectangleButtonPurple}
-                  onPress={() => {
-                    if (account) {
-                      return setAccount(null)
-                    }
-                    return setAccount(keyInfo)
-                  }}
+                  onPress={() => setAccount(keyInfo)}
                 >
                   <Text numberOfLines={1} style={styles.rectangleButtonText}>
                     {keyInfo.metadata.name}:{balance} KILT
