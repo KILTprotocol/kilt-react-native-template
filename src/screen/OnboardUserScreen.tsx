@@ -21,10 +21,8 @@ export default function OnboardUserScreen(): JSX.Element {
     }
 
     await setStorage('test', 'test', password)
-
-    await setStorage('nessie-initialized', 'true', password)
-
     await setStorage('session-password', password)
+    await setStorage('nessie-initialized', 'true', password)
 
     authContext.authenticate()
   }

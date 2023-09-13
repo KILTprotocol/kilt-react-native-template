@@ -5,27 +5,29 @@ import React, { useEffect, useState } from 'react'
 
 import styles from '../styles/styles'
 import SelectDid from '../components/SelectDid'
-import { CommonActions } from '@react-navigation/native'
+import { CommonActions, useIsFocused } from '@react-navigation/native'
 import { getKeypairs } from '../storage/keys/store'
 import { getStorage } from '../storage/storage'
 import NessieLogo from '../components/NessieLogo'
 
 export default function DidScreen({ navigation, route }) {
   const [isDisabled, setIsDisabled] = useState(true)
+  const isFocused = useIsFocused()
+
   const accounts = async () => {
     const password = await getStorage('session-password')
     const keypairs = await getKeypairs(password)
-    console.log('keys', keypairs.length)
+    console.log('keys', keypairs.length === 0)
     if (keypairs.length === 0) {
-      setIsDisabled(false)
+      return setIsDisabled(true)
     }
 
-    setIsDisabled(true)
+    return setIsDisabled(false)
   }
 
   useEffect(() => {
     accounts()
-  }, [])
+  }, [isFocused])
   return (
     <ScrollView style={styles.scroll}>
       <NessieLogo pink={false} purple={true} />
@@ -49,7 +51,7 @@ export default function DidScreen({ navigation, route }) {
       <View style={{ paddingTop: 30 }}>
         <TouchableOpacity
           style={
-            !isDisabled ? { ...styles.orangeButton, ...styles.buttonDisabled } : styles.orangeButton
+            isDisabled ? { ...styles.orangeButton, ...styles.buttonDisabled } : styles.orangeButton
           }
           disabled={isDisabled}
           onPress={() =>

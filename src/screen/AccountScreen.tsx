@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { TouchableOpacity, Text, View, ScrollView, Image } from 'react-native'
+import { useIsFocused } from '@react-navigation/native'
 
 import styles from '../styles/styles'
 
@@ -15,6 +16,7 @@ export default function AccountScreen({ navigation, route }) {
   const [keys, setKeys] = useState<KeyInfo[]>()
   const [balance, setBalance] = useState('')
   const [isLoading, setIsLoading] = useState<boolean>(false)
+  const isFocused = useIsFocused()
 
   const authContext = useContext(AuthContext)
   const fetchAccounts = async () => {
@@ -33,7 +35,7 @@ export default function AccountScreen({ navigation, route }) {
   }
   useEffect(() => {
     fetchAccounts()
-  }, [])
+  }, [isFocused])
 
   useEffect(() => {
     if (!account) return setIsLoading(false)
@@ -43,7 +45,7 @@ export default function AccountScreen({ navigation, route }) {
       setBalance(accountBalance)
       setIsLoading(false)
     })()
-  }, [account])
+  }, [account, isFocused])
 
   return (
     <ScrollView style={styles.scroll}>
