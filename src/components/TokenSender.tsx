@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   KeyboardAvoidingView,
-  ScrollView,
+  Image,
 } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import * as Kilt from '@kiltprotocol/sdk-js'
@@ -16,7 +16,8 @@ import { KeyInfo } from '../utils/interfaces'
 
 import Keyring from '@polkadot/keyring'
 import { CommonActions } from '@react-navigation/native'
-import { Image } from 'react-native'
+
+import getBalance from '../utils/getBalance'
 
 export default function TokenSender({ navigation, route }): JSX.Element {
   const [senderAccount, setSenderAccount] = useState<KeyInfo>()
@@ -24,7 +25,7 @@ export default function TokenSender({ navigation, route }): JSX.Element {
   const [isLoading, setIsLoading] = useState(false)
 
   const [amount, setAmount] = useState('')
-  const [balance, setBalance] = useState()
+  const [balance, setBalance] = useState('')
 
   const isDisabled = !amount || !receiverAddress || !senderAccount || isLoading
   useEffect(() => {
@@ -34,17 +35,13 @@ export default function TokenSender({ navigation, route }): JSX.Element {
 
   useEffect(() => {
     if (!senderAccount) return
-    const handler = async () => {
-      const api = Kilt.ConfigService.get('api')
-
-      const balances = await api.query.system.account(senderAccount.metadata.address)
-      const freeBalance = Kilt.BalanceUtils.fromFemtoKilt(balances.data.free)
-      setBalance(freeBalance.toString())
-    }
-    handler()
+    ;(async () => {
+      const accountBalance = await getBalance(senderAccount.metadata.address)
+      setBalance(accountBalance)
+    })()
   }, [senderAccount])
 
-  const handler = async () => {
+  const sendTokens = async () => {
     setIsLoading(true)
     if (!senderAccount || !receiverAddress) {
       setIsLoading(false)
@@ -130,11 +127,11 @@ export default function TokenSender({ navigation, route }): JSX.Element {
                 ? { ...styles.orangeButton, ...styles.buttonDisabled }
                 : styles.orangeButton
             }
-            onPress={() => handler()}
+            onPress={() => sendTokens()}
             disabled={isDisabled}
             activeOpacity={0.5}
           >
-            <Text style={styles.orangeButtonText}>Send</Text>
+            <Text style={styles.orangeButtonText}>SEND</Text>
           </TouchableOpacity>
         </View>
       </View>

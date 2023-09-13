@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 import { AuthContext } from '../wrapper/AuthContextProvider'
 import { TouchableOpacity, Text, Share, ScrollView, View } from 'react-native'
 import styles from '../styles/styles'
-import { getStorage, allStorage } from '../storage/storage'
+import { getStorage } from '../storage/storage'
 import * as KeyStore from '../storage/keys/store'
 
 export default function SettingScreen({ navigation }) {

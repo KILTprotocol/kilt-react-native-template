@@ -42,7 +42,7 @@ export default function TokenReceiver({ navigation, route }): JSX.Element {
             style={{ ...styles.redButton, ...componentStyles.button }}
             onPress={() =>
               navigation.dispatch({
-                ...CommonActions.navigate('Account'),
+                ...CommonActions.navigate('Accounts'),
                 params: { selectAccount: null },
               })
             }

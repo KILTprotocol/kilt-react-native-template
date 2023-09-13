@@ -1,10 +1,8 @@
 import { type KeypairType } from '@polkadot/util-crypto/types'
-import { mnemonicGenerate } from '@polkadot/util-crypto'
 
 import React, { useState, useContext } from 'react'
 import { TextInput, View, Text, TouchableOpacity } from 'react-native'
 
-import generateName from '../utils/generateName'
 import { generateMnemonic } from '../storage/keys/store'
 import { importKey } from '../storage/keys/store'
 
@@ -22,7 +20,7 @@ const alogrithmList = [
   // { label: 'x25519', value: 'x25519' },
 ]
 
-export default function ImportKey({ navigation }): JSX.Element {
+export default function AddAccount({ navigation }): JSX.Element {
   const [algorithm, setAlgorithm] = useState('sr25519')
 
   const [mnemonic, setMnemonic] = useState()
@@ -75,17 +73,18 @@ export default function ImportKey({ navigation }): JSX.Element {
       />
 
       <Text style={styles.text}>Key algorithm</Text>
-
-      {alogrithmList.map(({ value, label }, key) => {
-        return (
-          <RadioButton
-            key={key}
-            label={label}
-            selected={algorithm === value}
-            onPress={() => handleSelectAlgorithm(value)}
-          />
-        )
-      })}
+      <View style={styles.selectAccountRadioContainer}>
+        {alogrithmList.map(({ value, label }, key) => {
+          return (
+            <RadioButton
+              key={key}
+              label={label}
+              selected={algorithm === value}
+              onPress={() => handleSelectAlgorithm(value)}
+            />
+          )
+        })}
+      </View>
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={styles.redButton}
@@ -94,7 +93,11 @@ export default function ImportKey({ navigation }): JSX.Element {
           <Text style={styles.redButtonText}>CANCEL</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.orangeButton} onPress={addKey}>
+        <TouchableOpacity
+          style={styles.orangeButton}
+          onPress={addKey}
+          disabled={!mnemonic || !name}
+        >
           <Text style={styles.orangeButtonText}>ADD ACCOUNT</Text>
         </TouchableOpacity>
       </View>

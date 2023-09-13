@@ -7,14 +7,17 @@ import { getStorage } from '../storage/storage'
 import * as KeyStore from '../storage/keys/store'
 import { KeyInfo } from '../utils/interfaces'
 import { AuthContext } from '../wrapper/AuthContextProvider'
+import getBalance from '../utils/getBalance'
 
 export default function AccountScreen({ navigation, route }) {
   const [account, setAccount] = useState<KeyInfo | null>()
   const [keys, setKeys] = useState<KeyInfo[]>()
+  const [balance, setBalance] = useState('')
+
   const authContext = useContext(AuthContext)
 
   useEffect(() => {
-    const handle = async () => {
+    const fetchAccounts = async () => {
       const password = await getStorage('session-password')
 
       if (!password) {
@@ -28,8 +31,16 @@ export default function AccountScreen({ navigation, route }) {
       })
       setKeys(keys)
     }
-    handle()
+    fetchAccounts()
   }, [])
+
+  useEffect(() => {
+    if (!account) return
+    ;(async () => {
+      const accountBalance = await getBalance(account.metadata.address)
+      setBalance(accountBalance)
+    })()
+  }, [account])
 
   return (
     <ScrollView style={styles.scroll}>
@@ -66,7 +77,9 @@ export default function AccountScreen({ navigation, route }) {
                     return setAccount(keyInfo)
                   }}
                 >
-                  <Text style={styles.rectangleButtonText}>{keyInfo.metadata.address}</Text>
+                  <Text numberOfLines={1} style={styles.rectangleButtonText}>
+                    {keyInfo.metadata.name}:{balance} KILT
+                  </Text>
                   <View style={{ right: '40%' }}>
                     <Image source={require('../../assets/Manage.png')} />
                   </View>
@@ -103,7 +116,7 @@ export default function AccountScreen({ navigation, route }) {
 
       <TouchableOpacity
         style={styles.orangeButton}
-        onPress={() => navigation.navigate('ImportKey')}
+        onPress={() => navigation.navigate('Add Account')}
       >
         <Text style={styles.orangeButtonText}>ADD ACCOUNT</Text>
       </TouchableOpacity>

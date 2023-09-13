@@ -62,65 +62,7 @@ export default function DidManagement({ navigation, route }) {
           style={styles.redButton}
           onPress={() =>
             navigation.dispatch({
-              ...CommonActions.navigate('Identity'),
-              params: { did: null },
-            })
-          }
-        >
-          <Text style={styles.redButtonText}>CLOSE</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.buttonContainer}>
-        <TextInput style={styles.textInput} placeholder="Name" value={w3n} onChangeText={setW3n} />
-        <TouchableOpacity
-          style={styles.orangeButton}
-          disabled={!w3n}
-          onPress={() =>
-            navigation.dispatch({
-              ...CommonActions.navigate('ClaimW3n'),
-              params: { w3n },
-            })
-          }
-        >
-          <Text style={styles.orangeButtonText}>CLAIM</Text>
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={styles.redButton}
-          onPress={() =>
-            navigation.dispatch({
-              ...CommonActions.navigate('Identity'),
-              params: { did: null },
-            })
-          }
-        >
-          <Text style={styles.redButtonText}>CLOSE</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.buttonContainer}>
-        <TextInput style={styles.textInput} placeholder="Name" value={w3n} onChangeText={setW3n} />
-        <TouchableOpacity
-          style={styles.orangeButton}
-          disabled={!w3n}
-          onPress={() =>
-            navigation.dispatch({
-              ...CommonActions.navigate('ClaimW3n'),
-              params: { w3n },
-            })
-          }
-        >
-          <Text style={styles.orangeButtonText}>CLAIM</Text>
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={styles.redButton}
-          onPress={() =>
-            navigation.dispatch({
-              ...CommonActions.navigate('Identity'),
+              ...CommonActions.navigate('DID'),
               params: { did: null },
             })
           }

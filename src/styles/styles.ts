@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     marginTop: '3.69%',
-    flex: 1,
+
     justifyContent: 'center',
   },
   orangeButton: {
