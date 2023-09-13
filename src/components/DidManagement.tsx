@@ -1,16 +1,17 @@
 import { TouchableOpacity, Text, View, TextInput, ScrollView } from 'react-native'
 import styles from '../styles/styles'
 import React, { useEffect, useState } from 'react'
-import ClaimW3n from './ClaimW3n'
+
 import { CommonActions } from '@react-navigation/native'
-import { ConfigService, DidDocument } from '@kiltprotocol/sdk-js'
+import { DidDocument, connect } from '@kiltprotocol/sdk-js'
 
 export default function DidManagement({ navigation, route }) {
   const [did, setDid] = useState<DidDocument | null>()
   const [w3n, setW3n] = useState<string | null>()
 
   const handler = async () => {
-    const api = ConfigService.get('api')
+    const api = await connect('wss://peregrine.kilt.io/parachain-public-ws/')
+
     setDid(route.params.did.document)
     const fetchedW3n = await api.query.web3Names.owner(route.params.did.document.uri)
 
@@ -21,6 +22,7 @@ export default function DidManagement({ navigation, route }) {
   useEffect(() => {
     handler()
   }, [route.params])
+
   return (
     <ScrollView style={styles.scroll}>
       <Text style={styles.text}>DID Manage</Text>
@@ -42,7 +44,7 @@ export default function DidManagement({ navigation, route }) {
         </>
       ) : null}
       <View style={styles.buttonContainer}>
-        <TextInput style={styles.textInput} placeholder="Name" value={w3n} onChangeText={setW3n} />
+        <TextInput style={styles.input} placeholder="Name" value={w3n} onChangeText={setW3n} />
         <TouchableOpacity
           style={styles.orangeButton}
           disabled={!w3n}

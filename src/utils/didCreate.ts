@@ -4,8 +4,8 @@ import {
   NewDidEncryptionKey,
   Did,
   DidDocument,
-  ConfigService,
   Blockchain,
+  connect,
 } from '@kiltprotocol/sdk-js'
 
 export default async function createSimpleFullDid(
@@ -19,7 +19,7 @@ export default async function createSimpleFullDid(
   },
   signCallback: Did.GetStoreTxSignCallback
 ): Promise<DidDocument> {
-  const api = ConfigService.get('api')
+  const api = await connect('wss://peregrine.kilt.io/parachain-public-ws/')
 
   const fullDidCreationTx = await Did.getStoreTx(
     {
@@ -35,5 +35,6 @@ export default async function createSimpleFullDid(
   const fullDid = Did.getFullDidUriFromKey(authentication)
 
   const encodedUpdatedDidDetails = await api.call.did.query(Did.toChain(fullDid))
+  await api.disconnect()
   return Did.linkedInfoFromChain(encodedUpdatedDidDetails).document
 }

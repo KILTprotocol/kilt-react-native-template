@@ -24,8 +24,6 @@ import { removeStorage } from './storage/storage'
 import Warning from './components/Warning'
 import AddAccount from './components/AddAccount'
 
-const connection = async () => await connect('wss://peregrine.kilt.io/parachain-public-ws/')
-
 const Stack = createNativeStackNavigator()
 const Tab = createBottomTabNavigator()
 
@@ -147,9 +145,6 @@ function AuthStack() {
 }
 
 export default function App() {
-  useEffect(() => {
-    connection()
-  }, [])
   return (
     <AuthContextProvider>
       <NavigationContainer ref={navigationRef}>

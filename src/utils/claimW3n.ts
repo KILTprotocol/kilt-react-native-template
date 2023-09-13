@@ -1,6 +1,5 @@
 import {
   Blockchain,
-  ConfigService,
   Did,
   DidUri,
   KiltKeyringPair,
@@ -14,7 +13,7 @@ export async function claimWeb3Name(
   name: Did.Web3Name,
   signCallback: SignExtrinsicCallback
 ): Promise<void> {
-  const api = ConfigService.get('api')
+  const api = await connect('wss://peregrine.kilt.io/parachain-public-ws/')
 
   const web3NameClaimTx = api.tx.web3Names.claim(name)
   const authorizedWeb3NameClaimTx = await Did.authorizeTx(
@@ -24,4 +23,5 @@ export async function claimWeb3Name(
     submitterAccount.address
   )
   await Blockchain.signAndSubmitTx(authorizedWeb3NameClaimTx, submitterAccount)
+  await api.disconnect()
 }
