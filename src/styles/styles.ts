@@ -7,6 +7,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#440031',
   },
+  centerContainer: {
+    top: '25%',
+    alignItems: 'center',
+    paddingBottom: '15%',
+  },
   scroll: {
     flex: 1,
     backgroundColor: '#440031',
@@ -25,6 +30,25 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     color: '#FFFFFF',
     fontWeight: '600',
+  },
+  radioButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    height: screenHeight * 0.052,
+    backgroundColor: 'rgba(249,105,67,0.2)',
+    width: screenWidth * 0.91,
+    padding: 10,
+    borderBottomWidth: 1,
+    borderColor: '#A82D5B',
+    borderTopRadius: 0,
+  },
+  selectAccountRadioContainer: {
+    width: '100%',
+    alignItems: 'center',
+    marginTop: '3.69%',
+    flex: 1,
+    justifyContent: 'center',
   },
   orangeButton: {
     backgroundColor: '#F96943',
@@ -101,6 +125,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-evenly',
+    paddingTop: 20,
+    width: '100%',
   },
 })
 

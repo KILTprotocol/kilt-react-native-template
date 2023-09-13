@@ -96,8 +96,6 @@ export async function removeKeypair(key: string, password: string): Promise<void
 }
 
 export async function list(password: string): Promise<KeyInfo[]> {
-  console.log('call keys::list')
-
   const keypairs = await getKeypairs(password)
   return Promise.all(
     keypairs.map(async ([key, mnemonic]: [string, string]) => {

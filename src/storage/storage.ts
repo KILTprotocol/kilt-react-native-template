@@ -46,6 +46,6 @@ export async function allStorage(password: string, prefix?: string): Promise<Arr
         return decrypted.push([key, storageEntry])
       }
     })
-  )
+  ).catch((e) => console.log(e))
   return decrypted
 }

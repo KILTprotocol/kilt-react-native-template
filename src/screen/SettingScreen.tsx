@@ -1,19 +1,35 @@
 import React, { useContext } from 'react'
 import { AuthContext } from '../wrapper/AuthContextProvider'
-import { TouchableOpacity, Text, View, ScrollView } from 'react-native'
+import { TouchableOpacity, Text, Share, ScrollView } from 'react-native'
 import styles from '../styles/styles'
-import { removeStorage } from '../storage/storage'
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import { getStorage, allStorage } from '../storage/storage'
+import * as KeyStore from '../storage/keys/store'
 
 export default function SettingScreen({ navigation }) {
   const authContext = useContext(AuthContext)
+
+  const fetchKeys = async () => {
+    const password = await getStorage('session-password')
+
+    if (!password) {
+      authContext.logout()
+      navigation.navigate('UnlockStorageScreen')
+    }
+
+    const getAllStorage = await allStorage(password)
+    const keys = await KeyStore.getKeypairs(password)
+    Share.share({
+      message: JSON.stringify(keys),
+      title: 'KILT Demo account Haus of Chaos',
+    })
+  }
 
   return (
     <ScrollView style={styles.scroll}>
       <TouchableOpacity
         style={styles.orangeButton}
         onPress={async () => {
-          navigation.navigate('Export Storage')
+          fetchKeys()
         }}
       >
         <Text style={styles.orangeButtonText}>Export storage</Text>
@@ -21,8 +37,7 @@ export default function SettingScreen({ navigation }) {
       <TouchableOpacity
         style={styles.orangeButton}
         onPress={async () => {
-          await AsyncStorage.clear()
-          authContext.logout()
+          navigation.navigate('Warning')
         }}
       >
         <Text style={styles.orangeButtonText}>Clear Storage</Text>
