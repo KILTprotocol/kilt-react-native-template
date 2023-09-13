@@ -1,26 +1,31 @@
-import { Utils } from '@kiltprotocol/sdk-js'
+import { Utils, Did } from '@kiltprotocol/sdk-js'
 
 import React, { useEffect, useState } from 'react'
-import { TouchableOpacity, Text, View, ScrollView } from 'react-native'
+import { TouchableOpacity, Text, View, ScrollView, ActivityIndicator } from 'react-native'
 
 import styles from '../styles/styles'
 import { claimWeb3Name } from '../utils/claimW3n'
 import SelectAccount from './SelectAccount'
+import { CommonActions } from '@react-navigation/native'
+
+import { getDidKeypair } from '../storage/did/store'
+import { getStorage } from '../storage/storage'
+import { mnemonicToMiniSecret } from '@polkadot/util-crypto'
 
 export default function ClaimW3n({ navigation, route }) {
-  const [paymentAccount, setPaymentAccount] = useState()
-  const [w3n, setW3n] = useState()
-
-  useEffect(() => {
-    console.log(route.params)
-    if (!route.params) return
-    setPaymentAccount(route.params.selectAccount)
-    setW3n(route.params.w3n)
-  }, [route.params])
+  const [isLoading, setIsLoading] = useState(false)
 
   const claimW3n = async () => {
-    if (!paymentAccount || !route.params.did || !w3n) return
+    setIsLoading(true)
 
+    if (!route.params.did || !route.params.w3n || !route.params.selectAccount) {
+      return setIsLoading(false)
+    }
+
+    const password = await getStorage('session-password')
+
+    const w3n = JSON.parse(JSON.stringify(route.params.w3n))
+    const paymentAccount = JSON.parse(JSON.stringify(route.params.selectAccount))
     const did = JSON.parse(JSON.stringify(route.params.did))
 
     const keyring = new Utils.Keyring({
@@ -31,31 +36,46 @@ export default function ClaimW3n({ navigation, route }) {
       type: JSON.parse(JSON.stringify(paymentAccount)).metadata.type,
     })
 
-    const { keypairs } = did
+    const didKeypairs = await getDidKeypair(did.uri, password)
 
-    const authentication = keyring.addFromMnemonic(JSON.parse(keypairs).authentication, {
-      type: did.document.authentication[0].type,
-    })
+    const authKey = JSON.parse(didKeypairs)
 
-    await claimWeb3Name(did.document.uri, account, w3n, async ({ data }) => ({
+    const authentication = Utils.Crypto.makeKeypairFromSeed(
+      mnemonicToMiniSecret(authKey.authentication),
+      did.authentication[0].type
+    )
+
+    await claimWeb3Name(did.uri, account, w3n.toLowerCase(), async ({ data }) => ({
       signature: authentication.sign(data),
       keyType: authentication.type,
     }))
-
-    console.log('claimed')
+    setIsLoading(false)
+    navigation.dispatch(CommonActions.goBack())
   }
+
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.text}>Claim your web3name: {w3n}</Text>
+      {/* {route.params.w3n && <Text style={styles.text}>Claim your web3name: {route.params.w3n}</Text>} */}
 
       <SelectAccount navigation={navigation} route={route} />
+      <ActivityIndicator color="orange" animating={isLoading} />
 
       <View style={{ ...styles.buttonContainer, paddingTop: '10%' }}>
-        <TouchableOpacity style={styles.redButton} onPress={() => claimW3n()}>
+        <TouchableOpacity
+          style={styles.redButton}
+          onPress={() =>
+            navigation.dispatch({
+              ...CommonActions.goBack(),
+            })
+          }
+        >
           <Text style={styles.redButtonText}>CANCEL</Text>
         </TouchableOpacity>
-
-        <TouchableOpacity style={styles.orangeButton} onPress={() => claimW3n()}>
+        <TouchableOpacity
+          style={styles.orangeButton}
+          disabled={isLoading || !route.params.selectAccount}
+          onPress={() => claimW3n()}
+        >
           <Text style={styles.orangeButtonText}>CLAIM</Text>
         </TouchableOpacity>
       </View>

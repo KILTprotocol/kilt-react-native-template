@@ -12,6 +12,7 @@ import React, { useEffect, useState } from 'react'
 import { CommonActions } from '@react-navigation/native'
 import { DidDocument, connect } from '@kiltprotocol/sdk-js'
 import SelectCredential from './SelectCredential'
+import getWeb3NameForDid from '../utils/fetchW3n'
 
 export default function DidManagement({ navigation, route }) {
   const did = route.params.did.document as DidDocument
@@ -20,8 +21,7 @@ export default function DidManagement({ navigation, route }) {
 
   useEffect(() => {
     ;(async () => {
-      const api = await connect('wss://peregrine.kilt.io/parachain-public-ws/')
-      const fetchedW3n = await api.query.web3Names.owner(did.uri)
+      const fetchedW3n = await getWeb3NameForDid(did.uri)
 
       if (fetchedW3n) {
         setW3n(fetchedW3n.toString())
@@ -50,7 +50,9 @@ export default function DidManagement({ navigation, route }) {
 
           <Text style={{ ...styles.text, marginBottom: 12 }}>web3name</Text>
           {w3n ? (
-            <Text>{w3n}</Text>
+            <Text numberOfLines={1} style={{ ...styles.text, marginBottom: 12, marginLeft: 30 }}>
+              {w3n}
+            </Text>
           ) : (
             <View
               style={{
@@ -64,6 +66,7 @@ export default function DidManagement({ navigation, route }) {
               <TextInput
                 style={{ ...styles.input, flex: 1 }}
                 placeholder="Name"
+                value={w3nInput}
                 placeholderTextColor="rgba(255,255,255,0.5)"
                 onChangeText={setW3nInput}
               />
@@ -72,8 +75,7 @@ export default function DidManagement({ navigation, route }) {
                 disabled={!w3nInput}
                 onPress={() =>
                   navigation.dispatch({
-                    ...CommonActions.navigate('ClaimW3n'),
-                    params: { w3n: w3nInput },
+                    ...CommonActions.navigate('ClaimW3n', { w3n: w3nInput, did: did }),
                   })
                 }
               >

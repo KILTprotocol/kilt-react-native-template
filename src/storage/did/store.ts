@@ -46,6 +46,10 @@ export async function getDidKeypairs(password: string): Promise<Array<[string, s
   return allStorage(password, KEY_PREFIX)
 }
 
+export async function getDidKeypair(didUri: string, password: string): Promise<string> {
+  return getStorage(KEY_PREFIX + didUri, password)
+}
+
 export async function setDidKeypairs(didUri: string, keypairs: DidKeys, password: string) {
   await setStorage(KEY_PREFIX + didUri, JSON.stringify(keypairs), password)
 }
