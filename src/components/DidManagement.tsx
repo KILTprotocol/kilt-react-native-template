@@ -62,7 +62,7 @@ export default function DidManagement({ navigation, route }) {
           style={styles.redButton}
           onPress={() =>
             navigation.dispatch({
-              ...CommonActions.navigate('DID'),
+              ...CommonActions.navigate('Identity'),
               params: { did: null },
             })
           }

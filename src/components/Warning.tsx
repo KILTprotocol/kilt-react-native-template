@@ -20,7 +20,7 @@ export default function Warning({ navigation }) {
             style={styles.redButton}
             onPress={() =>
               navigation.dispatch({
-                ...CommonActions.navigate('DID'),
+                ...CommonActions.navigate('Identity'),
                 params: { did: null },
               })
             }

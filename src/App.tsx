@@ -16,7 +16,6 @@ import SelectDid from './components/SelectDid'
 import CreateDid from './components/CreateDid'
 import ClaimW3n from './components/ClaimW3n'
 import SettingScreen from './screen/SettingScreen'
-import ImportKey from './components/ImportKey'
 import TokenReceiver from './components/TokenReceiver'
 import TokenSender from './components/TokenSender'
 import AccountScreen from './screen/AccountScreen'
@@ -24,6 +23,7 @@ import styles from './styles/styles'
 import DidManagement from './components/DidManagement'
 import { removeStorage } from './storage/storage'
 import Warning from './components/Warning'
+import AddAccount from './components/AddAccount'
 
 const connection = async () => await connect('wss://peregrine.kilt.io/parachain-public-ws/')
 
@@ -39,7 +39,7 @@ function Main({ navigation }) {
       initialRouteName="Identity"
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
-          if (route.name === 'Account') {
+          if (route.name === 'Accounts') {
             return !focused ? (
               <Image source={require('../assets/Accounts.png')} />
             ) : (
@@ -79,7 +79,7 @@ function Main({ navigation }) {
         headerBackVisible: false,
       })}
     >
-      <Tab.Screen name="Account" component={AccountScreen} />
+      <Tab.Screen name="Accounts" component={AccountScreen} />
       <Tab.Screen name="Identity" component={DidScreen} options={{}} />
       <Tab.Screen name="Settings" component={SettingScreen} />
     </Tab.Navigator>
@@ -126,7 +126,7 @@ function AuthStack() {
           <Stack.Group>
             <Stack.Screen name="Nessie" component={Main} />
             <Stack.Screen name="ClaimW3n" component={ClaimW3n} />
-            <Stack.Screen name="ImportKey" component={ImportKey} />
+            <Stack.Screen name="Add Account" component={AddAccount} />
             <Stack.Screen name="TokenSender" component={TokenSender} />
             <Stack.Screen name="TokenReceiver" component={TokenReceiver} />
             <Stack.Screen name="SelectAccount" component={SelectAccount} />
