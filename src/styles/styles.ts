@@ -147,6 +147,11 @@ const styles = StyleSheet.create({
   purpleButtonHighlight: {
     backgroundColor: 'rgba(0,169,157,0.25)',
   },
+  keyContainer: {
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(151,151,151,0.5)',
+  },
 })
 
 export default styles
