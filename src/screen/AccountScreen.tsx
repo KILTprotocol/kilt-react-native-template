@@ -14,6 +14,7 @@ export default function AccountScreen({ navigation, route }) {
   const [account, setAccount] = useState<KeyInfo | null>()
   const [keys, setKeys] = useState<KeyInfo[]>()
   const [balance, setBalance] = useState('')
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const authContext = useContext(AuthContext)
   const fetchAccounts = async () => {
@@ -35,10 +36,12 @@ export default function AccountScreen({ navigation, route }) {
   }, [])
 
   useEffect(() => {
-    if (!account) return
+    if (!account) return setIsLoading(false)
+    setIsLoading(true)
     ;(async () => {
       const accountBalance = await getBalance(account.metadata.address)
       setBalance(accountBalance)
+      setIsLoading(false)
     })()
   }, [account])
 
@@ -67,7 +70,12 @@ export default function AccountScreen({ navigation, route }) {
             return (
               <View key={key} style={{ paddingTop: '0.5%', paddingBottom: '0.5%' }}>
                 <TouchableOpacity
-                  style={styles.rectangleButtonPurple}
+                  style={
+                    isLoading && account === keyInfo
+                      ? { ...styles.rectangleButtonPurple, ...styles.purpleButtonHighlight }
+                      : styles.rectangleButtonPurple
+                  }
+                  disabled={isLoading}
                   onPress={() => {
                     if (account === keyInfo) {
                       return setAccount(null)
@@ -85,14 +93,24 @@ export default function AccountScreen({ navigation, route }) {
                 </TouchableOpacity>
                 {account === keyInfo && (
                   <View
-                    style={{
-                      ...styles.buttonContainer,
-                      ...styles.rectangleButtonPurple,
-                      justifyContent: 'space-evenly',
-                    }}
+                    style={
+                      isLoading && account === keyInfo
+                        ? {
+                            ...styles.rectangleButtonPurple,
+                            ...styles.buttonContainer,
+                            justifyContent: 'space-evenly',
+                            ...styles.purpleButtonHighlight,
+                          }
+                        : {
+                            ...styles.buttonContainer,
+                            ...styles.rectangleButtonPurple,
+                            justifyContent: 'space-evenly',
+                          }
+                    }
                   >
                     <TouchableOpacity
                       style={styles.orangeButton}
+                      disabled={isLoading}
                       onPress={() => navigation.navigate('TokenSender', { selectAccount: account })}
                     >
                       <Text style={styles.orangeButtonText}>SEND</Text>
@@ -100,6 +118,7 @@ export default function AccountScreen({ navigation, route }) {
 
                     <TouchableOpacity
                       style={styles.orangeButton}
+                      disabled={isLoading}
                       onPress={() =>
                         navigation.navigate('TokenReceiver', { selectAccount: account })
                       }

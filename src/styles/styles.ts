@@ -144,6 +144,9 @@ const styles = StyleSheet.create({
   buttonDisabled: {
     opacity: 0.2,
   },
+  purpleButtonHighlight: {
+    backgroundColor: 'rgba(0,169,157,0.25)',
+  },
 })
 
 export default styles
