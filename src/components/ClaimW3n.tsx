@@ -55,7 +55,7 @@ export default function ClaimW3n({ navigation, route }) {
 
   return (
     <ScrollView style={styles.container}>
-      {/* {route.params.w3n && <Text style={styles.text}>Claim your web3name: {route.params.w3n}</Text>} */}
+      {route.params.w3n && <Text style={styles.text}>Claim your web3name: {route.params.w3n}</Text>}
 
       <SelectAccount navigation={navigation} route={route} />
       <ActivityIndicator color="orange" animating={isLoading} />

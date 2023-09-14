@@ -12,7 +12,7 @@ import getWeb3NameForDid from '../utils/fetchW3n'
 
 export default function SelectDid({ navigation, route }) {
   const [dids, setDids] =
-    useState<{ keypairs: DidKeys; document: DidDocument; w3n: string | null }[]>()
+    useState<{ keypairs: DidKeys; document: DidDocument; w3n: string | undefined }[]>()
   const authContext = useContext(AuthContext)
 
   const handle = async () => {
@@ -23,14 +23,14 @@ export default function SelectDid({ navigation, route }) {
       navigation.navigate('UnlockStorageScreen')
     }
     const didsList = await DidStore.list(password)
-    const d = await Promise.all(
+    const allDids = await Promise.all(
       didsList.map(async ({ keypairs, document }: { keypairs: DidKeys; document: DidDocument }) => {
         const fetchedW3n = await getWeb3NameForDid(document.uri)
 
         return { keypairs: keypairs, document: document, w3n: fetchedW3n }
       })
     )
-    setDids(d)
+    setDids(allDids)
   }
   useEffect(() => {
     handle()
@@ -48,7 +48,7 @@ export default function SelectDid({ navigation, route }) {
                     navigation.dispatch({
                       ...CommonActions.navigate({
                         name: 'DidManagement',
-                        params: { did: { keypairs, document } },
+                        params: { did: { keypairs, document }, w3n },
                       }),
                     })
                   }

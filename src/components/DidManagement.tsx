@@ -10,8 +10,7 @@ import styles from '../styles/styles'
 import React, { useEffect, useState } from 'react'
 
 import { CommonActions } from '@react-navigation/native'
-import { DidDocument, connect } from '@kiltprotocol/sdk-js'
-import SelectCredential from './SelectCredential'
+import { DidDocument } from '@kiltprotocol/sdk-js'
 import getWeb3NameForDid from '../utils/fetchW3n'
 
 export default function DidManagement({ navigation, route }) {
@@ -21,11 +20,12 @@ export default function DidManagement({ navigation, route }) {
 
   useEffect(() => {
     ;(async () => {
-      const fetchedW3n = await getWeb3NameForDid(did.uri)
+      if (!route.params.w3n) {
+        const fetchedW3n = await getWeb3NameForDid(did.uri)
 
-      if (fetchedW3n) {
-        setW3n(fetchedW3n.toString())
+        return setW3n(fetchedW3n!.toString())
       }
+      return setW3n(route.params.w3n)
     })()
   }, [did])
 
