@@ -25,7 +25,7 @@ export default function DidManagement({ navigation, route }) {
       if (!route.params.w3n) {
         const fetchedW3n = await getWeb3NameForDid(did.uri)
 
-        return setW3n(fetchedW3n!.toString())
+        return setW3n(fetchedW3n?.toString())
       }
       return setW3n(route.params.w3n)
     })()

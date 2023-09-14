@@ -74,7 +74,7 @@ export default function CreateDid({ navigation, route }) {
           signature: authentication.sign(data),
           keyType: authentication.type,
         })
-      )
+      ).catch(()=> setIsLoading(false))
 
       await DidStore.importDid(
         {
