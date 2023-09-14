@@ -15,3 +15,7 @@ web-build/
 
 # yarn error
 yarn-error.log
+
+#ignore new yarn
+.yarn
+.yarnrc.yml
