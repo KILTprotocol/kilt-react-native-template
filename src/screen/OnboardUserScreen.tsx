@@ -10,7 +10,7 @@ import NessieLogo from '../components/NessieLogo'
 
 // This would needs to be CHANGED!
 export default function OnboardUserScreen(): JSX.Element {
-  const [password, setPassword] = useState<string>('Enter your password')
+  const [password, setPassword] = useState<string>('')
   // const [rememberPassword, setRemeberPassword] = useState<boolean>(false)
   const [hidePassword, setHidePassword] = useState(true)
   const authContext = useContext(AuthContext)

@@ -13,7 +13,7 @@ const textDecoder = new TextDecoder()
 // type Props = NativeStackScreenProps<UnlockStorageScreenProps, 'UnlockStorageScreen', 'MyStack'>
 
 export default function UnlockStorageScreen({ navigation }) {
-  const [enterPassword, setEnterPassword] = useState('Enter your password')
+  const [enterPassword, setEnterPassword] = useState('')
   const [rememberPassword, setRememberPassword] = useState(false)
   const [error, setError] = useState('')
   const [hidePassword, setHidePassword] = useState(true)
@@ -107,7 +107,7 @@ export default function UnlockStorageScreen({ navigation }) {
         <TouchableOpacity style={styles.orangeButton} onPress={onInsertPassword}>
           <Text style={styles.orangeButtonText}>OK</Text>
         </TouchableOpacity>
-        <Text>{error}</Text>
+        {/* <Text>{error}</Text> */}
       </View>
     </KeyboardAvoidingView>
   )
