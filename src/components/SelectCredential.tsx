@@ -43,7 +43,7 @@ export default function SelectCredential({ navigation, route }) {
 
   return (
     <ScrollView style={{ width: '100%' }}>
-      <Text style={{ ...styles.text, alignSelf: 'flex-start', margin: 15 }}>Select Account</Text>
+      <Text style={{ ...styles.text, alignSelf: 'flex-start' }}>Select Credentials</Text>
       <View style={styles.selectAccountRadioContainer}>
         {credentials
           ? credentials.map(({ name, credential: a }, key) => {

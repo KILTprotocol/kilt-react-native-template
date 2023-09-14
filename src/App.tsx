@@ -23,6 +23,8 @@ import DidManagement from './components/DidManagement'
 import { removeStorage } from './storage/storage'
 import Warning from './components/Warning'
 import AddAccount from './components/AddAccount'
+import SelectCredential from './components/SelectCredential'
+import ImportCredential from './components/ImportCredential'
 
 const Stack = createNativeStackNavigator()
 const Tab = createBottomTabNavigator()
@@ -138,6 +140,8 @@ function AuthStack() {
           <Stack.Screen name="SelectDid" component={SelectDid} />
           <Stack.Screen name="QrScanner" component={QrScanner} />
           <Stack.Screen name="DidManagement" component={DidManagement} />
+          <Stack.Screen name="Import Credential" component={ImportCredential} />
+          <Stack.Screen name="Select Credential" component={SelectCredential} />
           <Stack.Screen name="Warning" component={Warning} />
         </Stack.Group>
       )}

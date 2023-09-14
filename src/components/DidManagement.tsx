@@ -12,6 +12,7 @@ import React, { useEffect, useState } from 'react'
 import { CommonActions } from '@react-navigation/native'
 import { DidDocument } from '@kiltprotocol/sdk-js'
 import getWeb3NameForDid from '../utils/fetchW3n'
+import SelectCredential from './SelectCredential'
 
 export default function DidManagement({ navigation, route }) {
   const did = route.params.did.document as DidDocument
@@ -34,7 +35,6 @@ export default function DidManagement({ navigation, route }) {
       <View style={{ ...styles.header, backgroundColor: 'rgba(249,105,67,0.2)', marginBottom: 6 }}>
         <Text style={styles.headerText}>Inspect Identity</Text>
       </View>
-      {/* <SelectCredential navigation={navigation} route={route} /> */}
 
       <ScrollView>
         <View
@@ -83,6 +83,8 @@ export default function DidManagement({ navigation, route }) {
               </TouchableOpacity>
             </View>
           )}
+          {/* <SelectCredential navigation={navigation} route={route} /> */}
+
           <View style={{ borderTopWidth: 1, borderTopColor: '#979797' }}>
             <View style={styles.keyContainer}>
               <Text style={{ ...styles.text, marginBottom: 10 }}>Authentication Key</Text>
@@ -124,6 +126,17 @@ export default function DidManagement({ navigation, route }) {
           >
             <Text style={styles.redButtonText}>CLOSE</Text>
           </TouchableOpacity>
+          {/* <TouchableOpacity
+            style={styles.orangeButton}
+            onPress={() =>
+              navigation.dispatch({
+                ...CommonActions.navigate('Import Credential'),
+                params: { did },
+              })
+            }
+          >
+            <Text style={styles.orangeButtonText}>IMPORT CREDENTIAL</Text>
+          </TouchableOpacity> */}
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
