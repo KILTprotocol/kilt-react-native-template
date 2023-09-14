@@ -9,7 +9,7 @@ import {
 import styles from '../styles/styles'
 import React, { useEffect, useState } from 'react'
 
-import { CommonActions } from '@react-navigation/native'
+import { CommonActions, useIsFocused } from '@react-navigation/native'
 import { DidDocument } from '@kiltprotocol/sdk-js'
 import getWeb3NameForDid from '../utils/fetchW3n'
 import SelectCredential from './SelectCredential'
@@ -18,6 +18,7 @@ export default function DidManagement({ navigation, route }) {
   const did = route.params.did.document as DidDocument
   const [w3n, setW3n] = useState<string | null>()
   const [w3nInput, setW3nInput] = useState<string>()
+  const isFocused = useIsFocused()
 
   useEffect(() => {
     ;(async () => {
@@ -28,7 +29,7 @@ export default function DidManagement({ navigation, route }) {
       }
       return setW3n(route.params.w3n)
     })()
-  }, [did])
+  }, [did, isFocused])
 
   return (
     <KeyboardAvoidingView style={styles.container}>

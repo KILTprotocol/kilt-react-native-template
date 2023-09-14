@@ -8,6 +8,7 @@ export async function getStorage(key: string, password?: string): Promise<string
   }
   if (password) {
     const decryptedData = decryptData(encodedResult, password)
+    console.log(decryptedData)
     return decryptedData
   }
   return encodedResult

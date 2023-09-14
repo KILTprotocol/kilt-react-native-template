@@ -82,7 +82,8 @@ export default function CreateDid({ navigation, route }) {
         didDoc.uri,
         password
       )
-      navigation.dispatch(CommonActions.goBack())
+      setIsLoading(false)
+      return navigation.dispatch(CommonActions.goBack())
     }
 
     await DidStore.importDid(
@@ -93,9 +94,9 @@ export default function CreateDid({ navigation, route }) {
       didUri,
       password
     )
-    navigation.dispatch(CommonActions.goBack())
-
+    
     setIsLoading(false)
+    return navigation.dispatch(CommonActions.goBack())
   }
   return (
     <View style={styles.container}>
