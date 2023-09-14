@@ -53,7 +53,6 @@ export default function TokenSender({ navigation, route }): JSX.Element {
     navigation.goBack()
   }
   useEffect(() => {
-    console.log(route.params)
     // if (!route.params.credential) {
     //   return
     // }

@@ -17,7 +17,7 @@ export default function DidScreen({ navigation, route }) {
   const accounts = async () => {
     const password = await getStorage('session-password')
     const keypairs = await getKeypairs(password)
-    console.log('keys', keypairs.length === 0)
+
     if (keypairs.length === 0) {
       return setIsDisabled(true)
     }
@@ -28,6 +28,7 @@ export default function DidScreen({ navigation, route }) {
   useEffect(() => {
     accounts()
   }, [isFocused])
+
   return (
     <ScrollView style={styles.scroll}>
       <NessieLogo pink={false} purple={true} />

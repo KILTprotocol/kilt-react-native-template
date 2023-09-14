@@ -12,6 +12,7 @@ import SelectAccount from './SelectAccount'
 import { AuthContext } from '../wrapper/AuthContextProvider'
 import getBalance from '../utils/getBalance'
 import { CommonActions } from '@react-navigation/native'
+import { connect } from '@kiltprotocol/sdk-js'
 
 export default function CreateDid({ navigation, route }) {
   const [didMnemonic, setDidMnemonic] = useState()
@@ -29,10 +30,10 @@ export default function CreateDid({ navigation, route }) {
     if (!account) return setBalance(null)
     ;(async () => {
       const addressBalance = await getBalance(account.metadata.address)
-      console.log(addressBalance)
+
       setBalance(addressBalance)
     })()
-  })
+  }, [account])
 
   const generateDid = async () => {
     setIsLoading(true)
@@ -48,6 +49,7 @@ export default function CreateDid({ navigation, route }) {
       authContext.logout()
       navigation.navigate('UnlockStorageScreen')
     }
+    await connect('wss://peregrine.kilt.io/parachain-public-ws/')
 
     const paymentAccount = keyring.addFromMnemonic(account.mnemonic)
 
@@ -94,7 +96,7 @@ export default function CreateDid({ navigation, route }) {
       didUri,
       password
     )
-    
+
     setIsLoading(false)
     return navigation.dispatch(CommonActions.goBack())
   }

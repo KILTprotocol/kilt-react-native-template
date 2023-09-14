@@ -1,4 +1,12 @@
-import { TextInput, View, Text, TouchableOpacity, KeyboardAvoidingView, Image } from 'react-native'
+import {
+  TextInput,
+  View,
+  Text,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  Image,
+  ActivityIndicator,
+} from 'react-native'
 import React, { useEffect, useState } from 'react'
 
 import Keyring from '@polkadot/keyring'
@@ -38,7 +46,6 @@ export default function TokenSender({ navigation, route }): JSX.Element {
       setIsLoading(false)
       throw new Error('get an account ')
     }
-    console.log('senderAccount.metadata.type,', senderAccount.metadata.type)
     const keyring = new Keyring({
       type: senderAccount.metadata.type,
       ss58Format: 38,
@@ -52,6 +59,7 @@ export default function TokenSender({ navigation, route }): JSX.Element {
     await Blockchain.signAndSubmitTx(transferTx, account, {}).catch((e) => console.log(e))
     setIsLoading(false)
     await api.disconnect()
+    return navigation.dispatch(CommonActions.goBack())
   }
 
   return (
@@ -62,6 +70,7 @@ export default function TokenSender({ navigation, route }): JSX.Element {
           <Text style={{ fontStyle: 'italic' }}>{senderAccount?.metadata.name}</Text>
         </Text>
       </View>
+      <ActivityIndicator color="orange" animating={isLoading} style={{ position: 'absolute' }} />
 
       <View style={{ ...styles.main, paddingTop: 32 }}>
         <Text style={{ ...styles.text, marginBottom: 45, alignSelf: 'flex-start' }}>

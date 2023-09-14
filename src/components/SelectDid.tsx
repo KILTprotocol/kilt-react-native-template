@@ -5,7 +5,7 @@ import * as DidStore from '../storage/did/store'
 import styles from '../styles/styles'
 import { DidKeys } from '../utils/interfaces'
 import { getStorage } from '../storage/storage'
-import { CommonActions } from '@react-navigation/native'
+import { CommonActions, useIsFocused } from '@react-navigation/native'
 import { ConfigService, DidDocument } from '@kiltprotocol/sdk-js'
 import { AuthContext } from '../wrapper/AuthContextProvider'
 import getWeb3NameForDid from '../utils/fetchW3n'
@@ -14,6 +14,7 @@ export default function SelectDid({ navigation, route }) {
   const [dids, setDids] =
     useState<{ keypairs: DidKeys; document: DidDocument; w3n: string | undefined }[]>()
   const authContext = useContext(AuthContext)
+  const isFocused = useIsFocused()
 
   const handle = async () => {
     const password = await getStorage('session-password')
@@ -34,7 +35,7 @@ export default function SelectDid({ navigation, route }) {
   }
   useEffect(() => {
     handle()
-  }, [])
+  }, [isFocused])
 
   return (
     <View style={styles.container}>
