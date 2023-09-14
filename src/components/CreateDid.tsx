@@ -134,7 +134,11 @@ export default function CreateDid({ navigation, route }) {
             <Text style={styles.redButtonText}>CANCEL</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={styles.orangeButton}
+            style={
+              !account || isLoading
+                ? { ...styles.orangeButton, ...styles.buttonDisabled }
+                : styles.orangeButton
+            }
             disabled={!account || isLoading}
             onPress={generateDid}
           >
