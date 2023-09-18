@@ -3,7 +3,7 @@ import { TouchableOpacity, View, Text, Image } from 'react-native'
 
 import * as DidStore from '../storage/did/store'
 import styles from '../styles/styles'
-import { DidKeys } from '../utils/interfaces'
+import { DidKeys } from '../storage/utils/interfaces'
 import { getStorage } from '../storage/storage'
 import { CommonActions, useIsFocused } from '@react-navigation/native'
 import { ConfigService, DidDocument } from '@kiltprotocol/sdk-js'

@@ -49,7 +49,7 @@ export default function CreateDid({ navigation, route }) {
       authContext.logout()
       navigation.navigate('UnlockStorageScreen')
     }
-    await connect('wss://peregrine.kilt.io/parachain-public-ws/')
+    await connect('wss://spiritnet.kilt.io/')
 
     const paymentAccount = keyring.addFromMnemonic(account.mnemonic)
 

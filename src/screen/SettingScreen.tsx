@@ -3,7 +3,7 @@ import { AuthContext } from '../wrapper/AuthContextProvider'
 import { TouchableOpacity, Text, Share, ScrollView, View } from 'react-native'
 import styles from '../styles/styles'
 import { getStorage } from '../storage/storage'
-import * as KeyStore from '../storage/keys/store'
+import * as AccountStore from '../storage/account/store'
 
 export default function SettingScreen({ navigation }) {
   const authContext = useContext(AuthContext)
@@ -16,7 +16,7 @@ export default function SettingScreen({ navigation }) {
       navigation.navigate('UnlockStorageScreen')
     }
 
-    const keys = await KeyStore.getKeypairs(password)
+    const keys = await AccountStore.getKeypairs(password)
     Share.share({
       message: JSON.stringify(keys),
       title: 'KILT Demo account Haus of Chaos',

@@ -72,7 +72,11 @@ export default function ClaimW3n({ navigation, route }) {
           <Text style={styles.redButtonText}>CANCEL</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={styles.orangeButton}
+          style={
+            isLoading || !route.params.selectAccount
+              ? { ...styles.orangeButton, ...styles.buttonDisabled }
+              : styles.orangeButton
+          }
           disabled={isLoading || !route.params.selectAccount}
           onPress={() => claimW3n()}
         >

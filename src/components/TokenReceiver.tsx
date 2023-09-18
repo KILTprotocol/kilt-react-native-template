@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import QRCode from 'react-qr-code'
 import { CommonActions } from '@react-navigation/native'
 import styles from '../styles/styles'
-import { KeyInfo } from '../utils/interfaces'
+import { KeyInfo } from '../storage/utils/interfaces'
 
 const componentStyles = StyleSheet.create({
   main: {

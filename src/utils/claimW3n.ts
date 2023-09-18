@@ -13,7 +13,7 @@ export async function claimWeb3Name(
   name: Did.Web3Name,
   signCallback: SignExtrinsicCallback
 ): Promise<void> {
-  const api = await connect('wss://peregrine.kilt.io/parachain-public-ws/')
+  const api = await connect('wss://spiritnet.kilt.io/')
 
   const web3NameClaimTx = api.tx.web3Names.claim(name)
   const authorizedWeb3NameClaimTx = await Did.authorizeTx(

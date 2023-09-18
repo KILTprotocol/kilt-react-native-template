@@ -13,7 +13,7 @@ import Keyring from '@polkadot/keyring'
 import { CommonActions } from '@react-navigation/native'
 import styles from '../styles/styles'
 
-import { KeyInfo } from '../utils/interfaces'
+import { KeyInfo } from '../storage/utils/interfaces'
 
 import getBalance from '../utils/getBalance'
 import { connect, BalanceUtils, Blockchain } from '@kiltprotocol/sdk-js'
@@ -53,7 +53,7 @@ export default function TokenSender({ navigation, route }): JSX.Element {
 
     const account = keyring.addFromMnemonic(senderAccount.mnemonic)
 
-    const api = await connect('wss://peregrine.kilt.io/parachain-public-ws/')
+    const api = await connect('wss://spiritnet.kilt.io/')
 
     const transferTx = api.tx.balances.transfer(receiverAddress, BalanceUtils.toFemtoKilt(amount))
     await Blockchain.signAndSubmitTx(transferTx, account, {}).catch((e) => console.log(e))

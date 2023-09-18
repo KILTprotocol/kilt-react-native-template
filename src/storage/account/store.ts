@@ -10,8 +10,8 @@ import { type KeyringPair } from '@polkadot/keyring/types'
 import { getStorage, setStorage, allStorage, removeStorage } from '../storage'
 import generateName from '../../utils/generateName'
 import kid from '../../utils/kid'
-import u8a from '../../utils/u8a'
-import { KeyInfo, KeyMetadata } from '../../utils/interfaces'
+import u8a from '../utils/u8a'
+import { KeyInfo, KeyMetadata } from '../utils/interfaces'
 const PREFIX = 'keys:'
 
 export async function saveMetadata(

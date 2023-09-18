@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react'
 import styles from '../styles/styles'
 import SelectDid from '../components/SelectDid'
 import { CommonActions, useIsFocused } from '@react-navigation/native'
-import { getKeypairs } from '../storage/keys/store'
+import { getKeypairs } from '../storage/account/store'
 import { getStorage } from '../storage/storage'
 import NessieLogo from '../components/NessieLogo'
 

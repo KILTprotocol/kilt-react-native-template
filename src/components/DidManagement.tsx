@@ -28,8 +28,16 @@ export default function DidManagement({ navigation, route }) {
         return setW3n(fetchedW3n?.toString())
       }
       return setW3n(route.params.w3n)
+    }
+    ;(async () => {
+      if (w3n) return
+
+      const fetchedW3n = await getWeb3NameForDid(did.uri)
+
+      console.log('did.uri', did.uri)
+      return setW3n(fetchedW3n!.toString())
     })()
-  }, [did, isFocused])
+  }, [route.params, did, isFocused])
 
   return (
     <KeyboardAvoidingView style={styles.container}>

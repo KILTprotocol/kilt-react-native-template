@@ -1,6 +1,6 @@
 import { Did, DidDocument, DidUri } from '@kiltprotocol/sdk-js'
 import { getStorage, setStorage, allStorage, removeStorage } from '../storage'
-import { DidKeys } from '../../utils/interfaces'
+import { DidKeys } from '../utils/interfaces'
 
 const KEY_PREFIX = 'did:kilt:'
 const DOCUMENT_PREFIX = 'document:'

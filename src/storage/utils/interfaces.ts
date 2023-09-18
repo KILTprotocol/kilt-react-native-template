@@ -1,5 +1,4 @@
 import type { KeypairType } from '@polkadot/util-crypto/types'
-import { KiltEncryptionKeypair, KiltKeyringPair } from '@kiltprotocol/sdk-js'
 export interface KeyMetadata {
   name: string
   address: string

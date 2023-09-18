@@ -5,8 +5,8 @@ import { useIsFocused } from '@react-navigation/native'
 import styles from '../styles/styles'
 
 import { getStorage } from '../storage/storage'
-import * as KeyStore from '../storage/keys/store'
-import { KeyInfo } from '../utils/interfaces'
+import * as AccountStore from '../storage/account/store'
+import { KeyInfo } from '../storage/utils/interfaces'
 import { AuthContext } from '../wrapper/AuthContextProvider'
 import getBalance from '../utils/getBalance'
 import NessieLogo from '../components/NessieLogo'
@@ -26,9 +26,9 @@ export default function AccountScreen({ navigation, route }) {
       authContext.logout()
       navigation.navigate('UnlockStorageScreen')
     }
-    const keysList = await KeyStore.list(password)
+    const accountsList = await AccountStore.list(password)
 
-    const keys = keysList.map((val: KeyInfo) => {
+    const keys = accountsList.map((val: KeyInfo) => {
       return JSON.parse(JSON.stringify(val))
     })
     setKeys(keys)

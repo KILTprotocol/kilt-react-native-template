@@ -1,10 +1,17 @@
 import { type KeypairType } from '@polkadot/util-crypto/types'
 
 import React, { useState, useContext } from 'react'
-import { TextInput, View, Text, TouchableOpacity, KeyboardAvoidingView } from 'react-native'
+import {
+  TextInput,
+  View,
+  Text,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  ScrollView,
+} from 'react-native'
 
-import { generateMnemonic } from '../storage/keys/store'
-import { importKey } from '../storage/keys/store'
+import { generateMnemonic } from '../storage/account/store'
+import { importKey } from '../storage/account/store'
 
 import styles from '../styles/styles'
 import { getStorage } from '../storage/storage'
@@ -61,99 +68,101 @@ export default function AddAccount({ navigation }): JSX.Element {
         <Text style={{ ...styles.text, marginVertical: 12, alignSelf: 'flex-start' }}>
           Account name
         </Text>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            width: '100%',
-          }}
-        >
-          <TextInput
+        <ScrollView>
+          <View
             style={{
-              width: '70%',
-              height: 30,
-              padding: 7,
-              backgroundColor: 'rgba(0,169,157,0.15)',
-              borderWidth: 1,
-              borderColor: '#5B5B5B',
-              borderRadius: 3,
-              color: '#FFFFFF',
-              marginRight: '3%',
+              flexDirection: 'row',
+              alignItems: 'center',
+              width: '100%',
             }}
-            value={name}
-            placeholder="Type name"
+          >
+            <TextInput
+              style={{
+                width: '70%',
+                height: 30,
+                padding: 7,
+                backgroundColor: 'rgba(0,169,157,0.15)',
+                borderWidth: 1,
+                borderColor: '#5B5B5B',
+                borderRadius: 3,
+                color: '#FFFFFF',
+                marginRight: '3%',
+              }}
+              value={name}
+              placeholder="Type name"
+              placeholderTextColor="rgba(255,255,255,0.5)"
+              onChangeText={setName}
+            />
+            <TouchableOpacity
+              style={{ ...styles.orangeButton, width: '27%' }}
+              onPress={() => setMnemonic(generateMnemonic(12))}
+            >
+              <Text style={styles.orangeButtonText}>Mnemonic</Text>
+            </TouchableOpacity>
+          </View>
+          <Text style={{ ...styles.text, marginVertical: 12, alignSelf: 'flex-start' }}>
+            Mnemonic
+          </Text>
+          <TextInput
+            style={styles.input}
+            placeholder="will be shown here - you can edit it if you want"
             placeholderTextColor="rgba(255,255,255,0.5)"
-            onChangeText={setName}
+            value={mnemonic}
+            onChangeText={setMnemonic}
           />
-          <TouchableOpacity
-            style={{ ...styles.orangeButton, width: '27%' }}
-            onPress={() => setMnemonic(generateMnemonic(12))}
-          >
-            <Text style={styles.orangeButtonText}>Mnemonic</Text>
-          </TouchableOpacity>
-        </View>
-        <Text style={{ ...styles.text, marginVertical: 12, alignSelf: 'flex-start' }}>
-          Mnemonic
-        </Text>
-        <TextInput
-          style={styles.input}
-          placeholder="will be shown here - you can edit it if you want"
-          placeholderTextColor="rgba(255,255,255,0.5)"
-          value={mnemonic}
-          onChangeText={setMnemonic}
-        />
 
-        <Text style={{ ...styles.text, marginVertical: 12, alignSelf: 'flex-start' }}>
-          Derivation
-        </Text>
-        <TextInput
-          style={styles.input}
-          value={derivation}
-          placeholder="Add text"
-          placeholderTextColor="rgba(255,255,255,0.5)"
-          onChangeText={(derivation) => {
-            setDerivation(derivation)
-          }}
-        />
+          <Text style={{ ...styles.text, marginVertical: 12, alignSelf: 'flex-start' }}>
+            Derivation
+          </Text>
+          <TextInput
+            style={styles.input}
+            value={derivation}
+            placeholder="Add text"
+            placeholderTextColor="rgba(255,255,255,0.5)"
+            onChangeText={(derivation) => {
+              setDerivation(derivation)
+            }}
+          />
 
-        <Text style={{ ...styles.text, marginVertical: 12, alignSelf: 'flex-start' }}>
-          Key algorithm
-        </Text>
-        <View style={styles.selectAccountRadioContainer}>
-          {alogrithmList.map(({ value, label }, key) => {
-            return (
-              <RadioButton
-                key={key}
-                label={label}
-                selected={algorithm === value}
-                onPress={() => handleSelectAlgorithm(value)}
-                first={key === 0}
-                last={alogrithmList.length - 1 === key}
-                backgroundColor={'rgba(0, 169, 157, 0.15)'}
-              />
-            )
-          })}
-        </View>
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity
-            style={styles.redButton}
-            onPress={() => navigation.dispatch(CommonActions.goBack())}
-          >
-            <Text style={styles.redButtonText}>CANCEL</Text>
-          </TouchableOpacity>
+          <Text style={{ ...styles.text, marginVertical: 12, alignSelf: 'flex-start' }}>
+            Key algorithm
+          </Text>
+          <View style={styles.selectAccountRadioContainer}>
+            {alogrithmList.map(({ value, label }, key) => {
+              return (
+                <RadioButton
+                  key={key}
+                  label={label}
+                  selected={algorithm === value}
+                  onPress={() => handleSelectAlgorithm(value)}
+                  first={key === 0}
+                  last={alogrithmList.length - 1 === key}
+                  backgroundColor={'rgba(0, 169, 157, 0.15)'}
+                />
+              )
+            })}
+          </View>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              style={styles.redButton}
+              onPress={() => navigation.dispatch(CommonActions.goBack())}
+            >
+              <Text style={styles.redButtonText}>CANCEL</Text>
+            </TouchableOpacity>
 
-          <TouchableOpacity
-            style={
-              isDisabled
-                ? { ...styles.orangeButton, ...styles.buttonDisabled }
-                : styles.orangeButton
-            }
-            onPress={addKey}
-            disabled={isDisabled}
-          >
-            <Text style={styles.orangeButtonText}>ADD ACCOUNT</Text>
-          </TouchableOpacity>
-        </View>
+            <TouchableOpacity
+              style={
+                isDisabled
+                  ? { ...styles.orangeButton, ...styles.buttonDisabled }
+                  : styles.orangeButton
+              }
+              onPress={addKey}
+              disabled={isDisabled}
+            >
+              <Text style={styles.orangeButtonText}>ADD ACCOUNT</Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
       </View>
     </KeyboardAvoidingView>
   )

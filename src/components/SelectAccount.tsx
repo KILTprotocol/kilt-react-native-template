@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useContext } from 'react'
 import { View, Text, ScrollView } from 'react-native'
 
-import * as KeyStore from '../storage/keys/store'
+import * as AccountStore from '../storage/account/store'
 
-import { KeyInfo } from '../utils/interfaces'
+import { KeyInfo } from '../storage/utils/interfaces'
 import { getStorage } from '../storage/storage'
 import { CommonActions } from '@react-navigation/native'
 import { AuthContext } from '../wrapper/AuthContextProvider'
@@ -31,7 +31,7 @@ export default function SelectAccount({ navigation, route }) {
         authContext.logout()
         navigation.navigate('UnlockStorageScreen')
       }
-      const keysList = await KeyStore.list(password)
+      const keysList = await AccountStore.list(password)
 
       const keys = keysList.map((val: KeyInfo) => {
         return JSON.parse(JSON.stringify(val))
